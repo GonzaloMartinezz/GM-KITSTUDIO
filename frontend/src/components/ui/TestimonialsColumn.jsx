@@ -21,7 +21,7 @@ export const TestimonialsColumn = ({ className = "", testimonials, duration = 15
             <React.Fragment key={index}>
               {testimonials.map(({ text, name, role, stars = 5 }, i) => (
                 <div 
-                  className="bg-brand-4/40 p-8 rounded-[2rem] border border-brand-3/20 shadow-lg shadow-brand-5/5 max-w-sm w-full text-left mx-auto hover:border-brand-3/50 transition-colors" 
+                  className="bg-brand-4/40 p-8 rounded-4xl border border-brand-3/20 shadow-lg shadow-brand-5/5 max-w-sm w-full text-left mx-auto hover:border-brand-3/50 transition-colors" 
                   key={`${index}-${i}`}
                 >
                   <div className="flex gap-1 mb-4">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CreditCard, MessageCircle, ArrowLeft, CheckCircle, Smartphone, Wallet } from 'lucide-react';
+import { CreditCard, MessageCircle, ArrowLeft, CheckCircle, Smartphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Checkout = () => {

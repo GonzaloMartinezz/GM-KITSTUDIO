@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Truck, HeartHandshake, PackageCheck, MessageCircle, Clock, Tag, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, PackageCheck, MessageCircle, Clock, Tag, CheckCircle2 } from 'lucide-react';
 
 const CatalogSpecsSection = () => {
   const services = [
@@ -13,15 +13,15 @@ const CatalogSpecsSection = () => {
 
 return (
   <section className="bg-brand-1 text-brand-5 py-32 px-4 md:px-12 lg:px-24 font-geist relative z-30">
-    <div className="max-w-[1400px] mx-auto bg-white rounded-[3rem] p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-8 shadow-2xl">
+    <div className="max-w-350 mx-auto bg-white rounded-[3rem] p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-8 shadow-2xl">
 
       {/* Left Dark Card */}
-      <div className="lg:w-[45%] bg-brand-5 text-brand-1 rounded-[2.5rem] p-10 md:p-12 flex flex-col justify-between min-h-[450px] relative overflow-hidden shadow-inner group">
+      <div className="lg:w-[45%] bg-brand-5 text-brand-1 rounded-[2.5rem] p-10 md:p-12 flex flex-col justify-between min-h-112.5 relative overflow-hidden shadow-inner group">
         <div className="relative z-10">
-          <h2 className="text-5xl md:text-6xl font-bebas leading-[1] mb-6 tracking-wide">
+          <h2 className="text-5xl md:text-6xl font-bebas leading-none mb-6 tracking-wide">
             NUESTROS<br />SERVICIOS<br />PREMIUM.
           </h2>
-          <p className="text-brand-1/70 mt-6 max-w-[350px] font-medium">
+          <p className="text-brand-1/70 mt-6 max-w-87.5 font-medium">
             Soluciones integrales pensadas para potenciar la eficiencia y seguridad en cada intervención de tu clínica.
           </p>
         </div>

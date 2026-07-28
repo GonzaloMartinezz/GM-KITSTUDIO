@@ -10,6 +10,7 @@ const Navbar = () => {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const isActive = (path) => location.pathname === path;
+  const isContactPage = location.pathname === '/contacto';
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -29,23 +30,23 @@ const Navbar = () => {
           </div>
 
           {/* Left Navigation Pills (Hidden on mobile) */}
-          <div className="pointer-events-auto hidden md:flex items-center bg-brand-1 rounded-full px-2 py-2 shadow-sm border border-brand-2/20">
-            <Link to="/" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 ${isActive('/') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'}`}>
-              {isActive('/') && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
+          <div className={`pointer-events-auto hidden md:flex ${isContactPage ? 'fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-4 z-50 bg-[#F5F2EB]/90 backdrop-blur-md shadow-2xl p-6 rounded-[2rem] border border-[#0C3B45]/10' : 'items-center bg-brand-1 rounded-full px-2 py-2 shadow-sm border border-brand-2/20'}`}>
+            <Link to="/" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 text-center ${isActive('/') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'} ${isContactPage && isActive('/') ? '!bg-[#0C3B45] !text-[#F5F2EB]' : ''} ${isContactPage && !isActive('/') ? 'hover:bg-[#0C3B45]/10' : ''}`}>
+              {isActive('/') && !isContactPage && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
               Inicio
             </Link>
-            <Link to="/productos" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 ${isActive('/productos') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'}`}>
-              {isActive('/productos') && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
+            <Link to="/productos" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 text-center ${isActive('/productos') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'} ${isContactPage && isActive('/productos') ? '!bg-[#0C3B45] !text-[#F5F2EB]' : ''} ${isContactPage && !isActive('/productos') ? 'hover:bg-[#0C3B45]/10' : ''}`}>
+              {isActive('/productos') && !isContactPage && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
               Productos
             </Link>
-            <Link to="/nosotros" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 ${isActive('/nosotros') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'}`}>
-              {isActive('/nosotros') && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
+            <Link to="/nosotros" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 text-center ${isActive('/nosotros') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'} ${isContactPage && isActive('/nosotros') ? '!bg-[#0C3B45] !text-[#F5F2EB]' : ''} ${isContactPage && !isActive('/nosotros') ? 'hover:bg-[#0C3B45]/10' : ''}`}>
+              {isActive('/nosotros') && !isContactPage && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
               Nosotros
             </Link>
           </div>
 
           {/* Right Action Pills */}
-          <div className="pointer-events-auto flex items-center gap-2 md:gap-4">
+          <div className="pointer-events-auto flex items-center gap-2 md:gap-4 mr-0 md:mr-2 lg:mr-4 mt-2 md:mt-6">
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -80,7 +81,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[60] bg-brand-5 flex flex-col items-center justify-center"
+            className="fixed inset-0 z-60 bg-brand-5 flex flex-col items-center justify-center"
           >
             <button 
               onClick={() => setIsMobileMenuOpen(false)}

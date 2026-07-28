@@ -3,7 +3,7 @@ import { Marquee } from './ui/Marquee';
 
 const TestimonialCard = ({ author, text }) => {
   return (
-    <div className="bg-[#111] border border-white/5 p-6 md:p-8 rounded-[1.5rem] w-[320px] md:w-[400px] shadow-lg flex flex-col gap-4 text-left mx-4 hover:border-white/20 transition-colors relative">
+    <div className="bg-[#111] border border-white/5 p-6 md:p-8 rounded-3xl w-[320px] md:w-100 shadow-lg flex flex-col gap-4 text-left mx-4 hover:border-white/20 transition-colors relative">
       
       {/* X (Twitter) Logo */}
       <svg className="absolute top-6 right-6 w-5 h-5 text-white/50" viewBox="0 0 24 24" fill="currentColor">
@@ -32,7 +32,7 @@ const TestimonialCard = ({ author, text }) => {
 };
 
 const LogoCard = ({ name }) => (
-  <div className="bg-transparent border border-transparent p-6 flex items-center justify-center w-[200px] md:w-[250px] mx-4">
+  <div className="bg-transparent border border-transparent p-6 flex items-center justify-center w-50 md:w-62.5 mx-4">
     <div className="flex items-center gap-3 opacity-30 hover:opacity-100 transition-opacity cursor-pointer">
       <div className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center">
         <div className="w-4 h-4 bg-white rounded-sm rotate-45"></div>
@@ -65,7 +65,7 @@ export const TestimonialsSection = ({ title, description, testimonials, classNam
       {/* Grid Pattern Background */}
       <div className="absolute inset-0 z-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)', backgroundSize: '4rem 4rem' }}></div>
 
-      <div className="relative z-10 max-w-[1400px] mx-auto flex flex-col items-center gap-12 md:gap-16 text-center">
+      <div className="relative z-10 max-w-350 mx-auto flex flex-col items-center gap-12 md:gap-16 text-center">
         
         <div className="flex flex-col items-center gap-4 px-4 max-w-3xl">
           <h2 className="text-5xl md:text-7xl font-bebas text-white leading-[0.9] tracking-wider uppercase">
@@ -95,8 +95,8 @@ export const TestimonialsSection = ({ title, description, testimonials, classNam
           </Marquee>
 
           {/* Fade gradients */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-linear-to-r from-[#0A0A0A] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-linear-to-l from-[#0A0A0A] to-transparent z-10" />
         </div>
 
       </div>

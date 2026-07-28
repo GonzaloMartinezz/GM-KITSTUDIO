@@ -46,7 +46,7 @@ const Products = () => {
           <h1 className="font-bebas text-5xl md:text-7xl lg:text-[5.5rem] text-brand-1 leading-[0.85] tracking-tight">
             SIENTE LA<br />SEGURIDAD<br />CON GM KIT -<br />BIOSEGURIDAD
           </h1>
-          <p className="mt-8 text-brand-1/70 font-geist max-w-[280px] text-sm leading-relaxed">
+          <p className="mt-8 text-brand-1/70 font-geist max-w-70 text-sm leading-relaxed">
             Una elección inteligente y amigable con el medio ambiente, diseñada para ofrecer máxima protección y bajo impacto.
           </p>
         </div>
@@ -85,11 +85,11 @@ const Products = () => {
           </div>
 
           {/* Bottom Right Glassmorphism Pills */}
-          <div className="hidden md:flex absolute bottom-10 right-10 gap-3 z-20">
+          <div className="hidden md:flex absolute top-24 right-6 md:top-auto md:bottom-10 md:right-10 gap-2 md:gap-3 z-20 flex-col md:flex-row">
             {["Estéril", "Seguro", "Confiable"].map((tag, i) => (
               <div 
                 key={i} 
-                className="backdrop-blur-md bg-brand-5/30 border border-white/20 text-white px-6 py-2.5 rounded-full font-geist text-sm hover:bg-brand-5/60 transition-colors cursor-pointer"
+                className="backdrop-blur-md bg-brand-5/30 border border-white/20 text-white px-4 py-2 md:px-6 md:py-2.5 rounded-full font-geist text-xs md:text-sm hover:bg-brand-5/60 transition-colors cursor-pointer text-center"
               >
                 {tag}
               </div>
@@ -100,13 +100,13 @@ const Products = () => {
       </div>
 
       {/* OVERLAPPING CAROUSEL (The magic touch) */}
-      <div className="relative md:absolute md:bottom-16 md:left-[22%] bg-brand-1 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] z-30 w-full md:w-[480px] lg:w-[540px] order-3 md:order-3">
+      <div className="relative md:absolute md:bottom-16 md:left-[22%] bg-brand-1 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] z-30 w-full md:w-120 lg:w-135 order-3 md:order-3">
          <div className="flex gap-4 md:gap-6 justify-center">
            {products.slice(0, 3).map((product, idx) => (
              <div 
                key={idx}
                onClick={() => setCurrentShowcaseSlide(idx)}
-               className={`w-[22%] sm:w-24 md:w-32 aspect-square rounded-[1rem] md:rounded-[1.5rem] overflow-hidden relative cursor-pointer group transition-all duration-300 ${currentShowcaseSlide === idx ? 'ring-2 md:ring-4 ring-brand-3 shadow-xl scale-105 z-10' : 'scale-90 opacity-60 hover:scale-100 hover:opacity-100'}`}
+               className={`w-[22%] sm:w-24 md:w-32 aspect-square rounded-2xl md:rounded-3xl overflow-hidden relative cursor-pointer group transition-all duration-300 ${currentShowcaseSlide === idx ? 'ring-2 md:ring-4 ring-brand-3 shadow-xl scale-105 z-10' : 'scale-90 opacity-60 hover:scale-100 hover:opacity-100'}`}
              >
                 <img src={product.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={product.name} />
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-sm text-brand-5 px-3 py-1.5 rounded-full text-[9px] md:text-[10px] font-bold w-10/12 text-center truncate shadow-sm transition-transform group-hover:-translate-y-1">
@@ -139,7 +139,6 @@ const Products = () => {
            </div>
          </div>
       </div>
-
     </div>
   );
 };

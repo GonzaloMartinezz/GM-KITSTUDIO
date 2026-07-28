@@ -186,17 +186,17 @@ const CONTAINER_TRANSFORMS = {
 
 const CharBox = memo(({ char, textClassName, flipTextClassName, rotateDirection }) => (
   <span
-    className="text-3d-flip-char inline [transform-style:preserve-3d]"
+    className="text-3d-flip-char inline transform-3d"
     style={{ transform: CONTAINER_TRANSFORMS[rotateDirection] }}
   >
     <span
-      className={`relative h-[1lh] [backface-visibility:hidden] ${textClassName}`}
+      className={`relative h-lh backface-hidden ${textClassName}`}
       style={{ transform: FRONT_FACE_TRANSFORMS[rotateDirection] }}
     >
       {char}
     </span>
     <span
-      className={`absolute top-0 left-0 h-[1lh] [backface-visibility:hidden] ${flipTextClassName}`}
+      className={`absolute top-0 left-0 h-lh backface-hidden ${flipTextClassName}`}
       style={{ transform: SECOND_FACE_TRANSFORMS[rotateDirection] }}
     >
       {char}

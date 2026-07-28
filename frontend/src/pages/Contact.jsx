@@ -4,6 +4,13 @@ import { Phone, Mail, Camera, MapPin, Banknote, CreditCard, ArrowRightLeft, Smar
 
 const Contact = () => {
   const [activeIndex, setActiveIndex] = useState(0); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const items = [
     { id: 1, label: "01", title: "Bienvenida" },
@@ -13,8 +20,8 @@ const Contact = () => {
     { id: 5, label: "05", title: "Pagos" }
   ];
 
-  const circleRadius = 600; // Large radius for a gentle arc
-  const angleStep = 20; // Degrees between each number
+  const circleRadius = isMobile ? 320 : 600; 
+  const angleStep = isMobile ? 18 : 20; 
 
   const sectionVariants = {
     initial: { opacity: 0, filter: 'blur(15px)', y: 30, scale: 0.95 },
@@ -144,7 +151,7 @@ const Contact = () => {
     <div className={`min-h-screen ${theme.bg} overflow-hidden flex flex-col relative font-geist pt-24 pb-12 transition-colors duration-1000 ease-in-out`}>
       
       {/* TOP ARC NAVIGATION */}
-      <div className="relative w-full h-[150px] md:h-[200px] z-20">
+      <div className="relative w-full h-37.5 md:h-50 z-20">
         <motion.div 
           className={`absolute left-1/2 border ${theme.border} rounded-full transition-colors duration-1000`}
           initial={false}
@@ -182,7 +189,7 @@ const Contact = () => {
                   transformOrigin: 'center center',
                 }}
                 // Custom style function for the initial layout
-                initialCapture={(node) => {
+                ref={(node) => {
                    if(node) node.style.transform = `rotate(${angle}deg) translateY(${circleRadius}px) rotate(${-angle}deg)`;
                 }}
               >
@@ -202,12 +209,12 @@ const Contact = () => {
                   >
                     <motion.span 
                       animate={{ 
-                        scale: isActive ? 1.6 : 1,
+                        scale: isActive ? (isMobile ? 1.3 : 1.6) : (isMobile ? 0.8 : 1),
                         opacity: isActive ? 1 : 0.4,
                         color: isActive ? (isAlternate ? creamColor : blueColor) : (isAlternate ? '#ffffff' : '#000000') 
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      className="font-bebas text-6xl md:text-[5.5rem] drop-shadow-sm origin-bottom"
+                      className="font-bebas text-5xl md:text-[5.5rem] drop-shadow-sm origin-bottom"
                       style={{
                         WebkitTextStroke: isActive ? (isAlternate ? `1px ${creamColor}` : `1px ${blueColor}`) : '0px transparent',
                       }}
@@ -230,7 +237,7 @@ const Contact = () => {
       </div>
 
       {/* DYNAMIC CONTENT AREA WITH BLUR TRANSITION */}
-      <div className="flex-grow flex items-center justify-center relative z-10 px-4 md:px-0">
+      <div className="grow flex items-center justify-center relative z-10 px-4 md:px-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -247,8 +254,8 @@ const Contact = () => {
       </div>
 
       {/* Background purely decorative accents */}
-      <div className={`absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] ${isAlternate ? 'bg-[#3E9B94]/20' : 'bg-[#0C3B45]/5'} rounded-full blur-3xl pointer-events-none transition-colors duration-1000`}></div>
-      <div className={`absolute top-[20%] right-[-10%] w-[400px] h-[400px] ${isAlternate ? 'bg-[#CFF0EA]/10' : 'bg-[#3E9B94]/10'} rounded-full blur-3xl pointer-events-none transition-colors duration-1000`}></div>
+      <div className={`absolute bottom-[-10%] left-[-10%] w-125 h-125 ${isAlternate ? 'bg-[#3E9B94]/20' : 'bg-[#0C3B45]/5'} rounded-full blur-3xl pointer-events-none transition-colors duration-1000`}></div>
+      <div className={`absolute top-[20%] right-[-10%] w-100 h-100 ${isAlternate ? 'bg-[#CFF0EA]/10' : 'bg-[#3E9B94]/10'} rounded-full blur-3xl pointer-events-none transition-colors duration-1000`}></div>
     </div>
   );
 };

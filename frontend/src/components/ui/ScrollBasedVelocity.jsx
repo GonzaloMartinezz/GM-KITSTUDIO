@@ -11,6 +11,7 @@ import {
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const wrap = (min, max, v) => {
   const rangeSize = max - min;
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;

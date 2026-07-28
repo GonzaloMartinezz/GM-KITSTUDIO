@@ -12,8 +12,42 @@ const PreFooterContact = () => {
 
   return (
     <section className="relative flex flex-col w-full bg-[#F3F3F3]">
+      {/* Stats Block (Moved from FeaturesSection to sit above the map) */}
+      <div className="w-full px-6 md:px-12 lg:px-24 mb-0 relative z-20 pt-20 pb-12 bg-brand-1">
+        <div className="bg-brand-5 text-brand-1 rounded-[3rem] md:rounded-[4rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.2)] mx-auto max-w-350">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 mb-16">
+            <div className="lg:w-1/2">
+              <span className="text-brand-2 font-bold tracking-[0.3em] text-sm uppercase mb-4 block">NUESTRA PROMESA</span>
+              <h2 className="text-6xl lg:text-7xl font-bebas leading-[0.9] text-white uppercase">
+                EL ESTÁNDAR DE<br/>BIOSEGURIDAD
+              </h2>
+            </div>
+            <div className="lg:w-1/2 flex items-end">
+              <p className="text-brand-1/80 text-lg max-w-md font-medium">
+                No somos solo proveedores; somos tus aliados estratégicos en el quirófano. Nuestro compromiso es entregar soluciones impecables para que ejerzas tu profesión con total tranquilidad.
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
+              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">10K+</h4>
+              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Kits validados este año</p>
+            </div>
+            <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
+              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">0%</h4>
+              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Margen de contaminación</p>
+            </div>
+            <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
+              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-white mb-2 leading-none">100%</h4>
+              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Satisfacción clínica</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Map Background */}
-      <div className="w-full h-[500px] relative z-0 border-b border-brand-2/10">
+      <div className="w-full h-125 relative z-0 border-b border-brand-2/10">
         <iframe 
           title="San Miguel de Tucumán Map"
           width="100%" 
@@ -30,8 +64,8 @@ const PreFooterContact = () => {
       </div>
 
       {/* Overlapping Card */}
-      <div className="max-w-6xl w-full mx-auto px-4 relative z-10 -mt-[250px] mb-0">
-        <div className="bg-brand-1 rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col md:flex-row border border-brand-5/5">
+      <div className="max-w-6xl w-full mx-auto px-4 relative z-10 -mt-62.5 mb-0">
+        <div className="bg-brand-1 rounded-4xl shadow-[0_30px_60px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col md:flex-row border border-brand-5/5">
           
           {/* Left: Form Area */}
           <div className="w-full md:w-[60%] p-10 md:p-14 bg-brand-1">
@@ -61,7 +95,7 @@ const PreFooterContact = () => {
               </div>
 
               <div className="relative pt-4 flex items-end gap-4">
-                <div className="flex-grow">
+                <div className="grow">
                   <label className="block text-xs uppercase tracking-widest text-brand-5/60 mb-2 font-semibold">Mensaje</label>
                   <textarea rows="1" placeholder="Hola, me gustaría cotizar..." className="w-full bg-transparent border-b-2 border-brand-5/10 py-2 focus:outline-none focus:border-brand-3 text-brand-5 placeholder:text-brand-5/30 transition-colors resize-none"></textarea>
                 </div>
