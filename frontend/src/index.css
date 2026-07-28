@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Changa+One:ital@0;1&family=Geist+Pixel&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Nueva paleta basada en #F1E8D9 y #3E5C76 */
+  --color-brand-1: #F1E8D9; /* Crema cálido (Fondo principal) */
+  --color-brand-2: #E3D4C1; /* Crema oscuro (Bordes y hovers suaves) */
+  --color-brand-3: #7A93A7; /* Azul acero claro (Acentos intermedios) */
+  --color-brand-4: #54728C; /* Azul acero medio (Hovers de botones) */
+  --color-brand-5: #3E5C76; /* Azul acero oscuro (Textos, Navbar, Botones) */
+
+  --font-bebas: "Bebas Neue", sans-serif;
+  --font-changa: "Changa One", sans-serif;
+  --font-geist: "Geist Pixel", sans-serif;
+
+  /* Marquee Animations */
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-5);
+    color: var(--color-brand-1);
+    font-family: var(--font-geist);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-bebas);
+    letter-spacing: 0.025em;
+  }
+}
