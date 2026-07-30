@@ -4,28 +4,29 @@ import { Search, Bell } from 'lucide-react';
 
 const AdminTopbar = () => {
   const topNav = [
-    { label: 'Dashboard', path: '/admin' },
-    { label: 'Employees', path: '/admin/employees' },
-    { label: 'Reports', path: '/admin/reports' },
-    { label: 'Schedule', path: '/admin/schedule' },
-    { label: 'Company', path: '/admin/company' },
+    { label: 'Control Central', path: '/admin' },
+    { label: '00_Planificación', path: '/admin/planificacion' },
+    { label: '01_Finanzas', path: '/admin/finanzas' },
+    { label: '02_Inventario', path: '/admin/inventario' },
+    { label: '03_Proveedores', path: '/admin/proveedores' },
+    { label: '04_Ventas', path: '/admin/ventas' },
   ];
 
   return (
-    <div className="flex items-center justify-between mb-10 mt-2">
+    <div className="flex flex-col-reverse xl:flex-row xl:items-center justify-between mb-6 md:mb-10 mt-2 gap-4">
       
       {/* Navigation Links */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 xl:pb-0 w-full xl:w-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {topNav.map((item, index) => (
           <NavLink
             key={index}
             to={item.path}
             end={item.path === '/admin'}
             className={({ isActive }) => 
-              `px-5 py-2.5 rounded-full text-[15px] font-medium transition-all ${
+              `px-5 py-2.5 rounded-full text-[14px] md:text-[15px] font-medium transition-all whitespace-nowrap shrink-0 ${
                 isActive 
-                ? 'bg-[#1C1C1E] text-white shadow-md' 
-                : 'text-[#8E8E93] hover:text-[#1C1C1E] hover:bg-black/5'
+                ? 'bg-[#1E5A9C] text-white shadow-md' 
+                : 'text-[#8E8E93] hover:text-[#1E5A9C] hover:bg-[#1E5A9C]/5'
               }`
             }
           >
@@ -35,17 +36,17 @@ const AdminTopbar = () => {
       </div>
 
       {/* Right Tools */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-end gap-2 md:gap-4 w-full xl:w-auto">
         
         {/* Search */}
-        <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#1C1C1E] shadow-sm transition-all">
+        <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#00C2CB] hover:bg-[#00C2CB]/5 shadow-sm transition-all">
           <Search size={20} strokeWidth={2.5} />
         </button>
 
         {/* Notifications */}
-        <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#1C1C1E] shadow-sm relative transition-all">
+        <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#00C2CB] hover:bg-[#00C2CB]/5 shadow-sm relative transition-all">
           <Bell size={20} strokeWidth={2.5} />
-          <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#FF3B30] border-2 border-white rounded-full"></span>
+          <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#00C2CB] border-2 border-white rounded-full"></span>
         </button>
 
         {/* Profile */}

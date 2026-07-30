@@ -15,12 +15,16 @@ import Products from './pages/Products';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
+import Login from './pages/Login';
 
 function App() {
   return (
     <Router>
       <Routes>
         
+        {/* === AUTH ROUTES === */}
+        <Route path="/login" element={<Login />} />
+
         {/* === PUBLIC E-COMMERCE ROUTES === */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />

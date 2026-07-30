@@ -13,21 +13,20 @@ const AdminDashboard = () => {
       {/* Top Navigation */}
       <AdminTopbar />
 
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-4xl font-normal text-[#1C1C1E] mb-2 font-geist tracking-tight">Welcome Back, <span className="font-medium">John</span></h1>
-          <p className="text-[#8E8E93] text-sm">Here's a clear overview of your workforce performance and structure</p>
+          <h1 className="text-4xl font-normal text-[#1E5A9C] mb-2 font-geist tracking-tight">Panel de <span className="font-medium">Control Central</span></h1>
+          <p className="text-[#8E8E93] text-sm">Resumen operativo de inventario, finanzas y ventas (San Miguel de Tucumán)</p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <button className="bg-[#1C1C1E] text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 hover:bg-black/80 transition-colors shadow-md">
-            <Plus size={16} strokeWidth={3} /> Add Employee
+        <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
+          <button className="bg-[#1E5A9C] text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#1E5A9C]/90 transition-colors shadow-md flex-1 md:flex-none">
+            <Plus size={16} strokeWidth={3} /> Nueva Operación
           </button>
-          <button className="bg-white border border-[#F0F0F3] text-[#1C1C1E] px-4 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 hover:bg-black/5 transition-colors shadow-sm">
+          <button className="bg-white border border-[#F0F0F3] text-[#1E5A9C] px-4 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#1E5A9C]/5 transition-colors shadow-sm flex-1 md:flex-none">
             <Calendar size={16} strokeWidth={2.5} /> 28 Apr, 2026
           </button>
-          <button className="bg-white border border-[#F0F0F3] text-[#1C1C1E] px-4 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 hover:bg-black/5 transition-colors shadow-sm">
+          <button className="bg-white border border-[#F0F0F3] text-[#1E5A9C] px-4 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#1E5A9C]/5 transition-colors shadow-sm flex-1 md:flex-none">
             <Filter size={16} strokeWidth={2.5} /> Filter
           </button>
         </div>

@@ -1,43 +1,43 @@
 import React from 'react';
-import { Users, DollarSign, RefreshCw, AtSign, TrendingUp } from 'lucide-react';
+import { Package, DollarSign, TrendingUp, Users } from 'lucide-react';
 
 const StatCards = () => {
   const stats = [
     {
-      title: 'Total Employees',
-      value: '1,589',
-      trend: '+5.6%',
-      trendDesc: 'from last month',
-      icon: Users,
-      iconColor: 'text-[#7A73FF]',
-      iconBg: 'bg-[#7A73FF]/10',
+      title: 'Kits en Stock',
+      value: '540',
+      trend: '+12.5%',
+      trendDesc: 'Unidades listas para envío',
+      icon: Package,
+      iconColor: 'text-[#1E5A9C]',
+      iconBg: 'bg-[#1E5A9C]/10',
     },
     {
-      title: 'Sales Revenue',
-      value: '$160,000',
-      trend: '+7.9%',
-      trendDesc: 'Total Revenue',
+      title: 'Ingresos Mensuales',
+      value: '$425,000',
+      trend: '+8.2%',
+      trendDesc: 'Flujo de caja',
       icon: DollarSign,
-      iconColor: 'text-[#34C759]',
-      iconBg: 'bg-[#34C759]/10',
+      iconColor: 'text-[#00C2CB]',
+      iconBg: 'bg-[#00C2CB]/10',
     },
     {
-      title: 'Submission Rate',
-      value: '67%',
-      trend: '+5.6%',
-      trendDesc: 'Profile',
-      icon: RefreshCw,
-      iconColor: 'text-[#FF3B30]',
-      iconBg: 'bg-[#FF3B30]/10',
+      title: 'Margen Promedio',
+      value: '35%',
+      trend: '+2.1%',
+      trendDesc: 'Rentabilidad neta',
+      icon: TrendingUp,
+      iconColor: 'text-[#1E5A9C]',
+      iconBg: 'bg-[#F6E2B3]/60',
     },
     {
-      title: 'Sales Leads',
-      value: '56',
+      title: 'Clínicas Activas',
+      value: '14',
       trend: null,
-      trendDesc: 'Positions',
-      icon: AtSign,
-      iconColor: 'text-[#FF9500]',
-      iconBg: 'bg-[#FF9500]/10',
+      trendDesc: 'Consultorios en Tucumán',
+      icon: Users,
+      iconColor: 'text-[#00C2CB]',
+      iconBg: 'bg-[#1E5A9C]/5',
     },
   ];
 
@@ -50,13 +50,13 @@ const StatCards = () => {
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.iconBg}`}>
               <stat.icon size={20} className={stat.iconColor} strokeWidth={2.5} />
             </div>
-            <span className="text-[15px] font-medium text-[#8E8E93] group-hover:text-[#1C1C1E] transition-colors">{stat.title}</span>
+            <span className="text-[15px] font-medium text-[#8E8E93] group-hover:text-[#1E5A9C] transition-colors">{stat.title}</span>
           </div>
 
           <div className="flex items-baseline gap-3 mb-2">
-            <h3 className="text-4xl font-bold text-[#1C1C1E]">{stat.value}</h3>
+            <h3 className="text-4xl font-bold text-[#1E5A9C]">{stat.value}</h3>
             {stat.trend && (
-              <div className="flex items-center gap-1 text-[11px] font-bold text-[#34C759] bg-[#34C759]/10 px-2 py-1 rounded-full">
+              <div className="flex items-center gap-1 text-[11px] font-bold text-[#00C2CB] bg-[#00C2CB]/10 px-2 py-1 rounded-full">
                 <TrendingUp size={12} strokeWidth={3} />
                 {stat.trend}
               </div>
