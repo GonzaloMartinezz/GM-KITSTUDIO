@@ -1,96 +1,81 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus, Mail } from 'lucide-react';
+import React from 'react';
+import { Mail } from 'lucide-react';
 import { Particles } from './ui/Particles';
 
 const FaqSection = () => {
-  const [openIndex, setOpenIndex] = useState(null);
-
   const faqs = [
-    { 
-      title: "¿Qué incluye el servicio de GM Kit?", 
-      text: "Nuestros kits incluyen todo el material esterilizado y descartable necesario para la intervención elegida, empaquetado bajo estrictas normas de bioseguridad y listo para su uso inmediato en quirófano." 
-    },
-    { 
-      title: "¿Cuáles son los precios y tiempos de entrega?", 
-      text: "Ofrecemos precios competitivos adaptados al volumen de tu clínica. Los envíos se realizan de manera ágil y segura, garantizando la recepción de los insumos en el menor tiempo posible para que nunca te falte stock." 
-    },
-    { 
-      title: "¿Cómo garantizan la bioseguridad?", 
-      text: "Todos nuestros productos pasan por procesos de esterilización validados internacionalmente (como rayos Gamma o ETO) y cuentan con aprobación de la ANMAT, garantizando una barrera bacteriológica total." 
-    },
-    { 
-      title: "¿Tienen soporte y atención a clínicas?", 
-      text: "Sí, contamos con atención personalizada y soporte excepcional para resolver dudas técnicas sobre especificaciones, usos clínicos y guías de descarte de nuestros kits quirúrgicos." 
-    },
-    { 
-      title: "¿Realizan envíos a todo el país?", 
-      text: "Por supuesto. Tenemos un dominio integral de logística que nos permite llegar a clínicas de toda Argentina con empaques especialmente diseñados para proteger la esterilidad durante el transporte." 
-    }
+    { num: "01", title: "¿QUÉ INCLUYE EL SERVICIO?", subtitle: "Kits Listos para Usar", text: "Nuestros kits incluyen todo el material esterilizado y descartable necesario para la intervención elegida, empaquetado bajo estrictas normas de bioseguridad y listo para su uso inmediato en quirófano.", category: "PRODUCTOS", bg: "bg-[#F3F3F3] border-2 border-brand-5/10", text_color: "text-brand-5" },
+    { num: "02", title: "¿CUÁLES SON LOS PRECIOS?", subtitle: "Adaptables a tu volumen", text: "Ofrecemos precios competitivos adaptados al volumen de tu clínica. Los envíos se realizan de manera ágil y segura, garantizando la recepción en el menor tiempo posible para que nunca te falte stock.", category: "VENTAS", bg: "bg-brand-1", text_color: "text-brand-5" },
+    { num: "03", title: "¿CÓMO ES LA BIOSEGURIDAD?", subtitle: "Esterilización Total", text: "Todos nuestros productos pasan por procesos de esterilización validados internacionalmente (como rayos Gamma o ETO) y cuentan con aprobación de la ANMAT, garantizando una barrera bacteriológica total.", category: "CALIDAD", bg: "bg-brand-3", text_color: "text-white" },
+    { num: "04", title: "¿TIENEN SOPORTE A CLÍNICAS?", subtitle: "Atención Personalizada", text: "Sí, contamos con atención personalizada y soporte excepcional para resolver dudas técnicas sobre especificaciones, usos clínicos y guías de descarte de nuestros kits quirúrgicos.", category: "SOPORTE", bg: "bg-[#1E293B]", text_color: "text-[#F3F3F3]" },
+    { num: "05", title: "¿ENVÍOS A TODO EL PAÍS?", subtitle: "Logística Nacional", text: "Por supuesto. Tenemos un dominio integral de logística que nos permite llegar a clínicas de toda Argentina con empaques especialmente diseñados para proteger la esterilidad durante el transporte.", category: "LOGÍSTICA", bg: "bg-brand-5", text_color: "text-brand-1" },
+    { num: "06", title: "¿FORMAS DE PAGO?", subtitle: "Múltiples Opciones", text: "Aceptamos transferencias bancarias, tarjetas de crédito, tarjetas de débito y pagos en efectivo para brindar la mayor comodidad y flexibilidad financiera a tu clínica odontológica.", category: "PAGOS", bg: "bg-white border-2 border-brand-3/20", text_color: "text-brand-5" }
   ];
 
   return (
-    <section className="py-32 px-4 font-geist relative z-30 bg-[#0C0C0C] overflow-hidden">
+    <section className="py-24 px-4 md:px-8 font-geist relative z-30 bg-[#0C0C0C] text-white">
       <Particles
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 pointer-events-none"
         quantity={60}
         ease={80}
         color="#ffffff"
         refresh
       />
-      <div className="relative z-10 max-w-3xl mx-auto bg-white rounded-[2.5rem] p-6 md:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-brand-5/5">
-        
+
+      <div className="relative z-10 max-w-4xl mx-auto flex flex-col">
+
         {/* Header: Contact Info */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16 bg-white/5 backdrop-blur-md p-6 md:p-8 rounded-4xl border border-white/10">
           <div>
-            <p className="text-brand-5/50 text-xs font-bold mb-1 ml-1 uppercase tracking-wider">Email</p>
-            <a href="mailto:contacto@gmkitstudio.com" className="text-[#1E293B] font-bold text-lg hover:text-brand-3 transition-colors underline decoration-brand-5/20 underline-offset-4">
+            <p className="text-white/50 text-xs font-bold mb-1 ml-1 uppercase tracking-wider">Email Directo</p>
+            <a href="mailto:contacto@gmkitstudio.com" className="text-white font-bebas tracking-wide text-2xl md:text-3xl hover:text-brand-3 transition-colors">
               contacto@gmkitstudio.com
             </a>
           </div>
-          
-          <button className="bg-[#1C1C1C] text-white px-6 py-3.5 rounded-2xl font-medium text-sm flex items-center gap-3 hover:bg-black transition-colors shadow-xl shadow-black/10">
+
+          <button className="bg-brand-3 text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-brand-4 transition-colors shadow-xl shadow-brand-3/20">
             <Mail size={18} />
             <span>Ponerse en contacto</span>
           </button>
         </div>
 
-        {/* FAQ List */}
-        <div className="flex flex-col gap-3">
-          {faqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <motion.div 
-                key={idx}
-                layout
-                onClick={() => setOpenIndex(isOpen ? null : idx)}
-                className="bg-[#F8F9FA] rounded-2xl overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
-              >
-                <div className="p-5 md:p-6 flex justify-between items-center gap-4">
-                  <h3 className="text-[#1E293B] font-medium text-[15px] md:text-[17px] leading-snug">{faq.title}</h3>
-                  <div className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center bg-[#1C1C1C] text-white shadow-sm transition-transform hover:scale-105">
-                    {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+        {/* FAQ Sticky Cards */}
+        <div className="flex flex-col relative w-full">
+          {faqs.map((faq, i) => (
+            <div
+              key={i}
+              className={`sticky flex flex-col p-8 md:p-10 min-h-[35vh] rounded-4xl md:rounded-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.15)] overflow-hidden ${faq.bg} ${faq.text_color}`}
+              style={{
+                top: `calc(12vh + ${i * 20}px)`, 
+                marginBottom: '40vh',
+                zIndex: i
+              }}
+            >
+              {/* Large Background Watermark Number */}
+              <div className={`absolute -right-5 -bottom-5 text-[10rem] md:text-[14rem] font-bebas leading-none font-bold opacity-5 pointer-events-none select-none ${faq.text_color === 'text-white' || faq.text_color === 'text-brand-1' || faq.text_color === 'text-[#F3F3F3]' ? 'text-white' : 'text-brand-5'}`}>
+                {faq.num}
+              </div>
+
+              <div className="relative z-10 flex flex-col gap-6">
+                <div className="flex items-center gap-4 border-b border-current/10 pb-6">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bebas text-2xl shrink-0 ${faq.text_color === 'text-brand-5' ? 'bg-brand-5 text-white' : 'bg-white text-brand-5'}`}>
+                    {faq.num}
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 mb-1">{faq.category}</p>
+                    <h4 className="font-bebas text-3xl md:text-4xl tracking-wide leading-none">{faq.title}</h4>
                   </div>
                 </div>
-                
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="px-5 md:px-6 pb-6"
-                    >
-                      <p className="text-[#1E293B]/70 text-sm md:text-[15px] leading-relaxed pr-8">
-                        {faq.text}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+
+                <div>
+                  <h5 className="font-bold text-sm uppercase tracking-widest mb-3 opacity-80">{faq.subtitle}</h5>
+                  <p className="opacity-90 font-light text-base md:text-lg leading-relaxed max-w-2xl">
+                    {faq.text}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

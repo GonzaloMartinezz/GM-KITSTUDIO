@@ -1,21 +1,46 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Package, ShieldPlus, BriefcaseMedical, UserPlus, MapPin, Truck, MessagesSquare, Mail } from 'lucide-react';
+import { useJsApiLoader, Autocomplete } from '@react-google-maps/api';
+
+const libraries = ['places'];
 
 const ProductModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
-  
+
   // Form State
   const [selectedProduct, setSelectedProduct] = useState(0);
   const [selectedQty, setSelectedQty] = useState(0);
   const [selectedShipping, setSelectedShipping] = useState(0);
   const [address, setAddress] = useState('');
+  const [autocomplete, setAutocomplete] = useState(null);
 
-  const products = [
-    { icon: Package, title: "Kit Básico", desc: "Ideal para intervenciones menores y rápidas." },
-    { icon: ShieldPlus, title: "Bioseguridad Completo", desc: "Protección total y barrera para dos profesionales." },
-    { icon: BriefcaseMedical, title: "Implante Premium", desc: "Máxima barrera bacteriológica para cirugías." },
-    { icon: UserPlus, title: "Armado Personalizado", desc: "Armá el kit a la medida de tu clínica o consultorio." }
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+    libraries,
+  });
+
+  const onLoad = (autoC) => setAutocomplete(autoC);
+  
+  const onPlaceChanged = () => {
+    if (autocomplete !== null) {
+      const place = autocomplete.getPlace();
+      if (place.formatted_address) {
+        setAddress(place.formatted_address);
+      } else if (place.name) {
+        setAddress(place.name);
+      }
+    }
+  };
+
+  const kitItems = [
+    { icon: Package, title: "Cubrecalzados", desc: "Protección descartable para calzado." },
+    { icon: Package, title: "Cubremangueras", desc: "Funda estéril para mangueras." },
+    { icon: Package, title: "Capuchón", desc: "Cobertura protectora para motor." },
+    { icon: Package, title: "Campo Quirúrgico", desc: "Campo estéril de 100x100cm." },
+    { icon: Package, title: "Camisolín", desc: "Camisolín quirúrgico SMS." },
+    { icon: Package, title: "Cofia", desc: "Cofia quirúrgica ajustable." },
+    { icon: Package, title: "Barbijo", desc: "Barbijo tricapa con ajuste." }
   ];
 
   const quantities = [
@@ -40,42 +65,41 @@ const ProductModal = ({ isOpen, onClose }) => {
   };
 
   const generateMessage = () => {
-    const product = products[selectedProduct].title;
     const qty = quantities[selectedQty].title;
     const shipping = shippings[selectedShipping].title;
     const addr = selectedShipping === 0 ? ` a: ${address}` : '';
-    
-    return `Hola GM KIT STUDIO! Quiero hacer un pedido:%0A- Producto: *${product}*%0A- Cantidad: *${qty}*%0A- Envío: *${shipping}*${addr}`;
+
+    return `Hola GM KIT STUDIO! Quiero hacer un pedido:%0A- Producto: *Kit Odontológico Completo*%0A- Cantidad: *${qty}*%0A- Envío: *${shipping}*${addr}`;
   };
 
   const handleWhatsApp = () => {
-    const url = `https://wa.me/5493815000000?text=${generateMessage()}`;
+    const url = `https://wa.me/5493816242482?text=${generateMessage()}`;
     window.open(url, '_blank');
   };
 
   const handleEmail = () => {
-    const url = `mailto:contacto@gmkitstudio.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
+    const url = `mailto:gonchimartinez9@gmail.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
     window.open(url, '_blank');
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 font-geist">
-          <motion.div 
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4 font-geist">
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="absolute inset-0 bg-brand-5/40 backdrop-blur-sm"
           />
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="bg-[#F5F2EB] w-full max-w-[28rem] rounded-3xl p-8 relative z-10 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden"
+            className="bg-[#F5F2EB] w-full max-w-md rounded-3xl p-8 relative z-10 shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto overflow-x-hidden"
           >
             {/* Header / Progress */}
             <div className="flex justify-between items-center mb-6">
@@ -84,36 +108,35 @@ const ProductModal = ({ isOpen, onClose }) => {
               </button>
               <div className="flex gap-1">
                 {[1, 2, 3, 4].map((s) => (
-                  <div key={s} className={`w-7 h-[3px] rounded-full transition-colors ${s <= step ? 'bg-[#1E293B]' : 'bg-gray-200'}`}></div>
+                  <div key={s} className={`w-7 h-0.75 rounded-full transition-colors ${s <= step ? 'bg-[#1E293B]' : 'bg-gray-200'}`}></div>
                 ))}
               </div>
             </div>
 
             <AnimatePresence mode="wait">
-              
+
               {/* STEP 1: PRODUCT */}
               {step === 1 && (
                 <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col">
-                  <h2 className="text-[28px] font-medium tracking-tight text-[#1E293B] mb-2 leading-tight">¿Qué producto buscas?</h2>
-                  <p className="text-[#1E293B]/50 text-[13px] mb-6 leading-relaxed max-w-[90%]">Especifica el tipo de kit que necesitas. Esto nos ayudará a ofrecerte la mejor opción para tu clínica.</p>
-                  <div className="flex flex-col gap-3 mb-6">
-                    {products.map((opt, idx) => {
-                      const isSelected = selectedProduct === idx;
+                  <h2 className="text-[28px] font-medium tracking-tight text-[#1E293B] mb-2 leading-tight">Kit Odontológico Completo</h2>
+                  <p className="text-[#1E293B]/50 text-[13px] mb-6 leading-relaxed max-w-[90%]">El kit incluye todo lo necesario para garantizar la máxima bioseguridad. (No se vende por separado).</p>
+                  <div className="flex flex-col gap-2 mb-6 max-h-[35vh] overflow-y-auto pr-2 custom-scrollbar">
+                    {kitItems.map((opt, idx) => {
                       const Icon = opt.icon;
                       return (
-                        <div key={idx} onClick={() => setSelectedProduct(idx)} className={`flex gap-4 p-4 rounded-[1.25rem] border-[1.5px] cursor-pointer transition-all ${isSelected ? 'border-[#1E293B] bg-[#1E293B]' : 'border-[#1E293B]/10 bg-white hover:border-[#1E293B]/20'}`}>
-                          <div className={`mt-0.5 transition-colors ${isSelected ? 'text-white' : 'text-[#1E293B]/60'}`}>
-                            <Icon size={22} strokeWidth={1.5} />
+                        <div key={idx} className="flex gap-4 p-3 rounded-xl border border-gray-200 bg-white items-center">
+                          <div className="text-[#1E293B]/60">
+                            <Icon size={18} strokeWidth={2} />
                           </div>
                           <div>
-                            <h4 className={`font-medium text-[15px] ${isSelected ? 'text-white' : 'text-[#1E293B]'}`}>{opt.title}</h4>
-                            <p className={`text-[13px] mt-0.5 leading-snug ${isSelected ? 'text-white/80' : 'text-[#1E293B]/50'}`}>{opt.desc}</p>
+                            <h4 className="font-medium text-[14px] text-[#1E293B]">{opt.title}</h4>
+                            <p className="text-[12px] mt-0.5 leading-snug text-[#1E293B]/50">{opt.desc}</p>
                           </div>
                         </div>
                       )
                     })}
                   </div>
-                  <button onClick={handleNext} className="w-full bg-[#1E293B] text-white py-4 rounded-2xl font-medium text-[15px] hover:bg-black transition-colors shadow-lg shadow-black/10">Continuar</button>
+                  <button onClick={handleNext} className="w-full bg-[#1E293B] text-white py-4 rounded-2xl font-medium text-[15px] hover:bg-black transition-colors shadow-lg shadow-black/10">Continuar a Cantidad</button>
                 </motion.div>
               )}
 
@@ -159,17 +182,33 @@ const ProductModal = ({ isOpen, onClose }) => {
                       )
                     })}
                   </div>
-                  
+
                   {selectedShipping === 0 && (
                     <div className="mb-6">
                       <label className="block text-sm font-medium mb-2 text-[#1E293B]">Dirección de entrega <span className="text-red-500">*</span></label>
-                      <input 
-                        type="text" 
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Ej. San Martín 123, Tucumán"
-                        className="w-full bg-[#F8F9FA] border border-transparent rounded-2xl px-5 py-4 focus:outline-none focus:bg-white focus:border-[#1C1C1C] transition-all text-[#1E293B] placeholder-gray-400"
-                      />
+                      {isLoaded ? (
+                        <Autocomplete
+                          onLoad={onLoad}
+                          onPlaceChanged={onPlaceChanged}
+                          options={{ componentRestrictions: { country: "ar" } }}
+                        >
+                          <input
+                            type="text"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            placeholder="Ej. San Martín 123, Tucumán"
+                            className="w-full bg-[#F8F9FA] border border-transparent rounded-2xl px-5 py-4 focus:outline-none focus:bg-white focus:border-[#1C1C1C] transition-all text-[#1E293B] placeholder-gray-400"
+                          />
+                        </Autocomplete>
+                      ) : (
+                        <input
+                          type="text"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          placeholder="Cargando mapa... Ej. San Martín 123"
+                          className="w-full bg-[#F8F9FA] border border-transparent rounded-2xl px-5 py-4 focus:outline-none focus:bg-white focus:border-[#1C1C1C] transition-all text-[#1E293B] placeholder-gray-400"
+                        />
+                      )}
                     </div>
                   )}
 
@@ -182,11 +221,11 @@ const ProductModal = ({ isOpen, onClose }) => {
                 <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col">
                   <h2 className="text-[28px] font-medium tracking-tight text-[#1E293B] mb-2 leading-tight">Resumen de tu pedido</h2>
                   <p className="text-[#1E293B]/50 text-[13px] mb-6 leading-relaxed max-w-[90%]">Revisá los datos antes de enviarnos un mensaje para finalizar la compra.</p>
-                  
+
                   <div className="bg-[#F8F9FA] rounded-[1.25rem] p-5 mb-8 border border-gray-100 flex flex-col gap-3 text-[14px]">
                     <div className="flex justify-between border-b border-gray-200 pb-2">
                       <span className="text-[#1E293B]/60">Producto</span>
-                      <span className="font-medium text-[#1E293B] text-right">{products[selectedProduct].title}</span>
+                      <span className="font-medium text-[#1E293B] text-right">Kit Completo</span>
                     </div>
                     <div className="flex justify-between border-b border-gray-200 pb-2">
                       <span className="text-[#1E293B]/60">Cantidad</span>

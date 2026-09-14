@@ -12,20 +12,33 @@ export const CartProvider = ({ children }) => {
   });
   
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
+  const [draftOrder, setDraftOrder] = useState(() => {
+    const saved = localStorage.getItem('draftOrder');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  useEffect(() => {
+    if (draftOrder) {
+      localStorage.setItem('draftOrder', JSON.stringify(draftOrder));
+    } else {
+      localStorage.removeItem('draftOrder');
+    }
+  }, [draftOrder]);
 
   const addToCart = (product) => {
     setCartItems(prev => {
       const existing = prev.find(item => item._id === product._id);
       if (existing) {
         return prev.map(item => 
-          item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+          item._id === product._id ? { ...item, quantity: item.quantity + (product.quantity || 1) } : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: product.quantity || 1 }];
     });
     setIsCartOpen(true);
   };
@@ -49,7 +62,9 @@ export const CartProvider = ({ children }) => {
       updateQuantity,
       cartTotal,
       isCartOpen,
-      setIsCartOpen
+      setIsCartOpen,
+      draftOrder,
+      setDraftOrder
     }}>
       {children}
     </CartContext.Provider>

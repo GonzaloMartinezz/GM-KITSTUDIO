@@ -1,407 +1,279 @@
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, Children } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { cva } from "class-variance-authority";
-import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User, Phone } from "lucide-react";
-import { AnimatePresence, motion, useInView } from "framer-motion";
-import confetti from "canvas-confetti";
-import { cn } from "../lib/utils";
-
-// --- CONFETTI LOGIC ---
-const Confetti = forwardRef((props, ref) => {
-  const { options, globalOptions = { resize: true, useWorker: true }, manualstart = false, ...rest } = props;
-  const instanceRef = useRef(null);
-  const canvasRef = useCallback((node) => {
-    if (node !== null) {
-      if (instanceRef.current) return;
-      instanceRef.current = confetti.create(node, { ...globalOptions, resize: true });
-    } else {
-      if (instanceRef.current) {
-        instanceRef.current.reset();
-        instanceRef.current = null;
-      }
-    }
-  }, [globalOptions]);
-  const fire = useCallback((opts = {}) => instanceRef.current?.({ ...options, ...opts }), [options]);
-  const api = useMemo(() => ({ fire }), [fire]);
-  useImperativeHandle(ref, () => api, [api]);
-  useEffect(() => { if (!manualstart) fire() }, [manualstart, fire]);
-  return <canvas ref={canvasRef} {...rest} />;
-});
-Confetti.displayName = "Confetti";
-
-// --- TEXT LOOP ANIMATION COMPONENT ---
-export function TextLoop({ children, className, interval = 2, transition = { duration: 0.3 }, variants, onIndexChange, stopOnEnd = false }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const items = Children.toArray(children);
-  useEffect(() => {
-    const intervalMs = interval * 1000;
-    const timer = setInterval(() => {
-      setCurrentIndex((current) => {
-        if (stopOnEnd && current === items.length - 1) {
-          clearInterval(timer);
-          return current;
-        }
-        const next = (current + 1) % items.length;
-        onIndexChange?.(next);
-        return next;
-      });
-    }, intervalMs);
-    return () => clearInterval(timer);
-  }, [items.length, interval, onIndexChange, stopOnEnd]);
-  const motionVariants = {
-    initial: { y: 20, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-    exit: { y: -20, opacity: 0 },
-  };
-  return (
-    <div className={cn('relative inline-block whitespace-nowrap', className)}>
-      <AnimatePresence mode='popLayout' initial={false}>
-        <motion.div key={currentIndex} initial='initial' animate='animate' exit='exit' transition={transition} variants={variants || motionVariants}>
-          {items[currentIndex]}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// --- BUILT-IN BLUR FADE ANIMATION COMPONENT ---
-function BlurFade({ children, className, variant, duration = 0.4, delay = 0, yOffset = 6, inView = true, inViewMargin = "-50px", blur = "6px" }) {
-  const ref = useRef(null);
-  const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
-  const isInView = !inView || inViewResult;
-  const defaultVariants = {
-    hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})` },
-    visible: { y: -yOffset, opacity: 1, filter: `blur(0px)` },
-  };
-  const combinedVariants = variant || defaultVariants;
-  return (
-    <motion.div ref={ref} initial="hidden" animate={isInView ? "visible" : "hidden"} exit="hidden" variants={combinedVariants} transition={{ delay: 0.04 + delay, duration, ease: "easeOut" }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-
-// --- BUILT-IN GLASS BUTTON COMPONENT ---
-const glassButtonVariants = cva("relative isolate all-unset cursor-pointer rounded-full transition-all", { variants: { size: { default: "text-base font-medium", sm: "text-sm font-medium", lg: "text-lg font-medium", icon: "h-10 w-10" } }, defaultVariants: { size: "default" } });
-const glassButtonTextVariants = cva("glass-button-text relative block select-none tracking-tighter", { variants: { size: { default: "px-6 py-3.5", sm: "px-4 py-2", lg: "px-8 py-4", icon: "flex h-10 w-10 items-center justify-center" } }, defaultVariants: { size: "default" } });
-const GlassButton = React.forwardRef(({ className, children, size, contentClassName, onClick, ...props }, ref) => {
-    const handleWrapperClick = (e) => {
-      const button = e.currentTarget.querySelector('button');
-      if (button && e.target !== button) button.click();
-    };
-    return (
-      <div className={cn("glass-button-wrap cursor-pointer rounded-full relative", className)} onClick={handleWrapperClick}>
-        <button className={cn("glass-button relative z-10", glassButtonVariants({ size }))} ref={ref} onClick={onClick} {...props}>
-          <span className={cn(glassButtonTextVariants({ size }), contentClassName)}>{children}</span>
-        </button>
-        <div className="glass-button-shadow rounded-full pointer-events-none"></div>
-      </div>
-    );
-  }
-);
-GlassButton.displayName = "GlassButton";
-
-// --- THEME-AWARE SVG GRADIENT BACKGROUND ---
-const GradientBackground = () => (
-    <>
-        <style>
-            {` @keyframes float1 { 0% { transform: translate(0, 0); } 50% { transform: translate(-10px, 10px); } 100% { transform: translate(0, 0); } } @keyframes float2 { 0% { transform: translate(0, 0); } 50% { transform: translate(10px, -10px); } 100% { transform: translate(0, 0); } } `}
-        </style>
-        <svg width="100%" height="100%" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" className="absolute top-0 left-0 w-full h-full">
-            <defs>
-                <linearGradient id="rev_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#F1E8D9', stopOpacity:1}} />
-                    <stop offset="100%" style={{stopColor: '#E3D4C1', stopOpacity:0.8}} />
-                </linearGradient>
-                <linearGradient id="rev_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#7A93A7', stopOpacity:0.9}} />
-                    <stop offset="50%" style={{stopColor: '#54728C', stopOpacity:0.7}} />
-                    <stop offset="100%" style={{stopColor: '#3E5C76', stopOpacity:0.6}} />
-                </linearGradient>
-                <radialGradient id="rev_grad3" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" style={{stopColor: '#54728C', stopOpacity:0.8}} />
-                    <stop offset="100%" style={{stopColor: '#F1E8D9', stopOpacity:0.4}} />
-                </radialGradient>
-                <filter id="rev_blur1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="35"/></filter>
-                <filter id="rev_blur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="25"/></filter>
-                <filter id="rev_blur3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="45"/></filter>
-            </defs>
-            <rect width="100%" height="100%" fill="#F1E8D9" />
-            <g style={{ animation: 'float1 20s ease-in-out infinite' }}>
-                <ellipse cx="200" cy="500" rx="350" ry="280" fill="url(#rev_grad1)" filter="url(#rev_blur1)" transform="rotate(-30 200 500)"/>
-                <rect x="400" y="50" width="400" height="350" rx="80" fill="url(#rev_grad2)" filter="url(#rev_blur2)" transform="rotate(15 650 225)"/>
-            </g>
-            <g style={{ animation: 'float2 25s ease-in-out infinite' }}>
-                <circle cx="650" cy="450" r="200" fill="url(#rev_grad3)" filter="url(#rev_blur3)" opacity="0.7"/>
-                <ellipse cx="50" cy="150" rx="200" ry="150" fill="#E3D4C1" filter="url(#rev_blur2)" opacity="0.8"/>
-            </g>
-        </svg>
-    </>
-);
-
-const modalSteps = [
-    { message: "Verificando datos...", icon: <Loader className="w-12 h-12 text-[#3E5C76] animate-spin" /> },
-    { message: "Preparando acceso...", icon: <Loader className="w-12 h-12 text-[#3E5C76] animate-spin" /> },
-    { message: "Casi listo...", icon: <Loader className="w-12 h-12 text-[#3E5C76] animate-spin" /> },
-    { message: "¡Bienvenido!", icon: <PartyPopper className="w-12 h-12 text-green-600" /> }
-];
-const TEXT_LOOP_INTERVAL = 1.2;
+import { AnimatePresence, motion } from 'framer-motion';
 
 const Login = () => {
   const navigate = useNavigate();
-  // Flows: 'choice' -> 'login' or 'register'
-  // Login Steps: 'login_email', 'login_password'
-  // Register Steps: 'reg_name', 'reg_lastName', 'reg_phone', 'reg_email', 'reg_password', 'reg_confirm'
-  const [authStep, setAuthStep] = useState("choice");
-  const [flow, setFlow] = useState(null);
-  
-  const [formData, setFormData] = useState({ name: '', lastName: '', phone: '', email: '', password: '', confirmPassword: '' });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-  const [modalStatus, setModalStatus] = useState('closed');
-  const [modalErrorMessage, setModalErrorMessage] = useState('');
-  const confettiRef = useRef(null);
-  const inputRef = useRef(null);
+  const [view, setView] = useState('home');
+  const [mode, setMode] = useState('login');
+  const [formData, setFormData] = useState({ email: '', name: '', password: '' });
 
-  const isValid = {
-    name: formData.name.length >= 2,
-    lastName: formData.lastName.length >= 2,
-    phone: formData.phone.length >= 6,
-    email: /\\S+@\\S+\\.\\S+/.test(formData.email) || formData.email.includes('@'),
-    password: formData.password.length >= 6,
-    confirmPassword: formData.confirmPassword.length >= 6,
+  const updateForm = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
+
+  const switchMode = (newMode) => {
+    setMode(newMode);
+    setView(newMode === 'login' ? 'login-form' : 'step-email');
   };
 
-  const updateForm = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem('currentUser', formData.email.split('@')[0]);
+    localStorage.setItem('userEmail', formData.email);
+    navigate('/admin');
   };
 
-  const fireSideCanons = () => {
-    const fire = confettiRef.current?.fire;
-    if (fire) {
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
-        fire({ ...defaults, particleCount: 50, origin: { x: 0, y: 1 }, angle: 60 });
-        fire({ ...defaults, particleCount: 50, origin: { x: 1, y: 1 }, angle: 120 });
-    }
-  };
-
-  const handleFinalSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (modalStatus !== 'closed') return;
-    
-    if (flow === 'register' && formData.password !== formData.confirmPassword) {
-        setModalErrorMessage("Las contraseñas no coinciden");
-        setModalStatus('error');
-    } else {
-        setModalStatus('loading');
-        const loadingStepsCount = modalSteps.length - 1;
-        const totalDuration = loadingStepsCount * TEXT_LOOP_INTERVAL * 1000;
-        setTimeout(() => {
-            setModalStatus('success');
-        }, totalDuration);
-    }
-  };
-
-  const handleProgressStep = (e) => {
-    if (e) e.preventDefault();
-    if (flow === 'login') {
-        if (authStep === 'login_email' && isValid.email) setAuthStep("login_password");
-        else if (authStep === 'login_password' && isValid.password) handleFinalSubmit();
-    } else if (flow === 'register') {
-        if (authStep === 'reg_name' && isValid.name) setAuthStep("reg_lastName");
-        else if (authStep === 'reg_lastName' && isValid.lastName) setAuthStep("reg_phone");
-        else if (authStep === 'reg_phone' && isValid.phone) setAuthStep("reg_email");
-        else if (authStep === 'reg_email' && isValid.email) setAuthStep("reg_password");
-        else if (authStep === 'reg_password' && isValid.password) setAuthStep("reg_confirm");
-        else if (authStep === 'reg_confirm' && isValid.confirmPassword) handleFinalSubmit();
-    }
-  };
-
-  const handleGoBack = () => {
-    if (flow === 'login') {
-        if (authStep === 'login_password') setAuthStep('login_email');
-        else if (authStep === 'login_email') setAuthStep('choice');
-    } else if (flow === 'register') {
-        if (authStep === 'reg_confirm') setAuthStep('reg_password');
-        else if (authStep === 'reg_password') setAuthStep('reg_email');
-        else if (authStep === 'reg_email') setAuthStep('reg_phone');
-        else if (authStep === 'reg_phone') setAuthStep('reg_lastName');
-        else if (authStep === 'reg_lastName') setAuthStep('reg_name');
-        else if (authStep === 'reg_name') setAuthStep('choice');
-    }
-  };
-
-  const selectFlow = (newFlow) => {
-      setFlow(newFlow);
-      if (newFlow === 'login') setAuthStep('login_email');
-      else setAuthStep('reg_name');
-  };
-
-  useEffect(() => {
-    if (authStep !== 'choice') setTimeout(() => inputRef.current?.focus(), 400);
-  }, [authStep]);
-
-  useEffect(() => {
-    if (modalStatus === 'success') {
-        fireSideCanons();
-        setTimeout(() => {
-            navigate('/admin');
-        }, 2000);
-    }
-  }, [modalStatus, navigate]);
-
-  const closeModal = () => {
-    setModalStatus('closed');
-    setModalErrorMessage('');
-  };
-
-  const renderInput = (field, type, placeholder, icon, validator, isPassword = false, isConfirm = false) => {
-    const valid = isValid[field];
-    const value = formData[field];
-    const showPw = isConfirm ? showConfirmPassword : showPassword;
-    const setShowPw = isConfirm ? setShowConfirmPassword : setShowPassword;
-    
-    return (
-        <div className="relative w-full">
-            <AnimatePresence>
-                {value.length > 0 && <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.3 }} className="absolute -top-6 left-4 z-10"><label className="text-xs text-[#3E5C76] font-bold">{placeholder}</label></motion.div>}
-            </AnimatePresence>
-            <div className="glass-input-wrap w-full"><div className="glass-input">
-                <span className="glass-input-text-area"></span>
-                <div className={cn( "relative z-10 flex-shrink-0 flex items-center justify-center overflow-hidden transition-all duration-300 ease-in-out", value.length > 20 && !isPassword ? "w-0 px-0" : "w-10 pl-2" )}>
-                    {isPassword ? (valid ? <button type="button" onClick={() => setShowPw(!showPw)} className="text-[#3E5C76] hover:text-[#54728C] p-2">{showPw ? <EyeOff className="w-5 h-5"/> : <Eye className="w-5 h-5"/>}</button> : icon) : icon}
-                </div>
-                <input ref={inputRef} type={isPassword && showPw ? "text" : type} placeholder={placeholder} value={value} onChange={(e) => updateForm(field, e.target.value)} onKeyDown={(e) => { if(e.key === 'Enter'){ e.preventDefault(); handleProgressStep(); } }} className="relative z-10 h-full w-0 flex-grow bg-transparent text-[#3E5C76] font-medium placeholder:text-[#3E5C76]/60 focus:outline-none" />
-                <div className={cn( "relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", valid ? "w-10 pr-1" : "w-0" )}>
-                    <GlassButton type="button" onClick={handleProgressStep} size="icon" contentClassName="text-[#3E5C76]">
-                        <ArrowRight className="w-5 h-5" />
-                    </GlassButton>
-                </div>
-            </div></div>
-        </div>
-    );
-  };
-
-  const getStepTitle = () => {
-    switch(authStep) {
-        case 'login_email': return 'Ingresa tu correo';
-        case 'login_password': return 'Ingresa tu contraseña';
-        case 'reg_name': return '¿Cuál es tu nombre?';
-        case 'reg_lastName': return '¿Tu apellido?';
-        case 'reg_phone': return 'Tu número de teléfono';
-        case 'reg_email': return 'Tu correo electrónico';
-        case 'reg_password': return 'Crea una contraseña';
-        case 'reg_confirm': return 'Confirma la contraseña';
-        default: return '';
-    }
-  };
-
-  const getStepSubtitle = () => {
-    if (authStep === 'reg_password' || authStep === 'login_password') return "Debe tener al menos 6 caracteres.";
-    return "Escribe aquí para continuar";
+  const handleRegisterSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem('currentUser', formData.name);
+    localStorage.setItem('userEmail', formData.email);
+    navigate('/admin');
   };
 
   return (
-    <div className="bg-[#F1E8D9] min-h-screen w-screen flex flex-col font-geist">
-        <style>{`
-            :root { --background: #F1E8D9; --foreground: #3E5C76; }
-            .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: 2px; position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); } 
-            .glass-button-wrap:has(.glass-button:active) { transform: rotateX(15deg); } 
-            .glass-button-shadow { position: absolute; inset: -4px; filter: blur(4px); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; } 
-            .glass-button { backdrop-filter: blur(8px); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8), rgba(255,255,255,0.4)); box-shadow: 0 4px 6px -1px rgba(62,92,118,0.1); border: 1px solid rgba(255,255,255,0.6); } 
-            .glass-button:hover { transform: scale(0.98); background: linear-gradient(-75deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9), rgba(255,255,255,0.6)); } 
-            .glass-button-text { color: #3E5C76; transition: all var(--anim-time) var(--anim-ease); font-weight: 600; } 
-            .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } 
-            .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.5rem; backdrop-filter: blur(12px); background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.8); box-shadow: inset 0 2px 4px rgba(62,92,118,0.05), 0 4px 8px rgba(62,92,118,0.1); transition: all 300ms ease; } 
-            .glass-input-wrap:focus-within .glass-input { background: rgba(255,255,255,0.8); box-shadow: inset 0 2px 4px rgba(62,92,118,0.02), 0 6px 12px rgba(62,92,118,0.15); border: 1px solid #7A93A7; }
-        `}</style>
+    <div className="h-screen font-sans antialiased flex overflow-hidden" style={{ background: 'transparent' }}>
+      <style>{`
+        html, body { height: 100%; margin: 0; overflow: hidden; }
+        body {
+          background-color: #f1ede5;
+          background-image:
+            radial-gradient(at 8% 20%, #f7f3eb 0px, transparent 50%),
+            radial-gradient(at 85% 15%, #5d758a 0px, transparent 55%),
+            radial-gradient(at 90% 80%, #475d71 0px, transparent 60%),
+            radial-gradient(at 30% 90%, #e6ded2 0px, transparent 45%),
+            radial-gradient(at 50% 50%, #cad7de 0px, transparent 65%);
+          background-size: cover;
+          background-attachment: fixed;
+        }
+        .glass-card {
+          background: rgba(255,255,255,0.4);
+          backdrop-filter: blur(30px);
+          -webkit-backdrop-filter: blur(30px);
+          border: 1px solid rgba(255,255,255,0.65);
+          box-shadow: 0 32px 64px -16px rgba(54,75,93,0.18), 0 8px 24px -8px rgba(0,0,0,0.06);
+        }
+        .pill-input {
+          background: rgba(245,247,250,0.85);
+          border: 1.5px solid rgba(255,255,255,0.9);
+          transition: all 0.25s ease;
+        }
+        .pill-input:focus-within {
+          background: rgba(255,255,255,0.98);
+          border-color: #61798d;
+          box-shadow: 0 0 0 4px rgba(84,106,126,0.13);
+        }
+        .action-btn {
+          background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(232,238,244,0.9));
+          border: 1.5px solid rgba(255,255,255,0.85);
+          box-shadow: 0 8px 22px -4px rgba(69,90,109,0.2);
+          transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+          background: #fff;
+          box-shadow: 0 14px 28px -4px rgba(69,90,109,0.28);
+          transform: translateY(-1px);
+        }
+        .right-pill {
+          background: rgba(255,255,255,0.18);
+          border: 1px solid rgba(255,255,255,0.35);
+          backdrop-filter: blur(12px);
+        }
+        .stat-block {
+          border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .testimonial-card {
+          background: rgba(255,255,255,0.15);
+          border: 1px solid rgba(255,255,255,0.25);
+          backdrop-filter: blur(16px);
+        }
+      `}</style>
 
-        <Confetti ref={confettiRef} manualstart className="fixed top-0 left-0 w-full h-full pointer-events-none z-[999]" />
-        
-        <AnimatePresence>
-            {modalStatus !== 'closed' && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative bg-white border-2 border-[#E3D4C1] rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-4 mx-2 shadow-2xl">
-                        {(modalStatus === 'error' || modalStatus === 'success') && <button onClick={closeModal} className="absolute top-2 right-2 p-1 text-[#7A93A7] hover:text-[#3E5C76]"><X className="w-5 h-5" /></button>}
-                        {modalStatus === 'error' && <>
-                            <AlertCircle className="w-12 h-12 text-red-500" />
-                            <p className="text-lg font-bold text-[#3E5C76]">{modalErrorMessage}</p>
-                            <GlassButton onClick={closeModal} size="sm" className="mt-4">Intentar de nuevo</GlassButton>
-                        </>}
-                        {modalStatus === 'loading' && 
-                            <TextLoop interval={TEXT_LOOP_INTERVAL} stopOnEnd={true}>
-                                {modalSteps.slice(0, -1).map((step, i) => 
-                                    <div key={i} className="flex flex-col items-center gap-4">
-                                        {step.icon}
-                                        <p className="text-lg font-bold text-[#3E5C76]">{step.message}</p>
-                                    </div>
-                                )}
-                            </TextLoop>
-                        }
-                        {modalStatus === 'success' &&
-                            <div className="flex flex-col items-center gap-4">
-                                {modalSteps[modalSteps.length - 1].icon}
-                                <p className="text-lg font-bold text-[#3E5C76]">{modalSteps[modalSteps.length - 1].message}</p>
-                            </div>
-                        }
-                    </motion.div>
-                </motion.div>
+      {/* LEFT — Auth Card */}
+      <section className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end px-8 lg:pr-14 xl:pr-20 py-12">
+        <div className="glass-card w-full max-w-[420px] rounded-4xl p-8 sm:p-10">
+
+          {/* Tabs */}
+          <div className="flex p-1 bg-[#364B5D]/10 rounded-full mb-8 border border-white/40">
+            {['login', 'register'].map(m => (
+              <button
+                key={m}
+                onClick={() => switchMode(m)}
+                className={`flex-1 py-2 text-[11px] font-bold tracking-wider rounded-full transition-all duration-200 ${
+                  mode === m ? 'bg-white text-[#1e2f3e] shadow-sm' : 'text-[#364B5D]/70 hover:text-[#1e2f3e]'
+                }`}
+              >
+                {m === 'login' ? 'INICIAR SESIÓN' : 'CREAR CUENTA'}
+              </button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="wait">
+
+            {/* HOME */}
+            {view === 'home' && (
+              <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="text-center space-y-7">
+                <div>
+                  <h2 className="font-display font-bold text-4xl uppercase tracking-tight text-[#1e2f3e]">GM KIT STUDIO</h2>
+                  <p className="text-sm text-[#546A7E] mt-1">Ingresá o registrate para comenzar</p>
+                </div>
+                <div className="flex flex-col gap-3 pt-1">
+                  <button onClick={() => { setMode('login'); setView('login-form'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Iniciar Sesión</button>
+                  <button onClick={() => { setMode('register'); setView('step-email'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta Nueva</button>
+                </div>
+              </motion.div>
             )}
-        </AnimatePresence>
 
-        <div className="flex w-full flex-1 h-full items-center justify-center bg-[#F1E8D9] relative overflow-hidden">
-            <div className="absolute inset-0 z-0"><GradientBackground /></div>
-            
-            <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-8 w-full max-w-[340px] mx-auto p-4">
-                
-                {authStep === "choice" && (
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center gap-6">
-                        <BlurFade delay={0.1} className="w-full text-center">
-                            <h1 className="font-bebas text-5xl md:text-6xl text-[#3E5C76] tracking-wide mb-2">DENTAL STUDIO</h1>
-                            <p className="font-geist text-[#54728C] font-medium text-sm">Ingresa o regístrate para comenzar</p>
-                        </BlurFade>
-                        <BlurFade delay={0.3} className="w-full flex flex-col gap-4 mt-4">
-                            <GlassButton onClick={() => selectFlow('login')} className="w-full" contentClassName="flex justify-center w-full">
-                                Iniciar Sesión
-                            </GlassButton>
-                            <GlassButton onClick={() => selectFlow('register')} className="w-full" contentClassName="flex justify-center w-full">
-                                Crear Cuenta Nueva
-                            </GlassButton>
-                        </BlurFade>
-                    </motion.div>
-                )}
+            {/* EMAIL */}
+            {view === 'step-email' && (
+              <motion.div key="email" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                <div>
+                  <h2 className="font-display font-bold text-3xl uppercase tracking-tight text-[#1e2f3e]">INGRESA TU CORREO</h2>
+                  <p className="text-xs text-[#546A7E] mt-1">Escribe aquí para continuar</p>
+                </div>
+                <form onSubmit={(e) => { e.preventDefault(); setView('step-name'); }} className="space-y-4">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <input required type="email" placeholder="Correo" value={formData.email} onChange={e => updateForm('email', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                  </label>
+                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                  </button>
+                </form>
+                <button onClick={() => setView('home')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                </button>
+              </motion.div>
+            )}
 
-                {authStep !== "choice" && (
-                    <div className="w-full space-y-8">
-                        <motion.div key={authStep + "title"} initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.3 }} className="text-center w-full">
-                            <h2 className="font-bebas text-4xl text-[#3E5C76] tracking-wide">{getStepTitle()}</h2>
-                            <p className="font-geist text-sm text-[#7A93A7] font-medium mt-1">{getStepSubtitle()}</p>
-                        </motion.div>
+            {/* NAME */}
+            {view === 'step-name' && (
+              <motion.div key="name" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                <div>
+                  <h2 className="font-display font-bold text-3xl uppercase tracking-tight text-[#1e2f3e]">¿CUÁL ES TU NOMBRE?</h2>
+                  <p className="text-xs text-[#546A7E] mt-1">Escribe aquí para continuar</p>
+                </div>
+                <form onSubmit={(e) => { e.preventDefault(); setView('step-password'); }} className="space-y-4">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <input required type="text" placeholder="Nombre completo" value={formData.name} onChange={e => updateForm('name', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                  </label>
+                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                  </button>
+                </form>
+                <button onClick={() => setView('step-email')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                </button>
+              </motion.div>
+            )}
 
-                        <form onSubmit={(e) => e.preventDefault()} className="w-full space-y-4">
-                            <AnimatePresence mode="wait">
-                                <motion.div key={authStep} initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} transition={{ duration: 0.2 }} className="w-full">
-                                    {authStep === 'login_email' && renderInput('email', 'email', 'Correo', <Mail className="h-5 w-5 text-[#7A93A7]"/>)}
-                                    {authStep === 'login_password' && renderInput('password', 'password', 'Contraseña', <Lock className="h-5 w-5 text-[#7A93A7]"/>, true)}
-                                    
-                                    {authStep === 'reg_name' && renderInput('name', 'text', 'Nombre', <User className="h-5 w-5 text-[#7A93A7]"/>)}
-                                    {authStep === 'reg_lastName' && renderInput('lastName', 'text', 'Apellido', <User className="h-5 w-5 text-[#7A93A7]"/>)}
-                                    {authStep === 'reg_phone' && renderInput('phone', 'tel', 'Teléfono', <Phone className="h-5 w-5 text-[#7A93A7]"/>)}
-                                    {authStep === 'reg_email' && renderInput('email', 'email', 'Correo', <Mail className="h-5 w-5 text-[#7A93A7]"/>)}
-                                    {authStep === 'reg_password' && renderInput('password', 'password', 'Contraseña', <Lock className="h-5 w-5 text-[#7A93A7]"/>, true)}
-                                    {authStep === 'reg_confirm' && renderInput('confirmPassword', 'password', 'Confirmar Contraseña', <Lock className="h-5 w-5 text-[#7A93A7]"/>, true, true)}
-                                </motion.div>
-                            </AnimatePresence>
-                        </form>
+            {/* PASSWORD */}
+            {view === 'step-password' && (
+              <motion.div key="password" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                <div>
+                  <h2 className="font-display font-bold text-3xl uppercase tracking-tight text-[#1e2f3e]">CREA TU CONTRASEÑA</h2>
+                  <p className="text-xs text-[#546A7E] mt-1">Último paso para proteger tu cuenta</p>
+                </div>
+                <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <input required type="password" placeholder="Contraseña segura" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                  </label>
+                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta</button>
+                </form>
+                <button onClick={() => setView('step-name')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                </button>
+              </motion.div>
+            )}
 
-                        <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={handleGoBack} className="flex items-center gap-2 text-sm text-[#7A93A7] hover:text-[#3E5C76] font-bold mx-auto mt-6 transition-colors">
-                            <ArrowLeft className="w-4 h-4" /> Volver
-                        </motion.button>
-                    </div>
-                )}
-            </fieldset>
+            {/* LOGIN FORM */}
+            {view === 'login-form' && (
+              <motion.div key="login" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+                <div>
+                  <h2 className="font-display font-bold text-3xl uppercase tracking-tight text-[#1e2f3e]">INGRESA TU CORREO</h2>
+                  <p className="text-xs text-[#546A7E] mt-1">Escribe aquí para continuar</p>
+                </div>
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <input required type="email" placeholder="Correo" value={formData.email} onChange={e => updateForm('email', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                  </label>
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <input required type="password" placeholder="Contraseña" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                  </label>
+                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                  </button>
+                </form>
+                <button onClick={() => setView('home')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                </button>
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+
+          {/* Security badge */}
+          <div className="mt-8 pt-5 border-t border-white/40 flex items-center gap-2 text-[10px] text-[#546A7E]/70">
+            <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" fillRule="evenodd"/></svg>
+            <span>Conexión cifrada de grado odontológico HIPAA & RGPD</span>
+          </div>
         </div>
+      </section>
+
+      {/* RIGHT — Branding */}
+      <section className="hidden lg:flex flex-col justify-between w-[55%] px-14 xl:px-20 py-14">
+
+        {/* Top pill badge */}
+        <div className="flex items-center gap-3">
+          <div className="right-pill flex items-center gap-3 px-4 py-2 rounded-full text-xs font-semibold text-[#1e2f3e]/80 tracking-wide">
+            <img src="/images/LOGOia.png" alt="logo" className="w-5 h-5 rounded-full object-cover" />
+            PLATAFORMA GM KIT STUDIO
+          </div>
+          <span className="text-[#1e2f3e]/40 text-xs">•</span>
+          <span className="text-[#1e2f3e]/60 text-xs font-medium">Acceso a clínicas y especialistas</span>
+        </div>
+
+        {/* Main headline */}
+        <div className="space-y-6">
+          <h1 className="font-display font-bold leading-[0.88] text-[#1e2f3e]" style={{ fontSize: 'clamp(3.5rem, 6vw, 5.5rem)' }}>
+            GM KIT<br />
+            <span className="text-[#1e2f3e]/35">STUDIO</span>
+          </h1>
+          <p className="text-[#1e2f3e]/65 text-base leading-relaxed max-w-sm">
+            Ingresá a tu portal de gestión para consultar pedidos, administrar tu cuenta y acceder a kits de bioseguridad certificados en tiempo real.
+          </p>
+        </div>
+
+        {/* Stats row */}
+        <div className="flex items-stretch gap-0 divide-x divide-white/20">
+          {[
+            { value: 'ISO & ANMAT', label: 'Certificación' },
+            { value: '24 / 7',      label: 'Soporte activo' },
+            { value: 'SSL-256',     label: 'Encriptación' },
+          ].map(stat => (
+            <div key={stat.value} className="px-8 first:pl-0 flex flex-col gap-1">
+              <span className="font-display font-bold text-2xl text-[#1e2f3e] tracking-tight">{stat.value}</span>
+              <span className="text-[11px] font-medium text-[#1e2f3e]/50 uppercase tracking-widest">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Testimonial card */}
+        <div className="testimonial-card rounded-2xl p-5 max-w-sm flex items-start gap-4">
+          <div className="w-10 h-10 rounded-full bg-[#364B5D] flex items-center justify-center text-white font-display font-bold text-sm shrink-0">
+            GM
+          </div>
+          <div>
+            <p className="text-sm font-medium text-[#1e2f3e]/85 leading-snug">
+              "La calidad y puntualidad de los kits es excepcional. No volvemos a trabajar con otro proveedor."
+            </p>
+            <p className="text-[11px] text-[#1e2f3e]/45 mt-1.5">Clínica certificada en Tucumán, Argentina.</p>
+          </div>
+        </div>
+
+      </section>
     </div>
   );
 };

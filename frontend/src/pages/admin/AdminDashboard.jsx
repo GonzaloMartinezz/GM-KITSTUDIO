@@ -9,7 +9,7 @@ import { Plus, Calendar, Filter } from 'lucide-react';
 const AdminDashboard = () => {
   return (
     <div className="w-full h-full font-geist flex flex-col relative">
-      
+
       {/* Top Navigation */}
       <AdminTopbar />
 
@@ -18,7 +18,7 @@ const AdminDashboard = () => {
           <h1 className="text-4xl font-normal text-[#1E5A9C] mb-2 font-geist tracking-tight">Panel de <span className="font-medium">Control Central</span></h1>
           <p className="text-[#8E8E93] text-sm">Resumen operativo de inventario, finanzas y ventas (San Miguel de Tucumán)</p>
         </div>
-        
+
         <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
           <button className="bg-[#1E5A9C] text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#1E5A9C]/90 transition-colors shadow-md flex-1 md:flex-none">
             <Plus size={16} strokeWidth={3} /> Nueva Operación
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
       {/* Lower Dashboard Grid */}
       <div className="flex flex-col lg:flex-row gap-8 pb-10">
-        
+
         {/* Left Column (Meetings & Employees) */}
         <div className="flex-1 flex flex-col">
           <MeetingGrid />
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Right Column (Events) */}
-        <div className="w-full lg:w-[350px] shrink-0">
+        <div className="w-full lg:w-87.5 shrink-0">
           <FeatureEvents />
         </div>
 

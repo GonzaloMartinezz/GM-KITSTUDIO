@@ -11,7 +11,7 @@ const PreFooterContact = () => {
   }
 
   return (
-    <section className="relative flex flex-col w-full bg-[#F3F3F3]">
+    <section className="relative flex flex-col w-full bg-brand-5 pb-20">
       {/* Stats Block (Moved from FeaturesSection to sit above the map) */}
       <div className="w-full px-6 md:px-12 lg:px-24 mb-0 relative z-20 pt-20 pb-12 bg-brand-1">
         <div className="bg-brand-5 text-brand-1 rounded-[3rem] md:rounded-[4rem] p-8 md:p-16 shadow-[0_20px_50px_rgba(0,0,0,0.2)] mx-auto max-w-350">
@@ -23,7 +23,7 @@ const PreFooterContact = () => {
               </h2>
             </div>
             <div className="lg:w-1/2 flex items-end">
-              <p className="text-brand-1/80 text-lg max-w-md font-medium">
+              <p className="text-white text-lg max-w-md font-medium">
                 No somos solo proveedores; somos tus aliados estratégicos en el quirófano. Nuestro compromiso es entregar soluciones impecables para que ejerzas tu profesión con total tranquilidad.
               </p>
             </div>
@@ -31,16 +31,16 @@ const PreFooterContact = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
-              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">10K+</h4>
-              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Kits validados este año</p>
+              <div className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">10K+</div>
+              <p className="text-brand-1 text-sm font-bold uppercase tracking-wider">Kits validados este año</p>
             </div>
             <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
-              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">0%</h4>
-              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Margen de contaminación</p>
+              <div className="text-[5rem] md:text-[6rem] font-bebas text-brand-2 mb-2 leading-none">0%</div>
+              <p className="text-brand-1 text-sm font-bold uppercase tracking-wider">Margen de contaminación</p>
             </div>
             <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-10 text-center rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
-              <h4 className="text-[5rem] md:text-[6rem] font-bebas text-white mb-2 leading-none">100%</h4>
-              <p className="text-brand-1/70 text-sm font-bold uppercase tracking-wider">Satisfacción clínica</p>
+              <div className="text-[5rem] md:text-[6rem] font-bebas text-white mb-2 leading-none">100%</div>
+              <p className="text-brand-1 text-sm font-bold uppercase tracking-wider">Satisfacción clínica</p>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ const PreFooterContact = () => {
                 </div>
                 
                 {/* Submit Button similar to the green circle in the reference image */}
-                <button type="button" className="w-14 h-14 bg-brand-3 text-brand-5 rounded-full flex items-center justify-center hover:bg-brand-2 transition-transform hover:scale-105 shadow-[0_10px_20px_rgba(241,232,217,0.3)] shrink-0 group">
+                <button type="button" aria-label="Enviar mensaje" className="w-14 h-14 bg-brand-3 text-brand-5 rounded-full flex items-center justify-center hover:bg-brand-2 transition-transform hover:scale-105 shadow-[0_10px_20px_rgba(241,232,217,0.3)] shrink-0 group">
                   <Send className="w-5 h-5 -ml-1 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
@@ -135,13 +135,13 @@ const PreFooterContact = () => {
             </div>
 
             <div className="flex gap-4 mt-12 md:mt-0 relative z-10">
-              <a href="#" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
+              <a href="#" aria-label="Instagram" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
                 <Camera size={20} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
+              <a href="#" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
                 <Briefcase size={20} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
+              <a href="#" aria-label="Comunidad" className="w-10 h-10 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center hover:bg-brand-1 hover:text-brand-5 transition-colors">
                 <Users size={20} />
               </a>
             </div>

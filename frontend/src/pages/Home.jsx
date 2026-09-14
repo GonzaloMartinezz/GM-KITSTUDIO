@@ -93,10 +93,10 @@ const Home = () => {
   ];
 
   return (
-    <div className="bg-brand-1 min-h-screen text-brand-5 overflow-x-hidden font-geist">
+    <div className="bg-brand-1 min-h-screen text-brand-5 font-geist">
 
       {/* Asymmetric Split Layout (Hero) */}
-      <div className="flex flex-col lg:flex-row min-h-screen relative overflow-hidden">
+      <div className="flex flex-col lg:flex-row min-h-screen relative">
 
         {/* Left Side: Typography & Content */}
         <div className="w-full lg:w-[45%] px-6 md:px-12 pt-40 pb-32 flex flex-col justify-center">
@@ -136,7 +136,7 @@ const Home = () => {
             className="w-full h-full rounded-[3rem] overflow-hidden relative shadow-2xl"
           >
             <img
-              src="https://images.unsplash.com/photo-1584308666744-24d5e4a83e0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+              src="/images/kitsodontologico.jpg"
               alt="Kit Quirúrgico"
               className="w-full h-full object-cover"
             />
@@ -153,7 +153,7 @@ const Home = () => {
       </div>
 
       {/* Original Services Section */}
-      <section className="bg-brand-5 text-brand-1 rounded-t-[60px] -mt-10 relative z-40 py-24 px-6 md:px-12 lg:px-24 overflow-hidden">
+      <section className="bg-brand-5 text-brand-1 rounded-t-[60px] mt-8 lg:-mt-10 relative z-40 py-24 px-6 md:px-12 lg:px-24 overflow-hidden">
         {/* Particles Background */}
         <Particles
           className="absolute inset-0 z-0"
@@ -178,13 +178,15 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="flex flex-col items-center text-center gap-0 border-b border-brand-1/20 pb-8 pt-0 group hover:border-brand-1 transition-colors"
+              className="relative flex flex-col items-center text-center border-b border-brand-1/20 pb-12 pt-8 group hover:border-brand-1 transition-colors overflow-hidden"
             >
-              <div className="text-[clamp(4rem,10vw,8rem)] leading-none font-bebas text-brand-1/20 group-hover:text-brand-1 transition-colors pointer-events-none select-none">
+              {/* Background Watermark Number */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(8rem,15vw,12rem)] leading-none font-bebas text-brand-1/3 group-hover:text-brand-1/10 transition-colors pointer-events-none select-none z-0">
                 {String(index + 1).padStart(2, '0')}
               </div>
-              <div className="flex flex-col items-center relative z-10 mt-0">
-                <h3 className="text-[clamp(2rem,4vw,3rem)] font-bebas uppercase mb-2 group-hover:text-brand-3 transition-colors">
+
+              <div className="flex flex-col items-center relative z-10">
+                <h3 className="text-[clamp(2rem,4vw,3rem)] font-bebas uppercase mb-3 group-hover:text-brand-3 transition-colors text-brand-1">
                   {service.title}
                 </h3>
                 <p className="text-base md:text-lg text-brand-1/70 font-light font-geist max-w-2xl">

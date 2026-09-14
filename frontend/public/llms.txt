@@ -1,0 +1,14 @@
+# GM KIT STUDIO
+
+GM KIT STUDIO es una plataforma de e-commerce y catálogo especializado en bioseguridad para consultorios odontológicos y profesionales de la salud. Fabricamos y distribuimos kits estériles y descartables con altos estándares de calidad en Argentina.
+
+## Secciones Principales
+- [Inicio](/): Información general sobre nuestra promesa de bioseguridad, catálogo destacado y preguntas frecuentes.
+- [Productos](/productos): Catálogo completo de nuestros kits odontológicos, cofias, barbijos, camisolines, campos quirúrgicos, cubremangueras y cubrecalzados.
+- [Nosotros](/nosotros): Conoce nuestra historia, estadísticas de calidad y testimonios de doctores y clínicas que confían en nosotros.
+- [Contacto](/contacto): Formulario para solicitar presupuestos y contactar a ventas directamente vía email o WhatsApp.
+
+## Información de Contacto
+- Ubicación: San Martín Centro, San Miguel de Tucumán, Argentina
+- Teléfono: +54 9 381 500-0000
+- Email: contacto@gmkitstudio.com.ar

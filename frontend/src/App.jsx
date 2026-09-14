@@ -1,47 +1,52 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Layouts
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
 
-// Public Pages
-import Home from './pages/Home';
-import Checkout from './pages/Checkout';
-import ProductDetail from './pages/ProductDetail';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Products from './pages/Products';
+// Loading fallback component
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center bg-brand-5">
+    <div className="w-8 h-8 border-4 border-brand-3 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
-// Admin Pages
-import AdminDashboard from './pages/admin/AdminDashboard';
-import Login from './pages/Login';
+// Lazy Loaded Pages
+const Home = lazy(() => import('./pages/Home'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const About = lazy(() => import('./pages/About'));
+const Products = lazy(() => import('./pages/Products'));
+const Login = lazy(() => import('./pages/Login'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const CargarProductos = lazy(() => import('./pages/CargarProductos'));
 
 function App() {
   return (
     <Router>
-      <Routes>
-        
-        {/* === AUTH ROUTES === */}
-        <Route path="/login" element={<Login />} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          
+          {/* === AUTH ROUTES === */}
+          <Route path="/login" element={<Login />} />
 
-        {/* === PUBLIC E-COMMERCE ROUTES === */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/productos" element={<Products />} />
-          <Route path="/nosotros" element={<About />} />
-          <Route path="/contacto" element={<Contact />} />
-        </Route>
+          {/* === PUBLIC E-COMMERCE ROUTES === */}
+          <Route path="/cargarproductos" element={<CargarProductos />} />
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/productos" element={<Products />} />
+            <Route path="/nosotros" element={<About />} />
+          </Route>
 
-        {/* === ADMIN DASHBOARD ROUTES === */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          {/* Future admin routes like /admin/employees can go here */}
-        </Route>
+          {/* === ADMIN DASHBOARD ROUTES === */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            {/* Future admin routes like /admin/employees can go here */}
+          </Route>
 
-      </Routes>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

@@ -32,7 +32,7 @@ const EmployeeTable = () => {
     <div className="bg-white rounded-3xl p-6 shadow-sm w-full overflow-x-auto">
       <h2 className="text-xl font-bold text-[#1E5A9C] mb-6">Transacciones Recientes</h2>
 
-      <table className="w-full text-left border-collapse min-w-[800px]">
+      <table className="w-full text-left border-collapse min-w-200">
         <thead>
           <tr className="border-b border-[#F0F0F3]">
             <th className="py-4 text-sm font-medium text-[#8E8E93] font-geist">Entidad</th>
@@ -56,8 +56,8 @@ const EmployeeTable = () => {
               <td className="py-4 text-sm text-[#8E8E93] font-medium">{emp.joinDate}</td>
               <td className="py-4 text-right pr-4">
                 <span className={`inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold ${emp.status === 'Completado'
-                    ? 'bg-[#1E5A9C]/10 text-[#1E5A9C]'
-                    : 'bg-[#00C2CB]/10 text-[#00C2CB]'
+                  ? 'bg-[#1E5A9C]/10 text-[#1E5A9C]'
+                  : 'bg-[#00C2CB]/10 text-[#00C2CB]'
                   }`}>
                   {emp.status}
                 </span>

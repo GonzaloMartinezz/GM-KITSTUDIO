@@ -21,7 +21,7 @@ const MeetingGrid = () => {
       </div>
 
       {/* Grid Container */}
-      <div className="min-w-[800px]">
+      <div className="min-w-200">
         {/* Days Header */}
         <div className="flex mb-4 px-2">
           <div className="w-48 shrink-0 text-sm font-medium text-[#8E8E93]">Clientes</div>
@@ -70,7 +70,7 @@ const MeetingGrid = () => {
                     <Truck size={12} />
                   </div>
                   <span className="text-xs font-bold text-[#00C2CB] flex-1 truncate">Envío en camino</span>
-                  <span className="text-[10px] font-bold text-white bg-white/50 px-2 py-0.5 rounded-full text-[#00C2CB]">Andreani</span>
+                  <span className="text-[10px] font-bold text-white bg-white/50 px-2 py-0.5 rounded-full">Andreani</span>
                 </div>
               </div>
             </div>
