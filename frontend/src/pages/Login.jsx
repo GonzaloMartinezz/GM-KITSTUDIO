@@ -89,7 +89,7 @@ const Login = () => {
 
       {/* LEFT — Auth Card */}
       <section className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end px-8 lg:pr-14 xl:pr-20 py-12">
-        <div className="glass-card w-full max-w-[420px] rounded-4xl p-8 sm:p-10">
+        <div className="glass-card w-full max-w-105 rounded-4xl p-8 sm:p-10">
 
           {/* Tabs */}
           <div className="flex p-1 bg-[#364B5D]/10 rounded-full mb-8 border border-white/40">
@@ -97,9 +97,8 @@ const Login = () => {
               <button
                 key={m}
                 onClick={() => switchMode(m)}
-                className={`flex-1 py-2 text-[11px] font-bold tracking-wider rounded-full transition-all duration-200 ${
-                  mode === m ? 'bg-white text-[#1e2f3e] shadow-sm' : 'text-[#364B5D]/70 hover:text-[#1e2f3e]'
-                }`}
+                className={`flex-1 py-2 text-[11px] font-bold tracking-wider rounded-full transition-all duration-200 ${mode === m ? 'bg-white text-[#1e2f3e] shadow-sm' : 'text-[#364B5D]/70 hover:text-[#1e2f3e]'
+                  }`}
               >
                 {m === 'login' ? 'INICIAR SESIÓN' : 'CREAR CUENTA'}
               </button>
@@ -131,15 +130,15 @@ const Login = () => {
                 </div>
                 <form onSubmit={(e) => { e.preventDefault(); setView('step-name'); }} className="space-y-4">
                   <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
-                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="email" placeholder="Correo" value={formData.email} onChange={e => updateForm('email', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
                   <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
-                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                   </button>
                 </form>
                 <button onClick={() => setView('home')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg> Volver
                 </button>
               </motion.div>
             )}
@@ -153,15 +152,15 @@ const Login = () => {
                 </div>
                 <form onSubmit={(e) => { e.preventDefault(); setView('step-password'); }} className="space-y-4">
                   <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
-                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="text" placeholder="Nombre completo" value={formData.name} onChange={e => updateForm('name', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
                   <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
-                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                   </button>
                 </form>
                 <button onClick={() => setView('step-email')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg> Volver
                 </button>
               </motion.div>
             )}
@@ -175,13 +174,13 @@ const Login = () => {
                 </div>
                 <form onSubmit={handleRegisterSubmit} className="space-y-4">
                   <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
-                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="password" placeholder="Contraseña segura" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
                   <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta</button>
                 </form>
                 <button onClick={() => setView('step-name')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg> Volver
                 </button>
               </motion.div>
             )}
@@ -195,19 +194,19 @@ const Login = () => {
                 </div>
                 <form onSubmit={handleLoginSubmit} className="space-y-4">
                   <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
-                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="email" placeholder="Correo" value={formData.email} onChange={e => updateForm('email', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
                   <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
-                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8"/></svg>
+                    <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="password" placeholder="Contraseña" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
                   <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
-                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/></svg>
+                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
                   </button>
                 </form>
                 <button onClick={() => setView('home')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"/></svg> Volver
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg> Volver
                 </button>
               </motion.div>
             )}
@@ -216,7 +215,7 @@ const Login = () => {
 
           {/* Security badge */}
           <div className="mt-8 pt-5 border-t border-white/40 flex items-center gap-2 text-[10px] text-[#546A7E]/70">
-            <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" fillRule="evenodd"/></svg>
+            <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path clipRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z" fillRule="evenodd" /></svg>
             <span>Conexión cifrada de grado odontológico HIPAA & RGPD</span>
           </div>
         </div>
@@ -250,8 +249,8 @@ const Login = () => {
         <div className="flex items-stretch gap-0 divide-x divide-white/20">
           {[
             { value: 'ISO & ANMAT', label: 'Certificación' },
-            { value: '24 / 7',      label: 'Soporte activo' },
-            { value: 'SSL-256',     label: 'Encriptación' },
+            { value: '24 / 7', label: 'Soporte activo' },
+            { value: 'SSL-256', label: 'Encriptación' },
           ].map(stat => (
             <div key={stat.value} className="px-8 first:pl-0 flex flex-col gap-1">
               <span className="font-display font-bold text-2xl text-[#1e2f3e] tracking-tight">{stat.value}</span>

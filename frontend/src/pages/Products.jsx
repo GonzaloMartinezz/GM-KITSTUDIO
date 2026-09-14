@@ -168,22 +168,29 @@ const Products = () => {
               onClick={() => setSelectedProduct(null)}
               className="fixed inset-0 bg-[#0C1517]/80 backdrop-blur-md z-100"
             />
+            {/* Mobile: slide up from bottom. Desktop: centered */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl bg-[#1E293B] rounded-4xl z-101 overflow-hidden flex flex-col md:flex-row shadow-2xl border border-white/10 max-h-[90vh] md:max-h-none overflow-y-auto"
+              initial={{ opacity: 0, y: '100%' }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              className="fixed inset-x-0 bottom-0 md:inset-x-auto md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-4xl bg-[#1E293B] rounded-t-3xl md:rounded-4xl z-101 overflow-hidden shadow-2xl border border-white/10 flex flex-col md:flex-row max-h-[92vh] md:max-h-[88vh]"
             >
+              {/* Drag handle — mobile only */}
+              <div className="flex justify-center pt-3 pb-1 md:hidden">
+                <div className="w-10 h-1 rounded-full bg-white/20" />
+              </div>
+
               {/* Close Button */}
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="absolute top-4 right-4 z-10 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors"
+                className="absolute top-3 right-3 z-10 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full backdrop-blur-sm transition-colors"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
 
-              {/* Image Side */}
-              <div className="w-full md:w-1/2 h-64 md:h-auto relative">
+              {/* Image — horizontal strip on mobile, half panel on desktop */}
+              <div className="w-full h-44 md:h-auto md:w-1/2 relative shrink-0">
                 <img
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
@@ -193,44 +200,37 @@ const Products = () => {
                 <div className="absolute inset-0 bg-linear-to-t from-[#1E293B] to-transparent md:hidden opacity-80" />
               </div>
 
-              {/* Content Side */}
-              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                <div className="inline-flex items-center gap-2 bg-brand-3/20 text-brand-3 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase w-fit mb-4">
+              {/* Content — scrollable on mobile */}
+              <div className="w-full md:w-1/2 p-5 md:p-12 flex flex-col overflow-y-auto">
+                <div className="inline-flex items-center gap-2 bg-brand-3/20 text-brand-3 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase w-fit mb-3">
                   <Check size={14} /> Especificaciones
                 </div>
 
-                <h2 className="font-bebas text-4xl md:text-5xl text-white tracking-wide mb-2">
+                <h2 className="font-bebas text-3xl md:text-5xl text-white tracking-wide mb-1.5">
                   {selectedProduct.name}
                 </h2>
 
-                <p className="text-white/70 font-geist text-lg leading-relaxed mb-8">
+                <p className="text-white/70 font-geist text-sm md:text-base leading-relaxed mb-4">
                   {selectedProduct.description}
                 </p>
 
-                <div className="space-y-4 font-geist">
-                  <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-white/50 uppercase tracking-widest text-xs font-bold">Material</span>
-                    <span className="text-white font-medium">SMS Trilaminado / Spunbond</span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-white/50 uppercase tracking-widest text-xs font-bold">Esterilidad</span>
-                    <span className="text-brand-3 font-medium">100% Estéril (Óxido de Etileno)</span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-white/50 uppercase tracking-widest text-xs font-bold">Uso</span>
-                    <span className="text-white font-medium">Descartable (Un solo uso)</span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <span className="text-white/50 uppercase tracking-widest text-xs font-bold">Hipoalergénico</span>
-                    <span className="text-white font-medium">Sí, libre de látex</span>
-                  </div>
+                <div className="font-geist divide-y divide-white/10">
+                  {[
+                    ['Material',       'SMS Trilaminado / Spunbond', false],
+                    ['Esterilidad',    '100% Estéril (Óxido de Etileno)', true],
+                    ['Uso',            'Descartable (Un solo uso)', false],
+                    ['Hipoalergénico', 'Sí, libre de látex', false],
+                  ].map(([label, value, highlight]) => (
+                    <div key={label} className="flex justify-between items-center py-2.5 gap-4">
+                      <span className="text-white/50 uppercase tracking-widest text-[10px] font-bold shrink-0">{label}</span>
+                      <span className={`text-sm font-medium text-right ${highlight ? 'text-brand-3' : 'text-white'}`}>{value}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="mt-10 flex items-center justify-between">
-                  <div>
-                    <span className="text-white/50 uppercase tracking-widest text-xs font-bold block mb-1">Precio x Unidad</span>
-                    <span className="font-bebas text-4xl text-brand-3">${selectedProduct.price.toLocaleString()}</span>
-                  </div>
+                <div className="mt-5 pb-2">
+                  <span className="text-white/50 uppercase tracking-widest text-[10px] font-bold block mb-0.5">Precio x Unidad</span>
+                  <span className="font-bebas text-3xl md:text-4xl text-brand-3">${selectedProduct.price.toLocaleString()}</span>
                 </div>
               </div>
             </motion.div>

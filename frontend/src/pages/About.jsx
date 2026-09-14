@@ -52,9 +52,9 @@ const About = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-brand-5/10">
             {[
-              { Icon: MapPin,      label: 'UBICACIÓN',    value: 'TUCUMÁN, ARG' },
-              { Icon: Stethoscope, label: 'ESPECIALIDAD', value: 'ODONTOLOGÍA'  },
-              { Icon: Truck,       label: 'ENVÍOS',       value: 'NACIONALES'   },
+              { Icon: MapPin, label: 'UBICACIÓN', value: 'TUCUMÁN, ARG' },
+              { Icon: Stethoscope, label: 'ESPECIALIDAD', value: 'ODONTOLOGÍA' },
+              { Icon: Truck, label: 'ENVÍOS', value: 'NACIONALES' },
             ].map(({ Icon, label, value }) => (
               <div key={label} className="flex flex-col gap-3 p-6 rounded-2xl bg-white border border-brand-5/5 shadow-sm hover:shadow-md transition-shadow">
                 <Icon className="w-6 h-6 text-brand-3" />
@@ -99,10 +99,10 @@ const About = () => {
 
         <div className="flex flex-col relative w-full max-w-5xl mx-auto">
           {[
-            { num: "01", title: "VALIDACIÓN ESTRICTA",  subtitle: "Normas ISO - Aprobación ANMAT",  desc: "Cada insumo es rigurosamente testeado bajo los más altos estándares nacionales e internacionales. Nuestra prioridad es garantizar que cada kit quirúrgico llegue a tus manos en perfectas condiciones.", category: "CALIDAD",      year: "2026", bg: "bg-[#F3F3F3] border-2 border-brand-5/10", text: "text-brand-5" },
-            { num: "02", title: "ESTERILIZACIÓN TOTAL", subtitle: "Tecnología de Rayos Gamma",       desc: "Implementamos procesos de esterilización de vanguardia, erradicando cualquier microorganismo. Tu seguridad y la de tu paciente es innegociable en el quirófano.",                                    category: "BIOSEGURIDAD", year: "2026", bg: "bg-brand-1",                                  text: "text-brand-5" },
-            { num: "03", title: "ENSAMBLAJE PRECISO",   subtitle: "Salas Blancas Certificadas",     desc: "Nuestros kits se preparan en ambientes controlados, libres de partículas y bajo un estricto monitoreo. Cada componente es manipulado por personal altamente capacitado.",                          category: "PROCESOS",     year: "2026", bg: "bg-brand-3",                                  text: "text-white"   },
-            { num: "04", title: "CUIDADO INTEGRAL",     subtitle: "Logística y Empaque",            desc: "Protegemos nuestro producto desde que sale de la planta hasta que llega a tu clínica. Empaques herméticos y envíos controlados que mantienen la esterilidad al 100%.",                            category: "DISTRIBUCIÓN", year: "2026", bg: "bg-brand-5",                                  text: "text-brand-1" },
+            { num: "01", title: "VALIDACIÓN ESTRICTA", subtitle: "Normas ISO - Aprobación ANMAT", desc: "Cada insumo es rigurosamente testeado bajo los más altos estándares nacionales e internacionales. Nuestra prioridad es garantizar que cada kit quirúrgico llegue a tus manos en perfectas condiciones.", category: "CALIDAD", year: "2026", bg: "bg-[#F3F3F3] border-2 border-brand-5/10", text: "text-brand-5" },
+            { num: "02", title: "ESTERILIZACIÓN TOTAL", subtitle: "Tecnología de Rayos Gamma", desc: "Implementamos procesos de esterilización de vanguardia, erradicando cualquier microorganismo. Tu seguridad y la de tu paciente es innegociable en el quirófano.", category: "BIOSEGURIDAD", year: "2026", bg: "bg-brand-1", text: "text-brand-5" },
+            { num: "03", title: "ENSAMBLAJE PRECISO", subtitle: "Salas Blancas Certificadas", desc: "Nuestros kits se preparan en ambientes controlados, libres de partículas y bajo un estricto monitoreo. Cada componente es manipulado por personal altamente capacitado.", category: "PROCESOS", year: "2026", bg: "bg-brand-3", text: "text-white" },
+            { num: "04", title: "CUIDADO INTEGRAL", subtitle: "Logística y Empaque", desc: "Protegemos nuestro producto desde que sale de la planta hasta que llega a tu clínica. Empaques herméticos y envíos controlados que mantienen la esterilidad al 100%.", category: "DISTRIBUCIÓN", year: "2026", bg: "bg-brand-5", text: "text-brand-1" },
           ].map((award, i, arr) => (
             <div
               key={i}
@@ -114,38 +114,33 @@ const About = () => {
               }}
             >
               {/* Watermark number */}
-              <div className={`absolute -right-10 -bottom-10 text-[15rem] md:text-[25rem] font-bebas leading-none font-bold opacity-5 pointer-events-none select-none ${
-                award.text === 'text-white' || award.text === 'text-brand-1' ? 'text-white' : 'text-brand-5'
-              }`}>
+              <div className={`absolute -right-10 -bottom-10 text-[15rem] md:text-[25rem] font-bebas leading-none font-bold opacity-5 pointer-events-none select-none ${award.text === 'text-white' || award.text === 'text-brand-1' ? 'text-white' : 'text-brand-5'
+                }`}>
                 {award.num}
               </div>
 
               <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-8 mb-12">
                 <div className="flex items-center gap-6">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bebas text-3xl ${
-                    award.text === 'text-brand-5' ? 'bg-brand-5 text-white' : 'bg-white text-brand-5'
-                  }`}>
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bebas text-3xl ${award.text === 'text-brand-5' ? 'bg-brand-5 text-white' : 'bg-white text-brand-5'
+                    }`}>
                     {award.num}
                   </div>
                   <div>
                     <h4 className="font-bebas text-4xl md:text-5xl mb-1 tracking-wide">{award.title}</h4>
-                    <p className={`text-base md:text-lg font-geist font-medium ${
-                      award.text === 'text-brand-5' ? 'text-brand-5/70' : 'text-current/80'
-                    }`}>{award.subtitle}</p>
+                    <p className={`text-base md:text-lg font-geist font-medium ${award.text === 'text-brand-5' ? 'text-brand-5/70' : 'text-current/80'
+                      }`}>{award.subtitle}</p>
                   </div>
                 </div>
-                <div className={`flex items-center gap-4 text-sm font-bold uppercase tracking-widest ${
-                  award.text === 'text-brand-5' ? 'text-brand-5/50' : 'text-current/60'
-                }`}>
+                <div className={`flex items-center gap-4 text-sm font-bold uppercase tracking-widest ${award.text === 'text-brand-5' ? 'text-brand-5/50' : 'text-current/60'
+                  }`}>
                   <span className="hidden md:inline">{award.category}</span>
                   <span>{award.year}</span>
                 </div>
               </div>
 
               <div className="relative z-10 max-w-2xl mt-auto">
-                <p className={`text-lg md:text-2xl font-geist font-light leading-relaxed ${
-                  award.text === 'text-brand-5' ? 'text-brand-5/80' : 'text-current/90'
-                }`}>
+                <p className={`text-lg md:text-2xl font-geist font-light leading-relaxed ${award.text === 'text-brand-5' ? 'text-brand-5/80' : 'text-current/90'
+                  }`}>
                   {award.desc}
                 </p>
               </div>

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, ArrowRight, MessageCircle, Mail, FileText, Ruler, Activity, BookOpen, HeartHandshake } from 'lucide-react';
+import { ShieldCheck, ArrowRight, MessageCircle, Mail, FileText, Ruler, Activity, BookOpen, HeartHandshake, Star, Award, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Particles } from '../components/ui/Particles';
-import { Text3DFlip } from '../components/ui/Text3DFlip';
 import FeaturesSection from '../components/FeaturesSection';
 import FaqSection from '../components/FaqSection';
 import CatalogSpecsSection from '../components/CatalogSpecsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import { ScrollVelocityContainer, ScrollVelocityRow } from '../components/ui/ScrollBasedVelocity';
+import ReviewModal from '../components/ReviewModal';
 
 const Home = () => {
   const [_products, setProducts] = useState([]);
   const [_loading, setLoading] = useState(true);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const { addToCart: _addToCart } = useCart();
 
   useEffect(() => {
@@ -334,46 +335,8 @@ const Home = () => {
         </ScrollVelocityContainer>
       </section>
 
-      {/* 3D Text Flip Section */}
-      <section className="bg-brand-1 py-24 md:py-32 flex flex-col justify-center items-center overflow-hidden relative z-40">
 
-        {/* Enhanced decorative elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 md:w-200 h-150 md:h-200 bg-brand-2/20 rounded-full blur-[100px] md:blur-[120px] z-0 pointer-events-none mix-blend-overlay"></div>
 
-        {/* Dynamic Glow Trail */}
-        <motion.div
-          animate={{ opacity: [0.4, 0.7, 0.4], scale: [1, 1.05, 1] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-50 md:h-75 bg-linear-to-r from-transparent via-brand-3/30 to-transparent blur-[60px] md:blur-[80px] z-0"
-        ></motion.div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-25 md:h-37.5 bg-linear-to-r from-transparent via-brand-4/40 to-transparent blur-2xl md:blur-[50px] z-0 transform -rotate-2"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-25 md:h-37.5 bg-linear-to-r from-transparent via-[#88C9C4]/20 to-transparent blur-[50px] md:blur-[60px] z-0 transform rotate-2"></div>
-
-        <div className="absolute -top-10 md:top-10 left-4 md:left-10 text-brand-5/10 font-bebas text-[10rem] md:text-[15rem] select-none z-0 leading-none blur-[2px]">"</div>
-        <div className="absolute -bottom-10 md:bottom-10 right-4 md:right-10 text-brand-5/10 font-bebas text-[10rem] md:text-[15rem] select-none z-0 leading-none rotate-180 blur-[2px]">"</div>
-
-        <div className="relative z-10 flex flex-col items-center px-4">
-          <p className="font-geist text-brand-5 uppercase tracking-[0.3em] text-xs md:text-sm font-bold mb-6 md:mb-8 flex items-center gap-4">
-            <span className="w-8 md:w-16 h-px bg-brand-5"></span>
-            Tu opinión es clave
-            <span className="w-8 md:w-16 h-px bg-brand-5"></span>
-          </p>
-
-          <Text3DFlip
-            className="font-bebas text-center cursor-pointer text-[clamp(4rem,9vw,9rem)] tracking-wider leading-[0.9]"
-            textClassName="text-brand-5 drop-shadow-[0_10px_30px_rgba(62,92,118,0.3)]"
-            flipTextClassName="text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]"
-            rotateDirection="bottom"
-            staggerDuration={0.02}
-          >
-            CUÉNTANOS TU EXPERIENCIA
-          </Text3DFlip>
-
-          <p className="font-geist text-brand-5/70 mt-8 max-w-lg text-center mx-auto text-sm md:text-base font-medium">
-            Pasa el cursor sobre el texto. Cada detalle ha sido diseñado pensando en los mejores profesionales.
-          </p>
-        </div>
-      </section>
 
       {/* Validation & Support Section (Premium Arches) */}
       <section className="bg-linear-to-br from-brand-5 via-brand-5 to-[#061F24] pt-32 pb-0 overflow-hidden relative z-50 rounded-t-[60px] -mt-10 shadow-[0_-20px_50px_rgba(0,0,0,0.2)]">
@@ -389,151 +352,201 @@ const Home = () => {
             VALIDACIÓN DE <span className="text-brand-2">PRODUCTO</span>
           </h2>
           <p className="text-brand-1/70 font-geist mt-6 max-w-2xl mx-auto text-lg md:text-xl font-light">
-            Transparencia y calidad garantizada. Descubre cómo nuestros clientes validan cada kit en tiempo real.
+            Transparencia y excelencia en cada detalle. Descubre la máxima calidad del mercado comprobada por especialistas.
           </p>
         </div>
 
         {/* Arches Container */}
         <div className="max-w-350 mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 relative z-10 items-end">
 
-          {/* Column 1 */}
-          <div className="bg-brand-1 rounded-[40px] md:rounded-b-none md:rounded-t-[60px] pb-110 md:pb-0 md:h-150 flex flex-col items-center pt-16 px-6 md:px-10 relative w-full shadow-[0_-10px_40px_rgba(0,0,0,0.1)] group overflow-hidden md:overflow-visible">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-2 group-hover:text-brand-3 transition-colors">Trazabilidad</h3>
-              <p className="font-geist text-brand-5/60 text-sm">Escanea y verifica el origen.</p>
+          {/* Column 1 — La Mejor Calidad del Mercado */}
+          <div className="bg-brand-1 rounded-[40px] md:rounded-b-none md:rounded-t-[60px] pb-110 md:pb-0 md:h-150 flex flex-col items-center pt-14 px-6 md:px-10 relative w-full shadow-[0_-10px_40px_rgba(0,0,0,0.1)] group overflow-hidden md:overflow-visible">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-1 group-hover:text-brand-3 transition-colors">
+                La Mejor Calidad
+              </h3>
+              <p className="font-geist text-brand-5/70 text-sm max-w-xs mx-auto font-medium">
+                Usamos la mejor calidad del mercado actualmente.
+              </p>
             </div>
 
             {/* Phone Mockup */}
-            <div className="w-70 h-140 bg-white border-8 border-[#111] rounded-[3rem] shadow-2xl absolute -bottom-10 md:-bottom-30 flex flex-col overflow-hidden group-hover:-translate-y-4 transition-transform duration-700">
+            <div className="w-70 h-140 bg-white border-8 border-[#111] rounded-[3rem] shadow-2xl absolute -bottom-10 md:-bottom-12 flex flex-col overflow-hidden group-hover:-translate-y-4 transition-transform duration-700">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-24 h-7 bg-[#111] rounded-full z-20"></div>
 
-              <div className="flex-1 bg-brand-5 p-6 pt-20 flex flex-col items-center relative overflow-hidden">
-                {/* Camera Viewfinder Fake */}
-                <div className="absolute inset-0 bg-black z-0 opacity-20"></div>
+              <div className="flex-1 bg-brand-5 p-6 pt-18 flex flex-col items-center justify-between relative overflow-hidden pb-8">
+                <div className="absolute inset-0 bg-black z-0 opacity-25"></div>
 
-                <div className="relative z-10 w-48 h-48 mb-8 mt-4 flex items-center justify-center">
+                <div className="relative z-10 w-48 h-44 mb-3 mt-1 flex flex-col items-center justify-center">
                   {/* Scanner Corners */}
                   <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-brand-2 rounded-tl-lg"></div>
                   <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-brand-2 rounded-tr-lg"></div>
                   <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-brand-2 rounded-bl-lg"></div>
                   <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-brand-2 rounded-br-lg"></div>
 
-                  {/* QR Code Fake */}
-                  <div className="w-32 h-32 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-2 flex flex-wrap gap-1">
-                    {[...Array(16)].map((_, i) => (
-                      <div key={i} className={`w-[22%] h-[22%] rounded-sm m-[1.5%] ${i % 3 === 0 || i % 5 === 0 ? 'bg-white' : 'bg-transparent'}`}></div>
-                    ))}
+                  {/* Quality Badge Display */}
+                  <div className="w-38 h-34 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 flex flex-col items-center justify-center text-center shadow-inner">
+                    <Award className="w-11 h-11 text-brand-3 mb-1.5 animate-bounce" />
+                    <span className="text-brand-1 font-bebas text-xl leading-none">MEJOR CALIDAD</span>
+                    <span className="text-brand-2 font-geist text-[10px] font-bold uppercase tracking-widest mt-1">100% Comprobada</span>
                   </div>
 
-                  {/* Scan Line */}
-                  <div className="absolute top-1/2 left-0 w-full h-1 bg-brand-2 shadow-[0_0_15px_rgba(136,201,196,0.8)] animate-pulse"></div>
+                  {/* Laser Scan Line */}
+                  <div className="absolute top-1/2 left-0 w-full h-1 bg-brand-2 shadow-[0_0_15px_rgba(136,201,196,0.9)] animate-pulse"></div>
                 </div>
 
-                <div className="relative z-10 bg-white/10 backdrop-blur-md w-full p-4 rounded-2xl border border-white/20 text-center">
-                  <p className="text-white font-geist text-sm mb-1">Escaneando Lote...</p>
-                  <p className="text-brand-2 font-bebas text-xl">L-2026-993</p>
+                <div className="relative z-10 bg-white/10 backdrop-blur-md w-full p-3.5 rounded-2xl border border-white/20 text-center">
+                  <p className="text-brand-2 font-geist text-[11px] uppercase tracking-wider font-bold mb-0.5">Estándar N°1</p>
+                  <p className="text-white font-bebas text-xl tracking-wide leading-tight">MEJOR CALIDAD DEL MERCADO</p>
+                  <p className="text-white/80 text-[10px] font-geist mt-1 leading-snug">
+                    Usamos la mejor calidad del mercado actualmente. SMS Trilaminado estéril.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Column 2 */}
+          {/* Column 2 — Kit Validado Especialista Gonzalo Martinez */}
           <div className="bg-brand-1 rounded-[40px] md:rounded-b-none md:rounded-t-[60px] pt-120 md:pt-0 md:h-175 flex flex-col items-center px-6 md:px-10 relative w-full z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] group overflow-hidden md:overflow-visible">
             {/* Phone Mockup */}
             <div className="w-70 h-140 bg-white border-8 border-[#111] rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.3)] absolute -top-10 md:-top-20 flex flex-col overflow-hidden group-hover:-translate-y-4 transition-transform duration-700">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-24 h-7 bg-[#111] rounded-full z-20"></div>
 
-              <div className="flex-1 bg-brand-1/40 p-6 pt-20 flex flex-col items-center relative">
+              <div className="flex-1 bg-brand-1/40 p-6 pt-16 flex flex-col items-center relative">
                 {/* Decorative blob */}
                 <div className="absolute top-0 left-0 w-full h-64 bg-linear-to-b from-brand-3/20 to-transparent z-0"></div>
 
-                <div className="relative z-10 w-20 h-20 bg-[#20666B] rounded-full flex items-center justify-center mb-6 shadow-xl shadow-[#20666B]/30">
-                  <ShieldCheck className="w-10 h-10 text-white" />
+                <div className="relative z-10 w-16 h-16 bg-[#20666B] rounded-full flex items-center justify-center mb-3 shadow-xl shadow-[#20666B]/30">
+                  <ShieldCheck className="w-8 h-8 text-white" />
                 </div>
 
-                <h4 className="text-center font-bebas text-brand-5 text-3xl mb-2 relative z-10">Kit Validado</h4>
-                <p className="text-center font-geist text-brand-5/60 text-xs mb-8 relative z-10">Autenticidad comprobada por GM Kit Studio.</p>
+                <h4 className="text-center font-bebas text-brand-5 text-3xl mb-1 relative z-10">Kit Validado</h4>
+                <p className="text-center font-geist text-brand-5/70 text-xs mb-5 relative z-10 font-medium">
+                  Especialista Gonzalo Martínez
+                </p>
 
                 <div className="w-full relative z-10">
-                  <div className="bg-white p-5 rounded-3xl shadow-sm border border-brand-5/5 flex flex-col gap-4 mb-4">
-                    <div className="flex justify-between items-center border-b border-brand-5/5 pb-3">
-                      <span className="text-xs text-brand-5/50 font-geist">Feedback</span>
-                      <span className="text-sm font-bold text-brand-5">¡Calidad 10/10!</span>
+                  <div className="bg-white p-4 rounded-3xl shadow-sm border border-brand-5/5 flex flex-col gap-3 mb-2">
+                    <div className="flex justify-between items-center border-b border-brand-5/5 pb-2">
+                      <span className="text-xs text-brand-5/50 font-geist">Especialista</span>
+                      <span className="text-xs font-bold text-brand-5">Gonzalo Martínez</span>
                     </div>
-                    <div className="flex justify-between items-center border-b border-brand-5/5 pb-3">
-                      <span className="text-xs text-brand-5/50 font-geist">Doctor/a</span>
-                      <span className="text-sm font-bold text-brand-5">Dr. Wagner</span>
+                    <div className="flex justify-between items-center border-b border-brand-5/5 pb-2">
+                      <span className="text-xs text-brand-5/50 font-geist">Comprobación</span>
+                      <span className="text-xs font-bold text-brand-5">Calidad 10/10 Quirúrgica</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-xs text-brand-5/50 font-geist">Valoración</span>
-                      <span className="text-sm font-bold text-brand-3 tracking-widest">★★★★★</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-bold text-brand-5">5.0</span>
+                        <span className="text-sm font-bold text-[#F59E0B] tracking-widest">★★★★★</span>
+                      </div>
                     </div>
                   </div>
 
-                  <button className="mt-12 bg-transparent border border-brand-5 text-brand-5 px-12 py-4 rounded-full font-bebas tracking-widest text-xl hover:bg-brand-5 hover:text-brand-1 transition-all duration-300 shadow-[0_0_20px_rgba(62,92,118,0.1)] hover:shadow-[0_0_30px_rgba(62,92,118,0.3)] relative overflow-hidden group">
-                    <span className="relative z-10">Dejar Reseña</span>
-                    <div className="absolute inset-0 bg-brand-5 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0"></div>
+                  {/* Button inside Phone */}
+                  <button
+                    onClick={() => setIsReviewModalOpen(true)}
+                    className="mt-4 w-full bg-[#5D7E8E] hover:bg-[#6E93A5] text-white py-3 px-4 rounded-2xl font-bebas tracking-widest text-base flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(93,126,142,0.4)] transition-all cursor-pointer"
+                  >
+                    <Star className="w-4 h-4 fill-white text-white" />
+                    <span>DEJA TU RESEÑA DEL PRODUCTO</span>
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="absolute bottom-12 md:bottom-28 w-full px-8 text-center">
-              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-2 group-hover:text-brand-3 transition-colors">Comunidad</h3>
-              <p className="font-geist text-brand-5/60 text-sm">Validado por cientos de profesionales.</p>
+            {/* Arch Bottom Text & Button */}
+            <div className="absolute bottom-6 md:bottom-12 w-full px-5 text-center flex flex-col items-center">
+              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-1 group-hover:text-brand-3 transition-colors">Kit Validado</h3>
+              <p className="font-geist text-brand-5/70 text-xs sm:text-sm mb-3 font-medium">Validado por Especialista Gonzalo Martínez.</p>
+              
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="inline-flex items-center gap-2 bg-[#5D7E8E] hover:bg-[#6E93A5] text-white px-7 py-3 rounded-full font-bebas tracking-widest text-base sm:text-lg shadow-[0_0_20px_rgba(93,126,142,0.4)] hover:shadow-[0_0_30px_rgba(93,126,142,0.6)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+              >
+                <Star className="w-4 h-4 fill-white text-white" />
+                <span>DEJA TU RESEÑA DEL PRODUCTO</span>
+              </button>
             </div>
           </div>
 
-          {/* Column 3 */}
-          <div className="bg-brand-1 rounded-[40px] md:rounded-b-none md:rounded-t-[60px] pb-110 md:pb-0 md:h-150 flex flex-col items-center pt-16 px-6 md:px-10 relative w-full shadow-[0_-10px_40px_rgba(0,0,0,0.1)] group overflow-hidden md:overflow-visible">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-2 group-hover:text-brand-3 transition-colors">Control Total</h3>
-              <p className="font-geist text-brand-5/60 text-sm">Gestiona tu stock inteligentemente.</p>
+          {/* Column 3 — Recomendación del Producto & Comprobación del Material */}
+          <div className="bg-brand-1 rounded-[40px] md:rounded-b-none md:rounded-t-[60px] pb-110 md:pb-0 md:h-150 flex flex-col items-center pt-14 px-6 md:px-10 relative w-full shadow-[0_-10px_40px_rgba(0,0,0,0.1)] group overflow-hidden md:overflow-visible">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl md:text-4xl font-bebas text-brand-5 tracking-wide mb-1 group-hover:text-brand-3 transition-colors">Recomendación del Producto</h3>
+              <p className="font-geist text-brand-5/60 text-sm max-w-xs mx-auto">Comprueba el material del descartable y valoraciones.</p>
             </div>
 
-            {/* Phone Mockup */}
-            <div className="w-70 h-140 bg-white border-8 border-[#111] rounded-[3rem] shadow-2xl absolute -bottom-10 md:-bottom-30 flex flex-col overflow-hidden group-hover:-translate-y-4 transition-transform duration-700">
+            {/* Phone Mockup (lifted higher so nothing cuts off) */}
+            <div className="w-70 h-140 bg-white border-8 border-[#111] rounded-[3rem] shadow-2xl absolute -bottom-4 md:-bottom-6 flex flex-col overflow-hidden group-hover:-translate-y-4 transition-transform duration-700">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-24 h-7 bg-[#111] rounded-full z-20"></div>
 
-              <div className="flex-1 bg-[#F8F9FA] p-6 pt-20 flex flex-col">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <p className="text-[10px] text-brand-5/50 uppercase tracking-widest font-bold mb-1">Stock Actual</p>
-                    <h5 className="font-bebas text-4xl text-brand-5 leading-none">2,450</h5>
+              <div className="flex-1 bg-[#F8F9FA] p-4.5 pt-18 flex flex-col justify-between pb-6">
+                {/* 1. Comprobación del Producto (MOVED HIGHER UP AT THE TOP) */}
+                <div className="bg-linear-to-br from-brand-5 via-[#20666B] to-brand-5 rounded-2xl p-3.5 text-brand-1 shadow-md relative overflow-hidden mb-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[9px] uppercase font-geist tracking-widest text-brand-2 font-bold">Comprobación del Producto</span>
+                    <ShieldCheck className="w-3.5 h-3.5 text-brand-2" />
                   </div>
-                  <div className="w-12 h-12 bg-brand-1 rounded-full border border-brand-2 flex items-center justify-center">
-                    <ShieldCheck className="w-6 h-6 text-[#20666B]" />
-                  </div>
-                </div>
-
-                {/* Premium Dashboard Card */}
-                <div className="w-full h-40 bg-linear-to-br from-brand-5 via-[#20666B] to-brand-5 rounded-3xl mb-6 p-5 flex flex-col justify-between shadow-xl relative overflow-hidden">
-                  <div className="absolute -right-5 -top-5 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-
-                  <div className="relative z-10 flex justify-between items-start text-brand-1">
-                    <span className="text-xs font-geist uppercase tracking-widest opacity-80">Alerta Stock</span>
-                    <span className="w-2 h-2 bg-brand-2 rounded-full animate-pulse shadow-[0_0_8px_#88C9C4]"></span>
-                  </div>
-                  <div className="relative z-10">
-                    <p className="text-brand-1/70 text-xs mb-1 font-geist">Kits de Cirugía</p>
-                    <div className="text-brand-1 font-bebas tracking-wider text-3xl">DISPONIBLE</div>
-                  </div>
-                </div>
-
-                {/* List items */}
-                <div className="space-y-3">
-                  <div className="bg-white p-3 rounded-2xl flex items-center gap-3 shadow-sm border border-brand-5/5">
-                    <div className="w-10 h-10 bg-brand-1 rounded-xl flex items-center justify-center text-[#20666B]">✦</div>
-                    <div className="flex-1">
-                      <div className="h-2 w-20 bg-brand-5/20 rounded-full mb-2"></div>
-                      <div className="h-1.5 w-12 bg-brand-5/10 rounded-full"></div>
+                  <p className="font-bebas text-lg text-brand-1 tracking-wide mb-1 leading-tight">Descartable Comprobado</p>
+                  <div className="space-y-1 text-[10px] font-geist text-brand-1/80">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3 h-3 text-brand-2 shrink-0" />
+                      <span>SMS Trilaminado 50g antidesgarro</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3 h-3 text-brand-2 shrink-0" />
+                      <span>100% Barrera impermeable a fluidos</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3 h-3 text-brand-2 shrink-0" />
+                      <span>Esterilidad grado quirúrgico</span>
                     </div>
                   </div>
-                  <div className="bg-white p-3 rounded-2xl flex items-center gap-3 shadow-sm border border-brand-5/5">
-                    <div className="w-10 h-10 bg-brand-1 rounded-xl flex items-center justify-center text-[#20666B]">✦</div>
-                    <div className="flex-1">
-                      <div className="h-2 w-24 bg-brand-5/20 rounded-full mb-2"></div>
-                      <div className="h-1.5 w-16 bg-brand-5/10 rounded-full"></div>
+                </div>
+
+                {/* 2. Star rating breakdown card */}
+                <div className="bg-white p-3.5 rounded-2xl shadow-sm border border-brand-5/5">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bebas text-3xl text-brand-5 leading-none">4.9</span>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star key={s} className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-[9px] text-brand-5/50 font-bold uppercase tracking-wider mt-0.5">Recomendación Clínica</p>
+                    </div>
+                    <span className="px-2 py-0.5 bg-[#10B981]/15 text-[#10B981] font-bold text-[9px] rounded-full uppercase tracking-wider">
+                      99% Aprobado
+                    </span>
+                  </div>
+
+                  {/* Opciones de las estrellas */}
+                  <div className="space-y-1 pt-2 border-t border-brand-5/5">
+                    <div className="flex items-center text-[10px] font-medium text-brand-5/70 gap-2">
+                      <span className="w-14">5 Estrellas</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#F59E0B] rounded-full w-[96%]"></div>
+                      </div>
+                      <span className="w-6 text-right font-bold text-brand-5">96%</span>
+                    </div>
+                    <div className="flex items-center text-[10px] font-medium text-brand-5/70 gap-2">
+                      <span className="w-14">4 Estrellas</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#F59E0B] rounded-full w-[4%]"></div>
+                      </div>
+                      <span className="w-6 text-right font-bold text-brand-5">4%</span>
+                    </div>
+                    <div className="flex items-center text-[10px] font-medium text-brand-5/40 gap-2">
+                      <span className="w-14">3 Estrellas</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-gray-200 rounded-full w-[0%]"></div>
+                      </div>
+                      <span className="w-6 text-right">0%</span>
                     </div>
                   </div>
                 </div>
@@ -543,9 +556,37 @@ const Home = () => {
 
         </div>
 
+        {/* Review CTA Capsule Banner (Exact visual replica of user's reference) */}
+        <div className="max-w-3xl mx-auto px-4 mt-12 md:mt-16 mb-8 relative z-20">
+          <div className="bg-[#121A20] backdrop-blur-md p-4 sm:p-5 md:px-8 rounded-2xl sm:rounded-full border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <p className="text-white/50 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-0.5">
+                Tu opinión nos importa
+              </p>
+              <h4 className="text-white font-bebas text-2xl sm:text-3xl tracking-wide leading-none">
+                DEJA TU RESEÑA DEL PRODUCTO
+              </h4>
+            </div>
+
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
+              className="bg-[#5D7E8E] hover:bg-[#6E93A5] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-base tracking-wider flex items-center gap-2 shadow-[0_0_20px_rgba(93,126,142,0.5)] hover:shadow-[0_0_30px_rgba(93,126,142,0.7)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer shrink-0"
+            >
+              <Star className="w-4 h-4 fill-white text-white" />
+              <span>¡NOS AYUDARÍA UN MONTÓN!</span>
+            </button>
+          </div>
+        </div>
+
         {/* Fill bottom space so white columns connect to footer/bottom seamlessly */}
         <div className="h-62.5 bg-brand-1 absolute bottom-0 left-0 w-full z-0 border-t border-brand-1"></div>
       </section>
+
+      {/* Review Modal */}
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+      />
 
     </div>
   );
