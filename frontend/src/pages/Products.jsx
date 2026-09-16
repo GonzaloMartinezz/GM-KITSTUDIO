@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check } from 'lucide-react';
+import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
 
 const Products = () => {
@@ -27,17 +27,17 @@ const Products = () => {
   return (
     <div className="bg-[#0C1517] min-h-screen text-brand-1 font-geist selection:bg-brand-3 selection:text-white">
       {/* Top Padding for Navbar */}
-      <div className="pt-28 md:pt-36 pb-16 px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
+      <div className="pt-24 sm:pt-28 md:pt-36 pb-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
 
         {/* HERO SECTION */}
-        <section className="flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24 mb-24 md:mb-32">
+        <section className="flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 lg:gap-24 mb-16 sm:mb-24 md:mb-32">
           {/* Left Text */}
           <div className="w-full md:w-1/2 flex flex-col items-start z-10">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="font-bebas text-6xl md:text-8xl tracking-wider text-white leading-[0.9]"
+              className="font-bebas text-5xl sm:text-7xl md:text-8xl tracking-wider text-white leading-[0.9]"
             >
               RAÍCES DE<br />CALIDAD
             </motion.h1>
@@ -45,7 +45,7 @@ const Products = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-              className="mt-6 text-lg text-brand-1/70 max-w-md font-light leading-relaxed"
+              className="mt-4 sm:mt-6 text-base sm:text-lg text-brand-1/70 max-w-md font-light leading-relaxed"
             >
               En GM KIT STUDIO, creemos que la seguridad médica comienza con el equilibrio perfecto entre protección absoluta y comodidad. Nuestra línea estéril combina materiales de primera calidad con tecnología moderna para restaurar la confianza.
             </motion.p>
@@ -54,7 +54,7 @@ const Products = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
               onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
-              className="mt-10 bg-[#42544F] hover:bg-[#526660] text-brand-1 px-8 py-3.5 rounded-full font-medium transition-colors flex items-center gap-2 shadow-lg"
+              className="mt-6 sm:mt-10 bg-[#42544F] hover:bg-[#526660] text-brand-1 px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium transition-colors flex items-center gap-2 shadow-lg text-sm sm:text-base cursor-pointer"
             >
               <ShoppingCart size={20} />
               Comprar Kit Completo
@@ -67,7 +67,7 @@ const Products = () => {
               initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
               animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative w-full h-75 md:h-112.5 lg:h-125 rounded-4xl overflow-hidden shadow-2xl bg-brand-5/20"
+              className="relative w-full h-76 xs:h-88 sm:h-96 md:h-112.5 lg:h-125 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-brand-5/20"
             >
               <img
                 src="/images/kitsodontologico.jpg"
@@ -87,7 +87,7 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="font-bebas text-4xl md:text-5xl text-white mb-4 tracking-wide"
+            className="font-bebas text-3xl sm:text-4xl md:text-5xl text-white mb-2 sm:mb-4 tracking-wide"
           >
             ¿QUÉ INCLUYE EL KIT?
           </motion.h2>
@@ -95,39 +95,39 @@ const Products = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-brand-1/60 font-geist mb-10 max-w-2xl"
+            className="text-brand-1/60 font-geist mb-8 sm:mb-10 max-w-2xl text-sm sm:text-base"
           >
             Todo lo necesario para garantizar la bioseguridad de un paciente y del profesional en una intervención odontológica.
           </motion.p>
 
           {loading ? (
-            <div className="flex justify-center items-center h-125">
+            <div className="flex justify-center items-center h-80 sm:h-125">
               <div className="w-12 h-12 border-4 border-brand-3 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
-            <div className="w-full relative z-20 mt-12" style={{ contain: 'paint' }}>
+            <div className="w-full relative z-20 mt-8 sm:mt-12" style={{ contain: 'paint' }}>
               <ProductShowcase products={products} onProductSelect={setSelectedProduct} />
             </div>
           )}
         </section>
 
         {/* HOW TO BUY SECTION */}
-        <section className="mt-32 border-t border-white/10 pt-24">
+        <section className="mt-20 sm:mt-32 border-t border-white/10 pt-16 sm:pt-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-16"
           >
-            <h2 className="font-bebas text-4xl md:text-5xl text-white mb-4 tracking-wide">
+            <h2 className="font-bebas text-3xl sm:text-4xl md:text-5xl text-white mb-2 sm:mb-4 tracking-wide">
               PASOS PARA COMPRAR
             </h2>
-            <p className="text-brand-1/60 font-geist max-w-2xl mx-auto">
+            <p className="text-brand-1/60 font-geist max-w-2xl mx-auto text-sm sm:text-base">
               Sigue este proceso simple y rápido para adquirir tus kits quirúrgicos a medida.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               { num: "1", title: "Visualizar kits", desc: "Explora nuestro catálogo y conoce en detalle cada componente de nuestros kits.", icon: <Eye className="w-5 h-5" /> },
               { num: "2", title: "Personalizar kits", desc: "Arma tu kit a medida según las necesidades específicas de tu cirugía.", icon: <Settings className="w-5 h-5" /> },
@@ -142,7 +142,7 @@ const Products = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-white rounded-[30px] p-8 md:p-10 flex flex-col items-start relative group hover:-translate-y-1 hover:bg-brand-4 transition-all duration-300 shadow-xl"
+                className="bg-white rounded-2xl sm:rounded-[30px] p-6 sm:p-8 md:p-10 flex flex-col items-start relative group hover:-translate-y-1 hover:bg-brand-4 transition-all duration-300 shadow-xl"
               >
                 <div className="absolute top-8 right-8 w-12 h-12 rounded-full bg-[#F3F3F3] text-brand-3 flex items-center justify-center group-hover:bg-white group-hover:text-brand-5 transition-colors">
                   {step.icon}

@@ -21,12 +21,13 @@ const Navbar = () => {
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
 
           {/* Mobile Menu Toggle (Visible only on small screens) */}
-          <div className="pointer-events-auto md:hidden flex items-center bg-brand-1 rounded-full p-2 shadow-sm border border-brand-2/20">
+          <div className="pointer-events-auto md:hidden flex items-center bg-brand-1 rounded-full p-1.5 shadow-sm border border-brand-2/20">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="p-2 text-brand-5 hover:text-brand-4"
+              aria-label="Abrir menú"
             >
-              <Menu size={24} />
+              <Menu size={22} />
             </button>
           </div>
 
@@ -47,15 +48,15 @@ const Navbar = () => {
           </div>
 
           {/* Right Action Pills */}
-          <div className="pointer-events-auto flex items-center gap-2 md:gap-4 mr-0 md:mr-2 lg:mr-4 mt-2 md:mt-6">
+          <div className="pointer-events-auto flex items-center gap-2 md:gap-4">
             
             {/* User Profile / Login */}
             {currentUser ? (
-              <div className="flex items-center gap-2 bg-brand-5 text-brand-1 px-2 py-2 md:px-3 rounded-full border border-brand-2/20 shadow-lg">
-                <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg">
+              <div className="flex items-center gap-1.5 sm:gap-2 bg-brand-5 text-brand-1 px-2 py-1.5 md:px-3 md:py-2 rounded-full border border-brand-2/20 shadow-lg">
+                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg shrink-0">
                   {currentUser.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-geist text-sm md:text-base hidden sm:block">
+                <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-[120px] truncate">
                   Hola, <b className="capitalize">{currentUser}</b>
                 </span>
                 
@@ -82,7 +83,7 @@ const Navbar = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-brand-5 text-brand-1 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-4 transition-colors border border-brand-2/20"
+                  className="bg-brand-5 text-brand-1 w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-4 transition-colors border border-brand-2/20"
                   title="Iniciar Sesión"
                 >
                   <User className="w-4 h-4 md:w-5 md:h-5" />
@@ -94,7 +95,8 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsCartOpen(true)}
-              className="relative bg-brand-5 text-brand-1 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-4 transition-colors border border-brand-2/20"
+              className="relative bg-brand-5 text-brand-1 w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-4 transition-colors border border-brand-2/20"
+              aria-label="Carrito de compras"
             >
               <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
               {totalItems > 0 && (
@@ -114,19 +116,20 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-60 bg-brand-5 flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[60] bg-brand-5 flex flex-col items-center justify-center px-6"
           >
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="absolute top-6 right-6 text-brand-1 p-2 rounded-full hover:bg-brand-4 transition-colors"
+              aria-label="Cerrar menú"
             >
-              <X size={32} />
+              <X size={28} />
             </button>
 
             <div className="flex flex-col items-center gap-8">
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className={`font-bebas text-5xl tracking-widest ${isActive('/') ? 'text-brand-3' : 'text-brand-1'}`}>INICIO</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/productos" className={`font-bebas text-5xl tracking-widest ${isActive('/productos') ? 'text-brand-3' : 'text-brand-1'}`}>PRODUCTOS</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/nosotros" className={`font-bebas text-5xl tracking-widest ${isActive('/nosotros') ? 'text-brand-3' : 'text-brand-1'}`}>NOSOTROS</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/') ? 'text-brand-3' : 'text-brand-1'}`}>INICIO</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} to="/productos" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/productos') ? 'text-brand-3' : 'text-brand-1'}`}>PRODUCTOS</Link>
+              <Link onClick={() => setIsMobileMenuOpen(false)} to="/nosotros" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/nosotros') ? 'text-brand-3' : 'text-brand-1'}`}>NOSOTROS</Link>
             </div>
           </motion.div>
         )}

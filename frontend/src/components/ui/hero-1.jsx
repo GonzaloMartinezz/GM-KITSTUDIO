@@ -13,7 +13,7 @@ export function Hero({
   return (
     <section
       id="hero"
-      className="relative mx-auto w-full pt-32 pb-48 px-6 text-center md:px-8 
+      className="relative mx-auto w-full pt-24 sm:pt-32 pb-32 sm:pb-48 px-4 sm:px-6 md:px-8 text-center 
       overflow-hidden flex flex-col items-center justify-center
       bg-[linear-gradient(to_bottom,#F1E8D9,#F1E8D9_50%,#E3D4C1_100%)]  
       dark:bg-[linear-gradient(to_bottom,#3E5C76,#3E5C76_40%,#54728C_100%)]"
@@ -53,12 +53,12 @@ export function Hero({
       )}
 
       {/* Title */}
-      <div className="flex justify-center max-w-5xl mx-auto">
+      <div className="flex justify-center max-w-5xl mx-auto px-2">
         <h1
           className="animate-fade-in -translate-y-4 text-balance 
           bg-linear-to-br from-brand-5 from-30% to-brand-4/60 
-          bg-clip-text py-6 text-[4.5rem] md:text-8xl lg:text-[7.5rem] font-bebas leading-[0.85] tracking-tight 
-          text-transparent opacity-0
+          bg-clip-text py-4 sm:py-6 text-4xl sm:text-6xl md:text-8xl lg:text-[7.5rem] font-bebas leading-[0.88] tracking-tight 
+          text-transparent opacity-0 break-words
           dark:from-brand-1 dark:to-brand-1/40"
           dangerouslySetInnerHTML={{ __html: title }}
         />

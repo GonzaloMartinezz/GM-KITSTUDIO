@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Target, Wallet, Package, Truck, ShoppingCart, Settings, HelpCircle, LogOut, PackageSearch, Menu, X, ChevronRight } from 'lucide-react';
+import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, PackageSearch, Menu, X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminSidebar = () => {
@@ -64,11 +64,8 @@ const AdminSidebar = () => {
               ))}
             </div>
 
-            <div className="p-4 border-t border-[#EBEBEB] flex flex-col gap-2">
-              <button className="flex items-center gap-4 px-4 py-3 rounded-xl text-[#8E8E93] hover:bg-[#F7F7F9] hover:text-[#1C1C1E] transition-all">
-                <Settings size={20} /> Ajustes
-              </button>
-              <button onClick={handleLogout} className="flex items-center gap-4 px-4 py-3 rounded-xl text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all font-medium">
+            <div className="p-4 border-t border-[#EBEBEB]">
+              <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all font-medium cursor-pointer">
                 <LogOut size={20} /> Cerrar Sesión
               </button>
             </div>
@@ -149,11 +146,7 @@ const AdminSidebar = () => {
 
         {/* Bottom section */}
         <div className={`flex flex-col gap-4 px-6 mt-auto ${isExpanded ? 'items-start' : 'items-center'}`}>
-          <button className={`h-12 rounded-xl flex items-center text-[#8E8E93] hover:text-[#1C1C1E] hover:bg-black/5 transition-all ${isExpanded ? 'px-4 gap-4 w-full' : 'justify-center w-12 mx-auto'}`}>
-            <Settings size={22} strokeWidth={2.5} className="shrink-0" />
-            {isExpanded && <span className="font-medium whitespace-nowrap text-sm">Ajustes</span>}
-          </button>
-          <button onClick={handleLogout} className={`h-12 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all ${isExpanded ? 'px-4 gap-4 w-full' : 'justify-center w-12 mx-auto'}`}>
+          <button onClick={handleLogout} className={`h-12 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all cursor-pointer ${isExpanded ? 'px-4 gap-4 w-full' : 'justify-center w-12 mx-auto'}`}>
             <LogOut size={22} strokeWidth={2.5} className="shrink-0" />
             {isExpanded && <span className="font-medium whitespace-nowrap text-sm">Cerrar Sesión</span>}
           </button>

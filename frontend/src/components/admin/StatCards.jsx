@@ -1,70 +1,102 @@
 import React from 'react';
-import { Package, DollarSign, TrendingUp, Users } from 'lucide-react';
+import { DollarSign, ShoppingCart, Users, UserPlus, TrendingUp } from 'lucide-react';
 
 const StatCards = () => {
   const stats = [
     {
-      title: 'Kits en Stock',
-      value: '540',
-      trend: '+12.5%',
-      trendDesc: 'Unidades listas para envío',
-      icon: Package,
-      iconColor: 'text-[#1E5A9C]',
-      iconBg: 'bg-[#1E5A9C]/10',
-    },
-    {
-      title: 'Ingresos Mensuales',
-      value: '$425,000',
-      trend: '+8.2%',
-      trendDesc: 'Flujo de caja',
+      id: 'revenue',
+      title: 'CANTIDAD DE INGRESOS BRUTOS',
+      value: '$2.845.000',
+      change: '+18.4%',
+      changeDesc: 'vs mes anterior',
+      sparkline: [35, 45, 55, 40, 70, 85, 100],
       icon: DollarSign,
-      iconColor: 'text-[#00C2CB]',
-      iconBg: 'bg-[#00C2CB]/10',
+      color: '#0F172A',
     },
     {
-      title: 'Margen Promedio',
-      value: '35%',
-      trend: '+2.1%',
-      trendDesc: 'Rentabilidad neta',
-      icon: TrendingUp,
-      iconColor: 'text-[#1E5A9C]',
-      iconBg: 'bg-[#F6E2B3]/60',
+      id: 'orders',
+      title: 'CANTIDAD DE VENTAS',
+      value: '342',
+      unit: 'Pedidos',
+      change: '+12.8%',
+      changeDesc: 'vs mes anterior',
+      sparkline: [40, 50, 45, 65, 75, 68, 92],
+      icon: ShoppingCart,
+      color: '#0F172A',
     },
     {
-      title: 'Clínicas Activas',
-      value: '14',
-      trend: null,
-      trendDesc: 'Consultorios en Tucumán',
+      id: 'customers',
+      title: 'CANTIDAD DE CLIENTES',
+      value: '128',
+      unit: 'Clínicas / Docs',
+      change: '+94%',
+      changeDesc: 'retención activa',
+      sparkline: [55, 62, 68, 74, 82, 88, 96],
       icon: Users,
-      iconColor: 'text-[#00C2CB]',
-      iconBg: 'bg-[#1E5A9C]/5',
+      color: '#0F172A',
+    },
+    {
+      id: 'new_customers',
+      title: 'CANTIDAD DE NUEVOS CLIENTES',
+      value: '24',
+      unit: 'Nuevos este mes',
+      change: '+8',
+      changeDesc: 'vs mes anterior',
+      sparkline: [20, 32, 38, 48, 58, 70, 88],
+      icon: UserPlus,
+      color: '#0F172A',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-      {stats.map((stat, index) => (
-        <div key={index} className="bg-white rounded-3xl p-6 shadow-sm border border-transparent hover:border-[#F0F0F3] hover:shadow-md transition-all cursor-default group">
-          
-          <div className="flex items-center gap-4 mb-6">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.iconBg}`}>
-              <stat.icon size={20} className={stat.iconColor} strokeWidth={2.5} />
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 mb-6">
+      {stats.map((stat) => (
+        <div
+          key={stat.id}
+          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
+        >
+          {/* Header row: Label + Sparkline */}
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <span className="text-[11px] font-bold text-[#64748B] tracking-wider uppercase leading-tight font-geist">
+              {stat.title}
+            </span>
+
+            {/* Mini Sparkline Bar Chart */}
+            <div className="flex items-end gap-1 h-8 shrink-0 px-1 pt-1" title="Tendencia reciente">
+              {stat.sparkline.map((val, idx) => (
+                <div
+                  key={idx}
+                  className="w-1 bg-[#CBD5E1] group-hover:bg-[#0F172A] rounded-full transition-all duration-300"
+                  style={{ height: `${val}%` }}
+                />
+              ))}
             </div>
-            <span className="text-[15px] font-medium text-[#8E8E93] group-hover:text-[#1E5A9C] transition-colors">{stat.title}</span>
           </div>
 
-          <div className="flex items-baseline gap-3 mb-2">
-            <h3 className="text-4xl font-bold text-[#1E5A9C]">{stat.value}</h3>
-            {stat.trend && (
-              <div className="flex items-center gap-1 text-[11px] font-bold text-[#00C2CB] bg-[#00C2CB]/10 px-2 py-1 rounded-full">
-                <TrendingUp size={12} strokeWidth={3} />
-                {stat.trend}
-              </div>
-            )}
+          {/* Main Value */}
+          <div className="mb-2">
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-3xl font-extrabold text-[#0F172A] tracking-tight font-geist">
+                {stat.value}
+              </h3>
+              {stat.unit && (
+                <span className="text-xs font-semibold text-[#64748B]">
+                  {stat.unit}
+                </span>
+              )}
+            </div>
           </div>
 
-          <p className="text-xs text-[#8E8E93] font-medium">{stat.trendDesc}</p>
-          
+          {/* Bottom row: Trend indicator */}
+          <div className="flex items-center gap-1.5 pt-2 border-t border-[#F1F5F9] text-xs">
+            <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-[#ECFDF5] text-[#10B981]">
+              <TrendingUp size={12} strokeWidth={2.5} />
+              {stat.change}
+            </span>
+            <span className="text-[#64748B] text-[11px] font-medium truncate">
+              {stat.changeDesc}
+            </span>
+          </div>
         </div>
       ))}
     </div>

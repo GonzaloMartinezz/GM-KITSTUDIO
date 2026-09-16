@@ -30,9 +30,9 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen font-sans antialiased flex overflow-hidden" style={{ background: 'transparent' }}>
+    <div className="min-h-screen font-sans antialiased flex flex-col lg:flex-row overflow-y-auto" style={{ background: 'transparent' }}>
       <style>{`
-        html, body { height: 100%; margin: 0; overflow: hidden; }
+        html, body { min-height: 100%; margin: 0; }
         body {
           background-color: #f1ede5;
           background-image:
@@ -88,8 +88,8 @@ const Login = () => {
       `}</style>
 
       {/* LEFT — Auth Card */}
-      <section className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end px-8 lg:pr-14 xl:pr-20 py-12">
-        <div className="glass-card w-full max-w-105 rounded-4xl p-8 sm:p-10">
+      <section className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end px-4 sm:px-8 lg:pr-14 xl:pr-20 py-8 sm:py-12 min-h-screen lg:min-h-0">
+        <div className="glass-card w-full max-w-105 rounded-3xl sm:rounded-4xl p-6 sm:p-10 my-auto">
 
           {/* Tabs */}
           <div className="flex p-1 bg-[#364B5D]/10 rounded-full mb-8 border border-white/40">
@@ -236,10 +236,22 @@ const Login = () => {
 
         {/* Main headline */}
         <div className="space-y-6">
-          <h1 className="font-display font-bold leading-[0.88] text-[#1e2f3e]" style={{ fontSize: 'clamp(3.5rem, 6vw, 5.5rem)' }}>
-            GM KIT<br />
-            <span className="text-[#1e2f3e]/35">STUDIO</span>
-          </h1>
+          <div className="flex items-center gap-6 xl:gap-8">
+            <h1 className="font-display font-bold leading-[0.88] text-[#1e2f3e]" style={{ fontSize: 'clamp(3.5rem, 6vw, 5.5rem)' }}>
+              GM KIT<br />
+              <span className="text-[#1e2f3e]/35">STUDIO</span>
+            </h1>
+            <div className="relative group shrink-0">
+              <div className="w-28 h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36 aspect-square rounded-full overflow-hidden border-2 border-white/60 shadow-[0_14px_38px_rgba(30,47,62,0.22)] transition-transform duration-300 group-hover:scale-105 bg-black flex items-center justify-center">
+                <img
+                  src="/images/LOGOia.png"
+                  alt="GM KIT STUDIO Logo"
+                  className="w-full h-full aspect-square rounded-full object-cover block select-none pointer-events-none"
+                  style={{ clipPath: 'circle(50% at 50% 50%)' }}
+                />
+              </div>
+            </div>
+          </div>
           <p className="text-[#1e2f3e]/65 text-base leading-relaxed max-w-sm">
             Ingresá a tu portal de gestión para consultar pedidos, administrar tu cuenta y acceder a kits de bioseguridad certificados en tiempo real.
           </p>

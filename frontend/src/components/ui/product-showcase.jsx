@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Syringe, Box, Crosshair, Droplet, User, PlusCircle, CheckCircle2 } from 'lucide-react';
 
@@ -14,54 +14,73 @@ const icons = [
 
 export function ProductShowcase({ products = [], onProductSelect }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   if (!products || products.length === 0) return null;
 
   return (
-    <div className="w-full max-w-350 mx-auto h-162.5 md:h-200 bg-[#0A0A0A] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+    <div className="w-full max-w-7xl mx-auto min-h-[580px] xs:min-h-[640px] md:h-200 bg-[#0A0A0A] rounded-3xl sm:rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
       {/* Left Panel: Menu */}
-      <div className="w-full md:w-[35%] bg-brand-4 h-full p-6 md:p-12 flex flex-col justify-center gap-2 z-20 relative">
-        <h3 className="text-white/80 font-bebas text-2xl tracking-widest mb-6 md:mb-8 px-4">SELECCIONAR PRODUCTO</h3>
+      <div className="w-full md:w-[32%] lg:w-[35%] bg-brand-4 p-3.5 sm:p-6 md:p-12 flex flex-col justify-center gap-1.5 sm:gap-2 z-20 relative shrink-0">
+        <h3 className="text-white/80 font-bebas text-base sm:text-2xl tracking-widest mb-1.5 sm:mb-4 md:mb-8 px-1 md:px-4">
+          SELECCIONAR PRODUCTO
+        </h3>
 
-        {products.map((product, idx) => {
-          const isActive = activeIndex === idx;
-          const Icon = icons[idx % icons.length];
+        {/* Scrollable list on mobile, column on desktop */}
+        <div 
+          className="flex md:flex-col overflow-x-auto md:overflow-visible gap-1.5 sm:gap-2 pb-1.5 md:pb-0 scrollbar-none"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {products.map((product, idx) => {
+            const isActive = activeIndex === idx;
+            const Icon = icons[idx % icons.length];
 
-          return (
-            <button
-              key={product._id || idx}
-              onClick={() => setActiveIndex(idx)}
-              className={`relative w-full flex items-center gap-4 px-6 py-4 rounded-full transition-all duration-200 ${isActive
-                  ? 'bg-brand-1 text-brand-5 shadow-xl'
-                  : 'bg-transparent text-white/60 border border-white/10 hover:bg-white/10'
+            return (
+              <button
+                key={product._id || idx}
+                onClick={() => setActiveIndex(idx)}
+                className={`relative shrink-0 md:shrink w-auto md:w-full flex items-center gap-2 sm:gap-4 px-3.5 sm:px-6 py-2 sm:py-3.5 md:py-4 rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? 'bg-brand-1 text-brand-5 shadow-xl scale-[1.02]'
+                    : 'bg-transparent text-white/60 border border-white/10 hover:bg-white/10'
                 }`}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-0 bg-brand-1 rounded-full -z-10"
-                  transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.8 }}
-                />
-              )}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-brand-1 rounded-full -z-10"
+                    transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.8 }}
+                  />
+                )}
 
-              {isActive ? (
-                <CheckCircle2 size={18} className="text-brand-3" />
-              ) : (
-                <Icon size={18} className="opacity-70" />
-              )}
+                {isActive ? (
+                  <CheckCircle2 size={15} className="text-brand-3 shrink-0" />
+                ) : (
+                  <Icon size={15} className="opacity-70 shrink-0" />
+                )}
 
-              <span className={`text-sm md:text-[15px] font-medium tracking-wide ${isActive ? 'font-bold' : ''}`}>
-                {product.name.toUpperCase()}
-              </span>
-            </button>
-          );
-        })}
+                <span className={`text-xs sm:text-sm md:text-[15px] font-medium tracking-wide ${isActive ? 'font-bold' : ''}`}>
+                  {product.name.toUpperCase()}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Right Panel: Stacked Cards */}
-      <div className="w-full md:w-[65%] relative h-full flex items-center justify-center p-8 overflow-hidden">
-        <div className="relative w-full max-w-125 aspect-4/5 perspective-1000">
-          <AnimatePresence>
+      {/* Right Panel: Stacked Cards (Expanded for larger mobile images) */}
+      <div className="w-full md:w-[68%] lg:w-[65%] relative h-[520px] xs:h-[580px] sm:h-[620px] md:h-full flex items-center justify-center px-2 py-3 xs:p-4 sm:p-8 overflow-hidden">
+        <div className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-125 h-[470px] xs:h-[520px] sm:h-[560px] md:h-full md:aspect-4/5 perspective-1000">
+          <AnimatePresence mode="popLayout">
             {products.map((product, idx) => {
               const offset = idx - activeIndex;
               if (offset < 0 || offset > 3) return null;
@@ -71,47 +90,56 @@ export function ProductShowcase({ products = [], onProductSelect }) {
               return (
                 <motion.div
                   key={product._id || idx}
-                  initial={{ opacity: 0, x: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, x: 60, scale: 0.88 }}
                   animate={{
-                    opacity: isFront ? 1 : 1 - offset * 0.25,
-                    scale: isFront ? 1 : 1 - offset * 0.08,
-                    x: offset * 40,
+                    opacity: isFront ? 1 : Math.max(0.18, 1 - offset * 0.22),
+                    scale: isFront ? 1 : 1 - offset * (isMobile ? 0.035 : 0.06),
+                    x: offset * (isMobile ? 10 : 20),
                     zIndex: 10 - offset,
                   }}
-                  exit={{ opacity: 0, x: -100, scale: 1.1, transition: { duration: 0.2, ease: "easeOut" } }}
+                  exit={{ opacity: 0, x: -60, scale: 1.05, transition: { duration: 0.2, ease: "easeOut" } }}
                   transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.8 }}
-                  className="absolute inset-0 rounded-4xl overflow-hidden shadow-2xl bg-[#EBEAE5]"
+                  onClick={() => onProductSelect && onProductSelect(product)}
+                  className="absolute inset-0 rounded-2xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#EBEAE5] cursor-pointer group"
                   style={{ transformOrigin: 'center center' }}
                 >
                   <div className="relative w-full h-full">
-                    <div className="absolute top-6 left-6 z-20 flex items-center gap-2">
+                    {/* Stock badge */}
+                    <div className="absolute top-3.5 left-3.5 sm:top-6 sm:left-6 z-20 flex items-center gap-1.5 sm:gap-2 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
                       <span className="w-2 h-2 rounded-full bg-brand-3 shadow-[0_0_10px_rgba(122,147,167,0.8)] animate-pulse"></span>
-                      <span className="text-xs font-bold tracking-widest text-brand-5 uppercase">En Stock</span>
+                      <span className="text-[10px] sm:text-xs font-bold tracking-widest text-brand-1 uppercase">En Stock</span>
                     </div>
 
+                    {/* Product Image - Larger, full visibility without dimming top */}
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-full object-cover mix-blend-multiply opacity-90 p-0"
+                      className="w-full h-full object-cover object-center opacity-95 group-hover:scale-105 transition-transform duration-700"
                     />
 
-                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+                    {/* Gradient Overlay focused only on bottom text area */}
+                    <div className="absolute bottom-0 left-0 right-0 h-[45%] sm:h-[48%] bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
 
-                    <div className="absolute bottom-0 left-0 w-full p-8 flex flex-col gap-3">
-                      <div className="bg-black/60 backdrop-blur-md w-fit px-4 py-1.5 rounded-full border border-white/10">
-                        <span className="text-brand-1 text-xs font-bold tracking-widest uppercase">
+                    {/* Product Info at bottom */}
+                    <div className="absolute bottom-0 left-0 w-full p-4 sm:p-8 flex flex-col gap-1.5 sm:gap-3 z-20">
+                      <div className="bg-black/60 backdrop-blur-md w-fit px-2.5 sm:px-4 py-0.5 sm:py-1.5 rounded-full border border-white/10">
+                        <span className="text-brand-1 text-[10px] sm:text-xs font-bold tracking-widest uppercase">
                           {idx + 1} • {product.name}
                         </span>
                       </div>
-                      <h3 className="text-white text-2xl md:text-3xl font-bebas leading-tight tracking-wide">
+                      <h3 className="text-white text-lg sm:text-2xl md:text-3xl font-bebas leading-tight tracking-wide line-clamp-2">
                         {product.description}
                       </h3>
-                      <div 
-                        onClick={() => onProductSelect && onProductSelect(product)}
-                        className="mt-2 text-brand-3 text-sm font-medium tracking-widest uppercase cursor-pointer hover:text-brand-1 transition-colors flex items-center gap-2 w-fit"
+                      <button 
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onProductSelect) onProductSelect(product);
+                        }}
+                        className="mt-0.5 sm:mt-2 text-brand-3 text-xs sm:text-sm font-medium tracking-widest uppercase cursor-pointer hover:text-brand-1 transition-colors flex items-center gap-1.5 sm:gap-2 w-fit pointer-events-auto group-hover:translate-x-1"
                       >
                         Ver Detalles <PlusCircle size={14} />
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </motion.div>

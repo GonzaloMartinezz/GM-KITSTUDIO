@@ -12,22 +12,22 @@ const CatalogSpecsSection = () => {
   ];
 
 return (
-  <section className="bg-brand-1 text-brand-5 py-32 px-4 md:px-12 lg:px-24 font-geist relative z-30">
-    <div className="max-w-350 mx-auto bg-white rounded-[3rem] p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-8 shadow-2xl">
+  <section className="bg-brand-1 text-brand-5 py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-12 lg:px-24 font-geist relative z-30">
+    <div className="max-w-7xl mx-auto bg-white rounded-3xl sm:rounded-[3rem] p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-6 sm:gap-8 shadow-2xl">
 
       {/* Left Dark Card */}
-      <div className="lg:w-[45%] bg-brand-5 text-brand-1 rounded-[2.5rem] p-10 md:p-12 flex flex-col justify-between min-h-112.5 relative overflow-hidden shadow-inner group">
+      <div className="lg:w-[45%] bg-brand-5 text-brand-1 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 flex flex-col justify-between min-h-auto md:min-h-112.5 relative overflow-hidden shadow-inner group">
         <div className="relative z-10">
-          <h2 className="text-5xl md:text-6xl font-bebas leading-none mb-6 tracking-wide">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bebas leading-none mb-4 sm:mb-6 tracking-wide">
             NUESTROS<br />SERVICIOS<br />PREMIUM.
           </h2>
-          <p className="text-brand-1/70 mt-6 max-w-87.5 font-medium">
+          <p className="text-brand-1/70 mt-3 sm:mt-6 max-w-87.5 font-medium text-sm sm:text-base leading-relaxed">
             Soluciones integrales pensadas para potenciar la eficiencia y seguridad en cada intervención de tu clínica.
           </p>
         </div>
 
-        <div className="relative z-10 mt-12">
-          <button className="w-full bg-[#0C0C0C] hover:bg-brand-2 hover:text-brand-5 text-white py-4 md:py-5 rounded-2xl font-bebas text-xl tracking-wider transition-colors shadow-lg">
+        <div className="relative z-10 mt-8 sm:mt-12">
+          <button className="w-full bg-[#0C0C0C] hover:bg-brand-2 hover:text-brand-5 text-white py-3.5 sm:py-4 md:py-5 rounded-2xl font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg cursor-pointer">
             VER TODOS LOS SERVICIOS
           </button>
         </div>
@@ -37,22 +37,22 @@ return (
       </div>
 
       {/* Right Grid */}
-      <div className="lg:w-[55%] py-10 px-4 lg:px-12">
+      <div className="lg:w-[55%] py-4 sm:py-10 px-2 sm:px-4 lg:px-12">
 
-        <div className="flex justify-between items-center mb-10 pb-6 border-b border-gray-100">
-          <span className="font-bebas text-xl text-gray-400 tracking-widest">Servicios</span>
-          <span className="font-bebas text-xl text-gray-400 tracking-widest hidden md:block">Beneficios</span>
+        <div className="flex justify-between items-center mb-6 sm:mb-10 pb-4 sm:pb-6 border-b border-gray-100">
+          <span className="font-bebas text-lg sm:text-xl text-gray-400 tracking-widest">Servicios</span>
+          <span className="font-bebas text-lg sm:text-xl text-gray-400 tracking-widest hidden md:block">Beneficios</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 sm:gap-x-12 gap-y-6 sm:gap-y-10">
           {services.map((spec, idx) => (
-            <div key={idx} className="flex gap-6 group cursor-pointer">
-              <div className="w-16 h-16 shrink-0 rounded-2xl bg-brand-1 flex items-center justify-center text-brand-5 group-hover:bg-brand-5 group-hover:text-brand-1 group-hover:shadow-lg transition-all duration-300">
+            <div key={idx} className="flex gap-3 sm:gap-6 group cursor-pointer">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 shrink-0 rounded-xl sm:rounded-2xl bg-brand-1 flex items-center justify-center text-brand-5 group-hover:bg-brand-5 group-hover:text-brand-1 group-hover:shadow-lg transition-all duration-300">
                 {spec.icon}
               </div>
               <div className="flex flex-col justify-center">
-                <h4 className="font-bebas tracking-wide text-2xl mb-1.5 text-gray-800">{spec.title}</h4>
-                <p className="text-gray-500 text-sm leading-relaxed">{spec.desc}</p>
+                <h4 className="font-bebas tracking-wide text-xl sm:text-2xl mb-1 text-gray-800">{spec.title}</h4>
+                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{spec.desc}</p>
               </div>
             </div>
           ))}

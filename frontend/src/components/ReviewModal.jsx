@@ -157,7 +157,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
             ) : (
               /* Main Content */
               <div 
-                className="p-5 sm:p-6 max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden"
+                className="p-4 sm:p-6 max-h-[88vh] overflow-y-auto [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {/* Tabs Switcher: Write vs View */}
@@ -165,7 +165,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('write')}
-                    className={`flex-1 py-1.5 px-3 rounded-full font-bebas text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
                       activeTab === 'write'
                         ? 'bg-[#5D7E8E] text-white shadow-sm'
                         : 'text-white/60 hover:text-white'
@@ -177,7 +177,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('view')}
-                    className={`flex-1 py-1.5 px-3 rounded-full font-bebas text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
                       activeTab === 'view'
                         ? 'bg-[#5D7E8E] text-white shadow-sm'
                         : 'text-white/60 hover:text-white'
@@ -193,7 +193,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   <div>
                     {/* Header */}
                     <div className="text-center mb-4">
-                      <h2 className="font-bebas text-3xl sm:text-4xl text-white tracking-wide leading-none mb-0.5">
+                      <h2 className="font-bebas text-2xl sm:text-4xl text-white tracking-wide leading-none mb-0.5">
                         DÉJANOS TU RESEÑA
                       </h2>
                       <p className="text-brand-2 font-geist text-[10px] uppercase tracking-wider font-semibold">
@@ -201,13 +201,13 @@ const ReviewModal = ({ isOpen, onClose }) => {
                       </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-3.5">
                       {/* Rating Stars */}
                       <div className="flex flex-col items-center">
                         <label className="text-[10px] font-bold text-white/70 uppercase tracking-widest mb-1.5">
                           Tu Calificación <span className="text-[#F59E0B]">*</span>
                         </label>
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-1 sm:gap-1.5">
                           {[1, 2, 3, 4, 5].map((star) => {
                             const active = (hoverRating || rating) >= star;
                             return (
@@ -220,7 +220,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                                 className="p-0.5 cursor-pointer transition-transform hover:scale-120 focus:outline-none"
                               >
                                 <Star
-                                  className={`w-7 h-7 sm:w-8 sm:h-8 transition-colors duration-150 ${
+                                  className={`w-6 h-6 sm:w-8 sm:h-8 transition-colors duration-150 ${
                                     active
                                       ? 'text-[#F59E0B] fill-[#F59E0B] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]'
                                       : 'text-white/20 fill-white/10'
@@ -244,7 +244,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Ej. Dr. Juan Pérez"
-                            className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all"
+                            className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all"
                           />
                         </div>
 
@@ -258,7 +258,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="juan@ejemplo.com"
-                            className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all"
+                            className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all"
                           />
                         </div>
                       </div>
@@ -274,7 +274,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                           value={comment}
                           onChange={(e) => setComment(e.target.value)}
                           placeholder="Escribe tu experiencia con el material descartable y el servicio..."
-                          className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all resize-none"
+                          className="w-full bg-[#243542]/70 border border-white/10 rounded-xl px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#5D7E8E] focus:bg-[#243542] transition-all resize-none"
                         ></textarea>
                       </div>
 
@@ -282,7 +282,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-[#5D7E8E] hover:bg-[#6E93A5] text-white font-bebas text-lg sm:text-xl tracking-widest py-3 rounded-xl transition-all duration-200 shadow-md mt-1 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                        className="w-full bg-[#5D7E8E] hover:bg-[#6E93A5] text-white font-bebas text-base sm:text-xl tracking-widest py-2.5 sm:py-3 rounded-xl transition-all duration-200 shadow-md mt-1 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                       >
                         {isSubmitting ? (
                           <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -294,14 +294,14 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   </div>
                 ) : (
                   /* TAB 2: Stats & Recent Reviews (compact layout) */
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3.5 sm:gap-4">
                     {/* Top Stats Box */}
-                    <div className="bg-white rounded-2xl p-4 text-[#1E293B] shadow-sm border border-brand-5/5">
-                      <div className="flex gap-4 items-center">
+                    <div className="bg-white rounded-2xl p-3 sm:p-4 text-[#1E293B] shadow-sm border border-brand-5/5">
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
                         {/* Rating Number */}
-                        <div className="flex flex-col items-center justify-center bg-[#F8F9FA] rounded-xl p-3 border border-brand-5/5 w-28 shrink-0 text-center">
-                          <span className="font-bebas text-4xl leading-none text-[#1E293B] mb-1">4.8</span>
-                          <div className="flex gap-0.5 mb-1">
+                        <div className="flex sm:flex-col items-center justify-between sm:justify-center bg-[#F8F9FA] rounded-xl px-3 py-2 sm:p-3 border border-brand-5/5 w-full sm:w-28 shrink-0 text-center">
+                          <span className="font-bebas text-3xl sm:text-4xl leading-none text-[#1E293B] sm:mb-1">4.8</span>
+                          <div className="flex gap-0.5 sm:mb-1">
                             {[1, 2, 3, 4, 5].map((s) => (
                               <Star key={s} className="w-3 h-3 fill-[#F59E0B] text-[#F59E0B]" />
                             ))}
@@ -312,7 +312,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
                         </div>
 
                         {/* Progress Bars */}
-                        <div className="flex-1 space-y-1.5">
+                        <div className="w-full sm:flex-1 space-y-1.5">
                           {ratingsStats.map((stat, i) => (
                             <div key={i} className="flex items-center gap-2 text-[11px] font-medium">
                               <span className="w-16 text-[#1E293B] shrink-0 text-[10px]">{stat.label}</span>

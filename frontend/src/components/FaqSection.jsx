@@ -25,15 +25,15 @@ const FaqSection = () => {
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col">
 
         {/* Header: Contact Info */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16 bg-white/5 backdrop-blur-md p-6 md:p-8 rounded-4xl border border-white/10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 sm:mb-16 bg-white/5 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-3xl sm:rounded-4xl border border-white/10">
           <div>
             <p className="text-white/50 text-xs font-bold mb-1 ml-1 uppercase tracking-wider">Email Directo</p>
-            <a href="mailto:contacto@gmkitstudio.com" className="text-white font-bebas tracking-wide text-2xl md:text-3xl hover:text-brand-3 transition-colors">
+            <a href="mailto:contacto@gmkitstudio.com" className="text-white font-bebas tracking-wide text-xl sm:text-2xl md:text-3xl hover:text-brand-3 transition-colors break-all sm:break-normal">
               contacto@gmkitstudio.com
             </a>
           </div>
 
-          <button className="bg-brand-3 text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-brand-4 transition-colors shadow-xl shadow-brand-3/20">
+          <button className="bg-brand-3 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-brand-4 transition-colors shadow-xl shadow-brand-3/20 cursor-pointer">
             <Mail size={18} />
             <span>Ponerse en contacto</span>
           </button>
@@ -44,26 +44,26 @@ const FaqSection = () => {
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className={`sticky flex flex-col p-8 md:p-10 min-h-[35vh] rounded-4xl md:rounded-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.15)] overflow-hidden ${faq.bg} ${faq.text_color}`}
+              className={`sticky flex flex-col p-6 sm:p-8 md:p-10 min-h-[28vh] sm:min-h-[35vh] rounded-3xl sm:rounded-4xl md:rounded-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.15)] overflow-hidden ${faq.bg} ${faq.text_color}`}
               style={{
-                top: `calc(12vh + ${i * 20}px)`, 
-                marginBottom: '40vh',
+                top: `calc(10vh + ${i * 16}px)`, 
+                marginBottom: '25vh',
                 zIndex: i
               }}
             >
               {/* Large Background Watermark Number */}
-              <div className={`absolute -right-5 -bottom-5 text-[10rem] md:text-[14rem] font-bebas leading-none font-bold opacity-5 pointer-events-none select-none ${faq.text_color === 'text-white' || faq.text_color === 'text-brand-1' || faq.text_color === 'text-[#F3F3F3]' ? 'text-white' : 'text-brand-5'}`}>
+              <div className={`absolute -right-5 -bottom-5 text-[8rem] sm:text-[10rem] md:text-[14rem] font-bebas leading-none font-bold opacity-5 pointer-events-none select-none ${faq.text_color === 'text-white' || faq.text_color === 'text-brand-1' || faq.text_color === 'text-[#F3F3F3]' ? 'text-white' : 'text-brand-5'}`}>
                 {faq.num}
               </div>
 
-              <div className="relative z-10 flex flex-col gap-6">
-                <div className="flex items-center gap-4 border-b border-current/10 pb-6">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bebas text-2xl shrink-0 ${faq.text_color === 'text-brand-5' ? 'bg-brand-5 text-white' : 'bg-white text-brand-5'}`}>
+              <div className="relative z-10 flex flex-col gap-4 sm:gap-6">
+                <div className="flex items-center gap-3 sm:gap-4 border-b border-current/10 pb-4 sm:pb-6">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bebas text-xl sm:text-2xl shrink-0 ${faq.text_color === 'text-brand-5' ? 'bg-brand-5 text-white' : 'bg-white text-brand-5'}`}>
                     {faq.num}
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 mb-1">{faq.category}</p>
-                    <h4 className="font-bebas text-3xl md:text-4xl tracking-wide leading-none">{faq.title}</h4>
+                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] opacity-60 mb-0.5 sm:mb-1">{faq.category}</p>
+                    <h4 className="font-bebas text-2xl sm:text-3xl md:text-4xl tracking-wide leading-none">{faq.title}</h4>
                   </div>
                 </div>
 
