@@ -261,7 +261,7 @@ const AdminVentas = () => {
             const computedPoints = currentSalesData.points.map((pt, i, arr) => {
               const x = 50 + (i / (arr.length - 1)) * 710;
               const y = 24 + 150 * (1 - pt.kits / 30);
-              return { ...pt, x, y, revenue: pt.kits * 8500 };
+              return { ...pt, x, y, revenue: pt.kits * 9500 };
             });
 
             const activePoint = computedPoints[safeActiveIndex] || computedPoints[0];
@@ -284,7 +284,7 @@ const AdminVentas = () => {
                       </span>
                     </div>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Total acumulado: <strong className="text-[#0F172A]">{currentSalesData.totalKits} kits</strong> (${(currentSalesData.totalKits * 8500).toLocaleString('es-AR')} facturados)
+                      Total acumulado: <strong className="text-[#0F172A]">{currentSalesData.totalKits} kits</strong> (${(currentSalesData.totalKits * 9500).toLocaleString('es-AR')} facturados)
                     </p>
                   </div>
 
@@ -328,7 +328,7 @@ const AdminVentas = () => {
                   </div>
                   <div>
                     <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-semibold block">Facturación Periodo</span>
-                    <strong className="text-sm font-black text-[#059669]">${(currentSalesData.totalKits * 8500).toLocaleString('es-AR')}</strong>
+                    <strong className="text-sm font-black text-[#059669]">${(currentSalesData.totalKits * 9500).toLocaleString('es-AR')}</strong>
                   </div>
                   <div>
                     <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-semibold block">Tasa de Quirófanos</span>

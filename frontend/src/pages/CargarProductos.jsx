@@ -18,7 +18,8 @@ import {
   Check,
   Sparkles,
   ShieldCheck,
-  MessageCircle
+  MessageCircle,
+  LogOut
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -83,58 +84,23 @@ const paymentOptions = [
   },
 ];
 
-const getPromo = (qty, isTrial = false) => {
-  if (isTrial && qty === 1) {
-    return {
-      label: 'Kit de Muestra Trial',
-      sublabel: 'Precio de costo ($6.500) para evaluación clínica',
-      discount: (8500 - 6500) / 8500,
-      unitPrice: 6500,
-      freeShipping: false,
-      isTrial: true,
-      tag: 'Precio Costo'
-    };
-  }
-  if (qty >= 20) {
-    return {
-      label: '¡Descuento Mayorista!',
-      sublabel: '15% OFF ($144.500) + Envío Gratis',
-      discount: 0.15,
-      unitPrice: 7225,
-      freeShipping: true,
-      isTrial: false,
-      tag: '15% OFF'
-    };
-  }
+const getPromo = (qty) => {
   if (qty >= 10) {
     return {
-      label: '¡Pack Clínico Recomendado!',
-      sublabel: '10% OFF ($76.500) + Envío 100% Bonificado Gratis',
-      discount: 0.10,
-      unitPrice: 7650,
+      label: qty >= 20 ? '¡Pack Mayorista!' : '¡Pack Clínico Recomendado!',
+      sublabel: 'Envío 100% Bonificado Gratis',
+      discount: 0,
+      unitPrice: 9500,
       freeShipping: true,
-      isTrial: false,
-      tag: '10% OFF + Envío Gratis'
-    };
-  }
-  if (qty >= 5) {
-    return {
-      label: '¡Incentivo Inicial!',
-      sublabel: '5% OFF ($40.375 en 5 kits)',
-      discount: 0.05,
-      unitPrice: 8075,
-      freeShipping: false,
-      isTrial: false,
-      tag: '5% OFF'
+      tag: 'Envío Gratis'
     };
   }
   return {
     label: 'Precio Regular',
-    sublabel: 'Comprando 5 kits o más accedés a descuentos.',
+    sublabel: 'Kit Quirúrgico Descartable Completo.',
     discount: 0,
-    unitPrice: 8500,
+    unitPrice: 9500,
     freeShipping: false,
-    isTrial: false,
     tag: 'Base'
   };
 };
@@ -146,17 +112,16 @@ const stepLabels = ['Contenido', 'El Kit', 'Cantidad', 'Envío', 'Pago', 'Confir
 const CargarProductos = () => {
   const navigate = useNavigate();
   const { cartItems, setIsCartOpen } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const [step, setStep] = useState(1);
   const [personalization, setPersonalization] = useState('Completo');
   const [quantity, setQuantity] = useState(5);
-  const [isTrial, setIsTrial] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
 
-  const basePrice = 8500;
-  const promo = getPromo(quantity, isTrial);
+  const basePrice = 9500;
+  const promo = getPromo(quantity);
   const unitPrice = promo.unitPrice;
   const total = unitPrice * quantity;
   const savings = (basePrice - unitPrice) * quantity;
@@ -207,26 +172,17 @@ const CargarProductos = () => {
 
     let msg = `¡Hola GM Kit Studio! 👋\nQuiero confirmar mi pedido desde la web:\n\n`;
 
-    if (isTrial && quantity === 1) {
-      msg += `🧪 *Pedido:* Kit Odontológico Completo (Muestra Trial - 1 kit)\n`;
-      msg += `🔬 *Detalle:* Evaluación de calidad médica (SMS 45g y esterilidad ETO)\n`;
-    } else {
-      msg += `📦 *Producto:* Kit Odontológico Completo (8 Insumos)\n`;
-      msg += `🔢 *Cantidad:* ${quantity} ${quantity === 1 ? 'kit' : 'kits'}\n`;
+    if (user) {
+      msg += `👤 *Datos del Cliente:*\n`;
+      msg += `• Nombre: ${user.name}\n`;
+      msg += `• Email: ${user.email}\n\n`;
     }
 
-    msg += `🚚 *Entrega:* ${shippingLabel}\n`;
-    msg += `💳 *Forma de Pago:* ${paymentLabel}\n`;
+    msg += `📦 *Detalle del Pedido:*\n`;
+    msg += `• ${quantity}x Kit Odontológico Completo\n`;
 
-    if (isTrial && quantity === 1) {
-      msg += `\n🎁 *Beneficio aplicado:* Precio especial de costo de evaluación\n`;
-    } else if (promo.discount > 0 || promo.freeShipping) {
-      msg += `\n🎁 *Beneficio aplicado:* ${promo.label}`;
-      if (promo.freeShipping) msg += ` + Envío 100% Bonificado Gratis`;
-      msg += `\n`;
-      if (savings > 0) {
-        msg += `💵 *Ahorro en tu compra:* $${Math.round(savings).toLocaleString()}\n`;
-      }
+    if (promo.freeShipping) {
+      msg += `🎁 *Beneficio aplicado:* Envío 100% Bonificado Gratis\n`;
     }
 
     if (cartItems.length > 0) {
@@ -235,6 +191,9 @@ const CargarProductos = () => {
         msg += `• ${item.quantity}x ${item.name} ($${(item.price * item.quantity).toLocaleString()})\n`;
       });
     }
+
+    msg += `\n🚚 *Método de Envío:* ${shippingLabel}\n`;
+    msg += `💳 *Método de Pago:* ${paymentLabel}\n`;
 
     msg += `\n💰 *TOTAL DE COMPRA:* $${Math.round(total).toLocaleString()}\n\n`;
     msg += `Quedo a la espera de su confirmación para coordinar la entrega. ¡Muchas gracias!`;
@@ -304,21 +263,56 @@ const CargarProductos = () => {
             </div>
 
             {/* User Profile */}
-            <button
-              onClick={() => navigate('/login')}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#364B5D] flex items-center justify-center text-white hover:bg-[#2A3A48] active:scale-95 transition-all shadow-xs cursor-pointer"
-              title="Mi Cuenta"
-            >
-              <UserCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
-            </button>
+            {isAuthenticated ? (
+              <div className="flex items-center gap-1.5 sm:gap-2 bg-[#364B5D] text-white px-2 py-1.5 rounded-full shadow-xs group relative cursor-default">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bebas text-xs sm:text-sm shrink-0">
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                
+                {/* Hover Dropdown with user details */}
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-[#364B5D]/20 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4 z-50 text-[#0C3B45] flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#364B5D]/50">Mi Cuenta</span>
+                    <span className="font-bold truncate text-sm">{user?.name}</span>
+                    <span className="text-xs truncate text-[#364B5D]/70">{user?.email}</span>
+                  </div>
+                  {user?.phone && (
+                    <div className="text-xs truncate text-[#364B5D]/70 border-t border-[#364B5D]/10 pt-2">
+                      Tel: {user?.phone}
+                    </div>
+                  )}
+                  {user?.clinicName && (
+                    <div className="text-xs truncate text-[#364B5D]/70">
+                      {user?.clinicName}
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={logout}
+                  className="ml-1 text-white/50 hover:text-red-400 transition-colors shrink-0 pr-1"
+                  title="Cerrar sesión"
+                >
+                  <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#364B5D] flex items-center justify-center text-white hover:bg-[#2A3A48] active:scale-95 transition-all shadow-xs cursor-pointer"
+                title="Iniciar Sesión"
+              >
+                <UserCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              </button>
+            )}
 
             {/* Cart Drawer */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#364B5D] flex items-center justify-center text-white relative hover:bg-[#2A3A48] active:scale-95 transition-all shadow-xs cursor-pointer"
+              className="hidden sm:flex w-9 h-9 rounded-full bg-[#364B5D] items-center justify-center text-white relative hover:bg-[#2A3A48] active:scale-95 transition-all shadow-xs cursor-pointer"
               title="Ver Carrito"
             >
-              <ShoppingCart className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <ShoppingCart className="w-4.5 h-4.5" />
               {totalCartItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#88C9C4] text-[#0C3B45] text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#364B5D]">
                   {totalCartItems}
@@ -377,50 +371,55 @@ const CargarProductos = () => {
                 Cada kit GM contiene los insumos de bioseguridad esenciales, envasados bajo normas de esterilidad y listos para su uso clínico.
               </p>
 
-              {/* Symmetrical 4x2 Grid on desktop / 2-col on mobile */}
-              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 w-full text-left">
+              {/* 4-Column Grid for Desktop */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full text-left mt-4">
                 {kitItems.map((item, i) => {
                   const isQty2 = item.qty === 2 || item.tag?.includes('2');
                   return (
                     <div
                       key={i}
-                      className={`rounded-xl sm:rounded-2xl p-3 flex items-start gap-2.5 sm:gap-3 shadow-xs border transition-all overflow-hidden group ${item.isBadge
+                      className={`rounded-2xl p-3 sm:p-4 flex flex-col justify-between gap-3 shadow-sm border transition-all overflow-hidden group min-h-35 ${item.isBadge
                         ? 'bg-[#88C9C4]/15 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
                         : isQty2
                           ? 'bg-white border-orange-200/90 hover:border-orange-400 hover:shadow-md'
                           : 'bg-white border-[#E1D9CC]/60 hover:border-[#88C9C4]/70'
                         }`}
                     >
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${item.isBadge
-                        ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
-                        : isQty2
-                          ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-100'
-                          : 'bg-[#F4F2EC] text-[#364B5D] group-hover:bg-[#88C9C4]/20'
-                        }`}>
-                        {item.isBadge ? (
-                          <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0C3B45]" />
-                        ) : (
-                          <Package className="w-4 h-4 sm:w-5 sm:h-5" />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-1 mb-1">
-                          <p className="font-bebas text-base sm:text-[17px] text-[#364B5D] leading-tight">
-                            {item.title}
-                          </p>
-                          {isQty2 ? (
-                            <span className="inline-flex items-center justify-center text-[11px] sm:text-xs font-black px-2 py-0.5 rounded-md bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/25 ring-1 ring-orange-400 shrink-0 uppercase tracking-wide">
-                              CANTIDAD 2
-                            </span>
+                      {/* Top: Icon & Text */}
+                      <div className="flex items-start gap-3 w-full">
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${item.isBadge
+                          ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
+                          : isQty2
+                            ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-100'
+                            : 'bg-[#F4F2EC] text-[#364B5D] group-hover:bg-[#88C9C4]/20'
+                          }`}>
+                          {item.isBadge ? (
+                            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#0C3B45]" />
                           ) : (
-                            <span className="inline-flex items-center justify-center text-[10px] sm:text-[11px] font-semibold px-1.5 py-0.5 rounded-md text-[#546A7E] bg-[#F4F2EC] border border-[#E1D9CC]/80 shrink-0">
-                              Cant. 1
-                            </span>
+                            <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                           )}
                         </div>
-                        <p className="text-[11px] sm:text-xs text-[#8CA0B2] leading-snug line-clamp-2">
-                          {item.desc}
-                        </p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bebas text-lg sm:text-xl text-[#364B5D] leading-tight mb-0.5">
+                            {item.title}
+                          </p>
+                          <p className="text-[10px] sm:text-xs text-[#8CA0B2] leading-snug line-clamp-3">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bottom: Badge */}
+                      <div className="w-full flex justify-end mt-1">
+                        {isQty2 ? (
+                          <span className="inline-flex items-center justify-center text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/25 ring-1 ring-orange-400 uppercase tracking-wide">
+                            CANTIDAD 2
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center justify-center text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-lg text-[#546A7E] bg-[#F4F2EC] border border-[#E1D9CC]/80">
+                            Cant. 1
+                          </span>
+                        )}
                       </div>
                     </div>
                   );
@@ -470,7 +469,7 @@ const CargarProductos = () => {
 
                   <div className="text-right shrink-0 bg-[#88C9C4]/10 px-3 py-1.5 rounded-xl border border-[#88C9C4]/30">
                     <div className="text-2xl sm:text-3xl font-bebas text-[#0C3B45] leading-none">
-                      $8.500
+                      $9.500
                     </div>
                     <div className="text-[9px] text-[#546A7E] font-semibold">
                       por kit (8 insumos)
@@ -543,11 +542,7 @@ const CargarProductos = () => {
                   <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
                     <button
                       onClick={() => {
-                        setQuantity(q => {
-                          const next = Math.max(1, q - 1);
-                          if (next > 1) setIsTrial(false);
-                          return next;
-                        });
+                        setQuantity(q => Math.max(1, q - 1));
                       }}
                       className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
                       aria-label="Restar kit"
@@ -559,15 +554,12 @@ const CargarProductos = () => {
                         {quantity}
                       </span>
                       <span className="text-[10px] sm:text-xs font-bold uppercase text-[#8CA0B2] tracking-wider block -mt-1">
-                        {isTrial && quantity === 1 ? 'Kit Trial' : quantity === 1 ? 'Unidad' : 'Unidades'}
+                        {quantity === 1 ? 'Unidad' : 'Unidades'}
                       </span>
                     </div>
                     <button
                       onClick={() => {
-                        setQuantity(q => {
-                          setIsTrial(false);
-                          return q + 1;
-                        });
+                        setQuantity(q => q + 1);
                       }}
                       className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
                       aria-label="Sumar kit"
@@ -579,18 +571,16 @@ const CargarProductos = () => {
                   {/* Quick Presets */}
                   <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-3.5 w-full">
                     {[
-                      { q: 1, lbl: '1 kit (Trial)', trial: true },
-                      { q: 5, lbl: '5 kits (5%)', trial: false },
-                      { q: 10, lbl: '10 kits (10% + Envío)', trial: false },
-                      { q: 20, lbl: '20 kits (15% OFF)', trial: false }
+                      { q: 5, lbl: '5 kits' },
+                      { q: 10, lbl: '10 kits (Envío Gratis)' },
+                      { q: 20, lbl: '20 kits (Envío Gratis)' }
                     ].map(preset => (
                       <button
                         key={preset.q}
                         onClick={() => {
                           setQuantity(preset.q);
-                          setIsTrial(preset.trial);
                         }}
-                        className={`flex-1 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${quantity === preset.q && isTrial === preset.trial
+                        className={`flex-1 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${quantity === preset.q
                           ? 'bg-[#364B5D] text-white shadow-xs scale-105'
                           : 'bg-white/80 text-[#546A7E] hover:bg-white border border-[#E1D9CC]/60'
                           }`}
@@ -612,39 +602,32 @@ const CargarProductos = () => {
                     </div>
                     <div className="grid grid-cols-3 gap-2 w-full">
                       {[
-                        { qty: 5, label: '5 kits', off: '5% OFF', total: '$40.375', ahorro: 'Ahorro $2.125', bonus: 'Incentivo' },
-                        { qty: 10, label: '10 kits', off: '10% OFF', total: '$76.500', ahorro: 'Ahorro $8.500', bonus: '+ Envío Gratis' },
-                        { qty: 20, label: '20+ kits', off: '15% OFF', total: '$144.500', ahorro: 'Ahorro $25.500', bonus: '+ Envío Gratis' }
-                      ].map(t => {
-                        const isUnlocked = !isTrial && quantity >= t.qty;
+                        { qty: 5, label: '5 kits', total: '$47.500', bonus: '' },
+                        { qty: 10, label: '10 kits', total: '$95.000', bonus: '+ Envío Gratis' },
+                        { qty: 20, label: '20+ kits', total: '$190.000', bonus: '+ Envío Gratis' }
+                      ].map((pkg) => {
+                        const isUnlocked = quantity >= pkg.qty;
                         return (
                           <div
-                            key={t.qty}
+                            key={pkg.qty}
                             onClick={() => {
-                              setQuantity(t.qty);
-                              setIsTrial(false);
+                              setQuantity(pkg.qty);
                             }}
-                            className={`cursor-pointer rounded-xl p-2 sm:p-2.5 text-center border transition-all ${isUnlocked
+                            className={`cursor-pointer rounded-xl p-2 sm:p-2.5 text-center border transition-all group ${isUnlocked
                               ? 'border-[#88C9C4] bg-[#88C9C4]/15 shadow-xs ring-1 ring-[#88C9C4]/30'
                               : 'border-[#E1D9CC]/60 bg-white/50 hover:bg-white/70'
                               }`}
                           >
-                            <p className={`font-bebas text-lg leading-tight ${isUnlocked ? 'text-[#0C3B45]' : 'text-[#546A7E]'}`}>
-                              {t.off}
-                            </p>
-                            <p className="text-[10px] text-[#546A7E] font-medium leading-tight">
-                              {t.label}
-                            </p>
-                            <p className="text-[9px] text-[#8CA0B2]">
-                              {t.total}
-                            </p>
-                            <p className="text-[9px] text-emerald-700 font-bold mt-0.5 leading-tight">
-                              {t.ahorro}
-                            </p>
-                            <span className={`inline-block mt-1 text-[8px] font-bold px-1.5 py-0.5 rounded-full ${isUnlocked ? 'text-[#0C3B45] bg-[#88C9C4]/40' : 'text-[#8CA0B2] bg-[#EBE7DF]'
-                              }`}>
-                              {t.bonus}
-                            </span>
+                            <div className="flex items-center justify-between">
+                              <span className="font-bebas text-lg xs:text-xl text-[#0C3B45]">{pkg.label}</span>
+                              <span className="font-geist font-bold text-[#1e2f3e] whitespace-nowrap">{pkg.total}</span>
+                            </div>
+
+                            {/* Detalles */}
+                            <div className="mt-1 flex items-center justify-between opacity-80 group-hover:opacity-100 transition-opacity">
+                              <span className="text-xs text-[#546A7E] font-medium">{pkg.qty} x $9.500</span>
+                              {pkg.bonus && <span className="text-[10px] font-bold text-[#88C9C4] uppercase tracking-wider">{pkg.bonus}</span>}
+                            </div>
                           </div>
                         );
                       })}
@@ -655,12 +638,12 @@ const CargarProductos = () => {
                 {/* Right Column: Live Price & Summary Box */}
                 <div className="md:col-span-5 flex flex-col gap-2.5">
                   {/* Promo Banner */}
-                  <div className={`w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${promo.discount > 0 || isTrial
+                  <div className={`w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${promo.freeShipping
                     ? 'bg-[#88C9C4]/25 text-[#0C3B45] border border-[#88C9C4]/50'
                     : 'bg-[#EBE7DF] text-[#8CA0B2]'
                     }`}>
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className={`w-2 h-2 rounded-full ${promo.discount > 0 || isTrial ? 'bg-[#0C3B45]' : 'bg-[#D9D1C7]'}`} />
+                      <span className={`w-2 h-2 rounded-full ${promo.freeShipping ? 'bg-[#0C3B45]' : 'bg-[#D9D1C7]'}`} />
                       <span className="font-bold">{promo.label}</span>
                       <span>— {promo.sublabel}</span>
                     </div>
@@ -671,39 +654,18 @@ const CargarProductos = () => {
                     <div className="flex items-center justify-between pb-2 border-b border-[#F4F2EC] mb-2.5">
                       <span className="font-bebas text-lg text-[#364B5D]">Resumen de Inversión</span>
                       <span className="text-[10px] font-bold text-[#0C3B45] bg-[#88C9C4]/20 px-2 py-0.5 rounded-full">
-                        {isTrial && quantity === 1 ? '1 kit (Trial Costo)' : `${quantity} ${quantity === 1 ? 'kit' : 'kits'}`}
+                        {`${quantity} ${quantity === 1 ? 'kit' : 'kits'}`}
                       </span>
                     </div>
 
                     <div className="space-y-1.5 mb-2.5 text-xs">
                       <div className="flex justify-between items-center text-[#546A7E]">
-                        <span>Precio unitario regular</span>
-                        <span className="font-semibold text-[#364B5D]">$8.500</span>
-                      </div>
-                      <div className="flex justify-between items-center text-[#546A7E]">
                         <span>Precio por kit</span>
                         <span className="font-semibold text-[#0C3B45]">${Math.round(unitPrice).toLocaleString()}</span>
                       </div>
-                      {promo.discount > 0 && !isTrial && (
-                        <div className="flex justify-between items-center text-emerald-700 font-semibold">
-                          <span>Descuento aplicado</span>
-                          <span>-{(promo.discount * 100)}%</span>
-                        </div>
-                      )}
-                      {isTrial && (
-                        <div className="flex justify-between items-center text-emerald-700 font-semibold">
-                          <span>Beneficio Muestra Trial</span>
-                          <span>Precio de Costo</span>
-                        </div>
-                      )}
-                      {savings > 0 && (
-                        <div className="flex justify-between items-center text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
-                          <span>Ahorro total</span>
-                          <span>${Math.round(savings).toLocaleString()}</span>
-                        </div>
-                      )}
+
                       {promo.freeShipping && (
-                        <div className="flex justify-between items-center text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
+                        <div className="flex justify-between items-center text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md mt-2">
                           <span>Envío a Domicilio</span>
                           <span className="uppercase">¡100% Bonificado Gratis!</span>
                         </div>
@@ -729,107 +691,6 @@ const CargarProductos = () => {
                   </div>
                 </div>
 
-              </div>
-
-              {/* ── ESTRATEGIAS DE CONFIANZA & VALOR PERCIBIDO ── */}
-              <div className="w-full max-w-4xl mt-6 pt-5 border-t border-[#E1D9CC]/70 text-left">
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <div>
-                    <span className="text-[10px] font-bold text-[#88C9C4] uppercase tracking-wider bg-[#0C3B45] px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-[#88C9C4]" /> Confianza Clínica Sin Riesgo
-                    </span>
-                    <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] mt-1 leading-tight">
-                      Beneficios Reales para Tu Consultorio
-                    </h3>
-                  </div>
-                  <span className="text-[10px] text-[#8CA0B2] hidden sm:inline font-medium">
-                    Valor percibido sin bajar la calidad
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-
-                  {/* 1. Kit de Muestra (Trial) */}
-                  <div className={`rounded-2xl p-3.5 border transition-all flex flex-col justify-between ${isTrial && quantity === 1
-                    ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
-                    : 'bg-white border-[#E1D9CC]/70 hover:border-[#88C9C4]/50'
-                    }`}>
-                    <div>
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#0C3B45] flex items-center gap-1">
-                          <Sparkles className="w-3.5 h-3.5 text-[#88C9C4]" /> Kit de Muestra
-                        </span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#0C3B45] text-[#88C9C4]">
-                          $6.500 (Costo)
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[#546A7E] leading-relaxed mb-3">
-                        ¿Primera compra o dudas sobre la calidad? Llevá 1 kit a precio de costo para evaluar en tu quirófano la tela SMS 45g, la esterilidad ANMAT y el empaque.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setQuantity(1);
-                        setIsTrial(true);
-                      }}
-                      className={`w-full py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${isTrial && quantity === 1
-                        ? 'bg-[#0C3B45] text-[#88C9C4] shadow-xs'
-                        : 'bg-[#F4F2EC] text-[#0C3B45] hover:bg-[#88C9C4]/30 border border-[#E1D9CC]'
-                        }`}
-                    >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>{isTrial && quantity === 1 ? 'Kit Trial Seleccionado' : 'Pedir Kit de Muestra ($6.500)'}</span>
-                    </button>
-                  </div>
-
-                  {/* 2. Envío Bonificado */}
-                  <div className={`rounded-2xl p-3.5 border transition-all flex flex-col justify-between ${promo.freeShipping
-                    ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
-                    : 'bg-white border-[#E1D9CC]/70'
-                    }`}>
-                    <div>
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#0C3B45] flex items-center gap-1">
-                          <Truck className="w-3.5 h-3.5 text-[#88C9C4]" /> Envío Bonificado
-                        </span>
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${promo.freeShipping ? 'bg-emerald-600 text-white' : 'bg-[#88C9C4]/20 text-[#0C3B45]'
-                          }`}>
-                          {promo.freeShipping ? '¡100% Gratis!' : 'Desde 10 kits'}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[#546A7E] leading-relaxed mb-3">
-                        En lugar de sacrificar calidad, a partir de 10 kits te regalamos el flete directo a tu clínica en San Miguel de Tucumán. Retenés máxima ganancia con entrega puerta a puerta.
-                      </p>
-                    </div>
-                    <div className="text-[10px] font-semibold text-[#0C3B45] bg-[#F4F2EC] p-2 rounded-xl border border-[#E1D9CC]/50 text-center">
-                      {promo.freeShipping
-                        ? '✓ ¡Envío Gratis Bonificado Activo!'
-                        : `Agregá ${Math.max(1, 10 - quantity)} kit(s) más para envío gratis`}
-                    </div>
-                  </div>
-
-                  {/* 3. Garantía de Recambio */}
-                  <div className="rounded-2xl p-3.5 bg-white border border-[#E1D9CC]/70 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#0C3B45] flex items-center gap-1">
-                          <ShieldCheck className="w-3.5 h-3.5 text-[#88C9C4]" /> Garantía de Recambio
-                        </span>
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#88C9C4]/20 text-[#0C3B45]">
-                          Sin Costo
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[#546A7E] leading-relaxed mb-3">
-                        Si cualquier empaque estéril llega vulnerado, roto o dañado por el traslado, lo reponemos de inmediato sin cargo alguno. Tu bioseguridad quirúrgica está asegurada.
-                      </p>
-                    </div>
-                    <div className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 p-2 rounded-xl border border-emerald-100 flex items-center justify-center gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                      <span>Reposición inmediata garantizada</span>
-                    </div>
-                  </div>
-
-                </div>
               </div>
             </motion.div>
           )}

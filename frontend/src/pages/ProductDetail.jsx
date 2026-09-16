@@ -17,7 +17,7 @@ const ProductDetail = () => {
         _id: '1',
         name: "Kit de Cirugía Odontológica Completo",
         description: "Kit esterilizado y descartable con los 8 insumos de bioseguridad: 2 batas con puños, compresa 1x1m imper, compresa 50x50cm imper, 1 campo fenestrado para paciente, 2 cubre suctores, 2 gorros clásicos, 2 barbijos y 2 cubrecalzados elastizados. Garantiza máxima higiene y barrera bacteriológica.",
-        price: 8500,
+        price: 9500,
         images: [
           "https://images.unsplash.com/photo-1598449356475-b9f71db7d847?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
           "https://images.unsplash.com/photo-1584308666744-24d5e4a83e0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
@@ -42,7 +42,7 @@ const ProductDetail = () => {
       _id: id,
       name: "Kit de Cirugía Odontológica Completo",
       description: "Kit de alta resistencia para procedimientos complejos. Barrera bacteriológica premium aprobada por ANMAT.",
-      price: 8500,
+      price: 9500,
       images: [
         "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1598449356475-b9f71db7d847?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",

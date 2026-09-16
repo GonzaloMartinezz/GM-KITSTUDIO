@@ -74,7 +74,7 @@ const Products = () => {
               className="relative w-full h-76 xs:h-88 sm:h-96 md:h-112.5 lg:h-125 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-brand-5/20"
             >
               <img
-                src="/images/kitsodontologico.jpg"
+                src="/images/kitsodontologico.webp"
                 alt="Colección GM KIT"
                 className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal hover:scale-105 transition-all duration-1000 cursor-pointer"
               />
@@ -451,7 +451,7 @@ const Products = () => {
                       Insumo Incluido en el Kit Completo
                     </span>
                     <span className="font-bebas text-2xl md:text-3xl text-white">
-                      PRECIO DEL KIT: <span className="text-[#88C9C4]">$8.500</span>
+                      PRECIO DEL KIT: <span className="text-[#88C9C4]">$9.500</span>
                     </span>
                     <span className="text-[11px] text-white/50 block">Se comercializa exclusivamente por kit completo</span>
                   </div>
@@ -462,7 +462,7 @@ const Products = () => {
                     }}
                     className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#88C9C4] hover:bg-[#6EB8B2] text-[#0C3B45] font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer text-center shrink-0"
                   >
-                    Comprar Kit ($8.500)
+                    Comprar Kit ($9.500)
                   </button>
                 </div>
               </div>

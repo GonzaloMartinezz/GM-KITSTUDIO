@@ -61,7 +61,7 @@ const AdminInventario = () => {
   const stockSoldMonth = inventoryData?.stockSoldMonth ?? 390;
   const stockInTransit = inventoryData?.stockInTransit ?? 100;
   const minThreshold = inventoryData?.minimumAlertThreshold ?? 30;
-  const kitPrice = inventoryData?.kitPrice ?? 8500;
+  const kitPrice = inventoryData?.kitPrice ?? 9500;
 
   const totalInWarehouse = stockAvailable + stockReserved;
   const totalInCircuit = stockAvailable + stockReserved + stockInTransit;

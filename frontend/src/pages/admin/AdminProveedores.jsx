@@ -93,7 +93,7 @@ const AdminProveedores = () => {
 
   const calculateGrossMargin = () => {
     const cost = Number(supplierData.costPerKit) || 5000;
-    const sale = Number(supplierData.regularSalePrice) || 8500;
+    const sale = Number(supplierData.regularSalePrice) || 9500;
     const margin = sale - cost;
     const marginPct = ((margin / sale) * 100).toFixed(1);
     return { margin, marginPct };

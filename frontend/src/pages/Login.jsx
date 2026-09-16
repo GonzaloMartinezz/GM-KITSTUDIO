@@ -12,6 +12,8 @@ const Login = () => {
 
   const [view, setView] = useState('home');
   const [mode, setMode] = useState('login');
+  
+  console.log("GOOGLE_CLIENT_ID IS:", GOOGLE_CLIENT_ID, "import.meta.env:", import.meta.env);
   const [formData, setFormData] = useState({ email: '', name: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -75,20 +77,33 @@ const Login = () => {
     }
   };
 
+  const googleBtnRef = React.useRef(null);
+
   // Carga el script de Google Identity Services y renderiza el botón (solo si hay Client ID configurado)
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID || view !== 'home') return undefined;
 
     const initGoogle = () => {
-      if (!window.google?.accounts?.id) return;
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: (response) => handleGoogleCredential(response.credential),
-      });
-      const el = document.getElementById('google-btn-container');
-      if (el) {
-        el.innerHTML = '';
-        window.google.accounts.id.renderButton(el, { theme: 'outline', size: 'large', shape: 'pill', width: 280 });
+      if (!window.google?.accounts?.id) {
+        console.error("Google accounts script failed to load properly.");
+        return;
+      }
+      
+      try {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: (response) => handleGoogleCredential(response.credential),
+        });
+        
+        if (googleBtnRef.current) {
+          googleBtnRef.current.innerHTML = '';
+          window.google.accounts.id.renderButton(googleBtnRef.current, { theme: 'outline', size: 'large', shape: 'pill', width: 280 });
+          console.log("Google button rendered successfully.");
+        } else {
+          console.error("googleBtnRef is null, cannot render button.");
+        }
+      } catch (err) {
+        console.error("Error initializing Google Identity Services:", err);
       }
     };
 
@@ -102,9 +117,13 @@ const Login = () => {
     script.async = true;
     script.defer = true;
     script.onload = initGoogle;
+    script.onerror = () => console.error("Failed to load Google script. Check network or adblockers.");
     document.body.appendChild(script);
+    
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
@@ -222,7 +241,7 @@ const Login = () => {
                       <span className="text-[10px] uppercase tracking-widest text-[#546A7E]/70">o continuá con</span>
                       <div className="flex-1 h-px bg-[#364B5D]/15" />
                     </div>
-                    <div id="google-btn-container" />
+                    <div ref={googleBtnRef} className="mt-1" />
                   </div>
                 )}
               </motion.div>

@@ -3,14 +3,13 @@ import { ShoppingCart, Menu, X, User, LogOut, Shield } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { cartItems, setIsCartOpen } = useCart();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const location = useLocation();
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const currentUser = localStorage.getItem('currentUser');
-  const userEmail = localStorage.getItem('userEmail');
-  const isAdmin = userEmail === 'gonnnchimartinez9@gmail.com' || userEmail === 'gonchimartinez9@gmail.com' || userEmail === 'admin@gmkitstudio.com' || currentUser?.toLowerCase() === 'admin';
 
   const isActive = (path) => location.pathname === path;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,11 +57,11 @@ const Navbar = () => {
           <div className="pointer-events-auto flex items-center gap-2 md:gap-4">
 
             {/* User Profile / Login */}
-            {currentUser ? (
-              <div className="flex items-center gap-1.5 sm:gap-2 bg-brand-5 text-brand-1 px-2 py-1.5 md:px-3 md:py-2 rounded-full border border-brand-2/20 shadow-lg">
+            {isAuthenticated ? (
+              <div className="flex items-center gap-1.5 sm:gap-2 bg-brand-5 text-brand-1 px-2 py-1.5 md:px-3 md:py-2 rounded-full border border-brand-2/20 shadow-lg group relative cursor-default">
                 
                 {isAdmin ? (
-                  <Link to="/admin" className="flex items-center gap-2 hover:text-[#88C9C4] transition-colors pl-2 pr-1">
+                  <Link to="/admin" className="flex items-center gap-2 hover:text-[#88C9C4] transition-colors pl-2 pr-1 cursor-pointer">
                     <Shield className="w-4 h-4 md:w-5 md:h-5 text-brand-3" />
                     <span className="font-bebas text-sm sm:text-base tracking-wider hidden sm:inline leading-none">
                       ADMINISTRADOR
@@ -71,20 +70,35 @@ const Navbar = () => {
                 ) : (
                   <>
                     <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg shrink-0">
-                      {currentUser.charAt(0).toUpperCase()}
+                      {user?.name?.charAt(0).toUpperCase()}
                     </div>
                     <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-30 truncate">
-                      Hola, <b className="capitalize">{currentUser}</b>
+                      Hola, <b className="capitalize">{user?.name}</b>
                     </span>
+                    
+                    {/* Hover Dropdown with user details */}
+                    <div className="absolute top-full right-0 mt-3 w-56 bg-white border border-brand-2/20 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-4 z-50 text-brand-5 flex flex-col gap-3">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs font-bold uppercase tracking-widest text-brand-5/50">Mi Cuenta</span>
+                        <span className="font-bold truncate text-brand-5">{user?.name}</span>
+                        <span className="text-sm truncate text-brand-5/70">{user?.email}</span>
+                      </div>
+                      {user?.phone && (
+                        <div className="text-sm truncate text-brand-5/70 border-t border-brand-5/10 pt-2">
+                          Tel: {user?.phone}
+                        </div>
+                      )}
+                      {user?.clinicName && (
+                        <div className="text-sm truncate text-brand-5/70">
+                          {user?.clinicName}
+                        </div>
+                      )}
+                    </div>
                   </>
                 )}
 
                 <button
-                  onClick={() => {
-                    localStorage.removeItem('currentUser');
-                    localStorage.removeItem('userEmail');
-                    window.location.reload();
-                  }}
+                  onClick={logout}
                   className={`ml-1 md:ml-2 mr-1 text-brand-1/50 hover:text-red-500 transition-colors shrink-0`}
                   title="Cerrar sesión"
                 >

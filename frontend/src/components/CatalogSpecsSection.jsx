@@ -28,9 +28,9 @@ const CatalogSpecsSection = () => {
       tag: "LISTO PARA OPERAR",
       title: "KITS ESTÉRILES DESCARTABLES",
       subtitle: "Todo listo para abrir directo en la mesa quirúrgica",
-      description: "Eliminamos el armado manual y las demoras preoperatorias. Cada kit integral incluye 8 insumos críticos con doble envoltorio estéril termosellado. Un único valor transparente de $8.500 por kit completo.",
+      description: "Eliminamos el armado manual y las demoras preoperatorias. Cada kit integral incluye 8 insumos críticos con doble envoltorio estéril termosellado. Un único valor transparente de $9.500 por kit completo.",
       specs: [
-        { label: "Precio Kit", val: "$8.500 Final" },
+        { label: "Precio Kit", val: "$9.500 Final" },
         { label: "Contenido", val: "8 Insumos Estériles" },
         { label: "Empaque", val: "Doble Envoltorio" },
       ],
@@ -78,7 +78,7 @@ const CatalogSpecsSection = () => {
               to="/productos"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-5 text-brand-1 font-bebas text-base sm:text-lg tracking-wider hover:bg-[#0C3B45] hover:scale-105 transition-all shadow-md active:scale-95 cursor-pointer"
             >
-              <span>EXPLORAR KITS ($8.500)</span>
+              <span>EXPLORAR KITS ($9.500)</span>
               <ArrowRight size={18} />
             </Link>
           </div>

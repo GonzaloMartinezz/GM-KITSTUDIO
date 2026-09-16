@@ -44,10 +44,9 @@ const ProductModal = ({ isOpen, onClose }) => {
   ];
 
   const quantities = [
-    { title: "1 Kit", desc: "$8.500 (Precio regular por kit completo)." },
-    { title: "5 Kits", desc: "10% de descuento en el total." },
-    { title: "10 Kits o más", desc: "20% de descuento y envío prioritario." },
-    { title: "Personalizado", desc: "Consultar cantidad específica." }
+    { title: "1 a 9 Kits", desc: "$9.500 por kit completo." },
+    { title: "10 Kits o más", desc: "$9.500 por kit + Envío Gratis 100% Bonificado." },
+    { title: "Personalizado", desc: "Consultar volumen mayor." }
   ];
 
   const shippings = [

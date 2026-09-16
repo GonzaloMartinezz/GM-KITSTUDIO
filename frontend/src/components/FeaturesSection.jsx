@@ -11,11 +11,11 @@ const FeaturesSection = () => {
         <div className="flex flex-col lg:flex-row gap-10 sm:gap-16 mb-12 sm:mb-16 lg:mb-20">
           {/* Left Text */}
           <div className="lg:w-5/12 flex flex-col justify-center">
-            <span className="text-brand-3 font-bold tracking-[0.3em] text-xs sm:text-sm uppercase mb-3 sm:mb-4">CÓMO TRABAJAMOS</span>
+            <span className="text-brand-5 font-bold tracking-[0.3em] text-xs sm:text-sm uppercase mb-3 sm:mb-4">CÓMO TRABAJAMOS</span>
             <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bebas leading-[0.9] mb-6 sm:mb-8 text-brand-5 uppercase">
               Nuestro proceso de excelencia
             </h2>
-            <p className="text-brand-5/80 text-base sm:text-lg mb-8 sm:mb-12 max-w-md font-medium leading-relaxed">
+            <p className="text-brand-5/90 text-base sm:text-lg mb-8 sm:mb-12 max-w-md font-medium leading-relaxed">
               Detrás de cada kit odontológico hay un riguroso proceso de validación, esterilización y ensamblaje meticuloso. Nos encargamos de todo para que tú solo te enfoques en la salud de tus pacientes.
             </p>
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
@@ -41,7 +41,7 @@ const FeaturesSection = () => {
             <div className="bg-brand-2/30 border border-brand-2/50 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl flex flex-col items-center text-center justify-center gap-3 sm:gap-4 hover:bg-brand-2/50 transition-colors">
               <ShieldCheck size={44} className="text-brand-4 mb-1" strokeWidth={1.5} />
               <h3 className="font-bebas text-2xl sm:text-3xl text-brand-5 tracking-wide">Validación Estricta</h3>
-              <p className="text-brand-5/70 text-xs sm:text-sm font-medium leading-relaxed">Garantizamos que cada lote cumple con los más altos estándares bioseguros del mercado.</p>
+              <p className="text-brand-5/90 text-xs sm:text-sm font-medium leading-relaxed">Garantizamos que cada lote cumple con los más altos estándares bioseguros del mercado.</p>
             </div>
             {/* Card 2 (Dark) */}
             <div className="bg-brand-5 text-brand-1 p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl flex flex-col items-center text-center justify-center gap-3 sm:gap-4 shadow-[0_20px_40px_rgba(62,92,118,0.3)] relative overflow-hidden group cursor-default">
@@ -61,7 +61,7 @@ const FeaturesSection = () => {
             <div className="bg-brand-2/30 border border-brand-2/50 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl flex flex-col items-center text-center justify-center gap-3 sm:gap-4 hover:bg-brand-2/50 transition-colors">
               <HeartPulse size={44} className="text-brand-4 mb-1" strokeWidth={1.5} />
               <h3 className="font-bebas text-2xl sm:text-3xl text-brand-5 tracking-wide">Cuidado Integral</h3>
-              <p className="text-brand-5/70 text-xs sm:text-sm font-medium leading-relaxed">Entregas seguras y puntuales manteniendo la integridad absoluta del empaque.</p>
+              <p className="text-brand-5/90 text-xs sm:text-sm font-medium leading-relaxed">Entregas seguras y puntuales manteniendo la integridad absoluta del empaque.</p>
             </div>
           </div>
         </div>

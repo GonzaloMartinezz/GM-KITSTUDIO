@@ -102,6 +102,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="w-full max-w-xs px-4 py-2.5 rounded-2xl bg-[#25D366]/15 hover:bg-[#25D366] text-white border border-[#25D366]/40 hover:border-[#25D366] transition-all duration-300 flex items-center justify-between group shadow-sm hover:shadow-[0_4px_20px_rgba(37,211,102,0.4)] active:scale-[0.98] cursor-pointer"
               title="Contactar por WhatsApp Oficial"
+              aria-label="Contactar por WhatsApp Oficial"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-[#25D366] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
@@ -122,6 +123,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="w-full max-w-xs px-4 py-2.5 rounded-2xl bg-linear-to-r from-[#833ab4]/15 via-[#fd1d1d]/15 to-[#fcb045]/15 hover:from-[#833ab4] hover:via-[#fd1d1d] hover:to-[#fcb045] text-white border border-pink-500/35 hover:border-transparent transition-all duration-300 flex items-center justify-between group shadow-sm hover:shadow-[0_4px_20px_rgba(225,48,108,0.4)] active:scale-[0.98] cursor-pointer"
               title="Instagram Personal: @gonchi_martinezz"
+              aria-label="Instagram Personal de Gonzalo Martinez"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-linear-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
@@ -142,6 +144,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="w-full max-w-xs px-4 py-2.5 rounded-2xl bg-[#88C9C4]/15 hover:bg-[#88C9C4] text-white hover:text-[#0C3B45] border border-[#88C9C4]/40 hover:border-[#88C9C4] transition-all duration-300 flex items-center justify-between group shadow-sm hover:shadow-[0_4px_20px_rgba(136,201,196,0.35)] active:scale-[0.98] cursor-pointer"
               title="Instagram Studio Dental Carcara Martinez"
+              aria-label="Instagram de Studio Dental Carcara Martinez"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
@@ -164,6 +167,7 @@ const Footer = () => {
               href="mailto:gonchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
               className="w-full max-w-xs px-4 py-2.5 rounded-2xl bg-[#EA4335]/15 hover:bg-[#EA4335] text-white border border-[#EA4335]/40 hover:border-[#EA4335] transition-all duration-300 flex items-center justify-between group shadow-sm hover:shadow-[0_4px_20px_rgba(234,67,53,0.4)] active:scale-[0.98] cursor-pointer"
               title="Enviar correo a gonchimartinez9@gmail.com"
+              aria-label="Enviar correo a gonchimartinez9@gmail.com"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-[#EA4335] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">

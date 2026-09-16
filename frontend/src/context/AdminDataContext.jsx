@@ -423,7 +423,7 @@ export const AdminDataProvider = ({ children }) => {
     stockSoldMonth: dashboard?.kitsSold ?? 0,
     stockInTransit,
     minimumAlertThreshold: kitProduct?.minStock ?? 30,
-    kitPrice: kitProduct?.price ?? 8500,
+    kitPrice: kitProduct?.price ?? 9500,
     warehouseLocation: 'Depósito Central GM - San Miguel de Tucumán',
     reservedList: reservations.map((r) => ({
       id: r._id,
@@ -473,7 +473,7 @@ export const AdminDataProvider = ({ children }) => {
       doctor: newRes.doctor,
       clinic: newRes.clinic,
       kits,
-      total: Number(newRes.total) || kits * (kitProduct?.price || 8500),
+      total: Number(newRes.total) || kits * (kitProduct?.price || 9500),
       surgeryDate: newRes.surgeryDate,
       surgeryType: newRes.surgeryType,
       paymentStatus: newRes.paymentStatus,

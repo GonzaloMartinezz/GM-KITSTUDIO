@@ -7,7 +7,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
     customer: '',
     clinic: '',
     qty: 1,
-    numericTotal: 8500,
+    numericTotal: 9500,
     paymentMethod: 'Transferencia Bancaria',
     status: 'En Preparación'
   });
@@ -21,7 +21,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSave }) => {
       // Auto-update total based on qty if they only change qty
       if (name === 'qty') {
         const parsedQty = parseInt(value, 10) || 1;
-        updated.numericTotal = parsedQty * 8500;
+        updated.numericTotal = parsedQty * 9500;
       }
       return updated;
     });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Target, Users, Activity, MapPin, Stethoscope, Truck } from 'lucide-react';
-import ReviewsSection from '../components/ReviewsSection';
+import { ShieldCheck, Target, Users, Activity, MapPin, Stethoscope, Truck, Award } from 'lucide-react';
+
 import { Hero } from '../components/ui/hero-1';
 
 const About = () => {
@@ -159,15 +159,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* 6. Reviews */}
-      <div className="bg-brand-5 pt-32 pb-20 rounded-t-[60px] relative z-20 mt-20">
-        <div className="text-center mb-16">
-          <ShieldCheck className="w-10 h-10 text-brand-2 mx-auto mb-4" />
-          <h2 className="font-bebas text-5xl text-brand-1 mb-2">LO QUE DICEN NUESTROS CLIENTES</h2>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-1/50">CONFIANZA CLÍNICA</p>
-        </div>
-        <ReviewsSection />
-      </div>
+
 
     </div>
   );
