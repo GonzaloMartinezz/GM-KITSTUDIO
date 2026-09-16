@@ -24,7 +24,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
   // Recent reviews matching user reference
   const recentReviews = [
     {
-      name: "Dr. Roberto Sánchez",
+      name: "Dra. Rocío Pérez",
       specialty: "Cirugía General",
       text: "Excelente calidad de los kits, el material descartable es de primera y la entrega puntual.",
       stars: 5,
@@ -116,7 +116,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="relative w-full max-w-[460px] bg-[#1A2832] border border-white/10 rounded-3xl shadow-[0_20px_70px_rgba(0,0,0,0.6)] text-white my-auto z-10 overflow-hidden"
+            className="relative w-full max-w-115 bg-[#1A2832] border border-white/10 rounded-3xl shadow-[0_20px_70px_rgba(0,0,0,0.6)] text-white my-auto z-10 overflow-hidden"
           >
             {/* Ambient subtle glow */}
             <div className="absolute top-0 right-0 w-60 h-60 bg-[#5D7E8E]/10 rounded-full blur-[80px] pointer-events-none" />
@@ -156,7 +156,7 @@ const ReviewModal = ({ isOpen, onClose }) => {
               </motion.div>
             ) : (
               /* Main Content */
-              <div 
+              <div
                 className="p-4 sm:p-6 max-h-[88vh] overflow-y-auto [&::-webkit-scrollbar]:hidden"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
@@ -165,11 +165,10 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('write')}
-                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                      activeTab === 'write'
+                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${activeTab === 'write'
                         ? 'bg-[#5D7E8E] text-white shadow-sm'
                         : 'text-white/60 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <MessageSquare className="w-3 h-3" />
                     <span>DEJAR RESEÑA</span>
@@ -177,11 +176,10 @@ const ReviewModal = ({ isOpen, onClose }) => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('view')}
-                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                      activeTab === 'view'
+                    className={`flex-1 py-1.5 px-2.5 sm:px-3 rounded-full font-bebas text-[11px] sm:text-xs tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 ${activeTab === 'view'
                         ? 'bg-[#5D7E8E] text-white shadow-sm'
                         : 'text-white/60 hover:text-white'
-                    }`}
+                      }`}
                   >
                     <ThumbsUp className="w-3 h-3" />
                     <span>OPINIONES (4.8 ★)</span>
@@ -220,11 +218,10 @@ const ReviewModal = ({ isOpen, onClose }) => {
                                 className="p-0.5 cursor-pointer transition-transform hover:scale-120 focus:outline-none"
                               >
                                 <Star
-                                  className={`w-6 h-6 sm:w-8 sm:h-8 transition-colors duration-150 ${
-                                    active
+                                  className={`w-6 h-6 sm:w-8 sm:h-8 transition-colors duration-150 ${active
                                       ? 'text-[#F59E0B] fill-[#F59E0B] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]'
                                       : 'text-white/20 fill-white/10'
-                                  }`}
+                                    }`}
                                 />
                               </button>
                             );
@@ -352,9 +349,8 @@ const ReviewModal = ({ isOpen, onClose }) => {
                                   {[1, 2, 3, 4, 5].map((s) => (
                                     <Star
                                       key={s}
-                                      className={`w-2.5 h-2.5 ${
-                                        s <= rev.stars ? 'fill-[#F59E0B] text-[#F59E0B]' : 'text-white/20'
-                                      }`}
+                                      className={`w-2.5 h-2.5 ${s <= rev.stars ? 'fill-[#F59E0B] text-[#F59E0B]' : 'text-white/20'
+                                        }`}
                                     />
                                   ))}
                                 </div>

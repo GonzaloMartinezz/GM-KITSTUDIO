@@ -73,12 +73,16 @@
   body {
     background-color: var(--color-brand-5);
     color: var(--color-brand-1);
-    font-family: var(--font-geist);
+    font-family: 'Inter', sans-serif;
     min-width: 0;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-bebas);
     letter-spacing: 0.025em;
+  }
+
+  input, select, textarea {
+    color: #0F172A;
   }
 }

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck } from 'lucide-react';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminSidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     { icon: Target, path: '/admin', label: '00_Control Central' },
@@ -16,10 +19,9 @@ const AdminSidebar = () => {
     { icon: ShoppingCart, path: '/admin/ventas', label: '04_Ventas' },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('userEmail');
-    window.location.href = '/';
+  const handleLogout = async () => {
+    await logout();
+    navigate('/', { replace: true });
   };
 
   // --- MOBILE DRAWER ---
@@ -68,14 +70,14 @@ const AdminSidebar = () => {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80"
+                    src="/images/GMKAIZER.png"
                     alt="Gonzalo Martínez"
                     className="w-10 h-10 rounded-full object-cover border-2 border-[#1E5A9C]"
                   />
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] border-2 border-white rounded-full"></span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm font-bold text-[#0F172A] leading-tight">Gonzalo Martínez</span>
+                  <span className="text-sm font-bold text-[#0F172A] leading-tight">{user?.name || 'Administrador'}</span>
                   <span className="text-[11px] font-semibold text-[#1E5A9C] flex items-center gap-1">
                     <ShieldCheck size={12} /> Administrador Único
                   </span>
@@ -83,7 +85,10 @@ const AdminSidebar = () => {
               </div>
             </div>
 
-            <div className="p-4 border-t border-[#EBEBEB]">
+            <div className="p-4 border-t border-[#EBEBEB] flex flex-col gap-2">
+              <Link to="/" onClick={() => setIsMobileOpen(false)} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-[#8E8E93] hover:text-[#1E5A9C] hover:bg-black/5 transition-all font-medium cursor-pointer">
+                <ArrowLeft size={20} /> Volver a la App
+              </Link>
               <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-3 rounded-xl text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all font-medium cursor-pointer">
                 <LogOut size={20} /> Cerrar Sesión
               </button>
@@ -176,9 +181,9 @@ const AdminSidebar = () => {
           >
             <div className="relative shrink-0">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80"
+                src="/images/GMKAIZER.png"
                 alt="Gonzalo Martínez"
-                className="w-10 h-10 rounded-full object-cover border-2 border-[#1E5A9C]"
+                className="w-10 h-10 rounded-full object-cover border-2 border-[#1E5A9C] bg-[#F8F9FA]"
               />
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] border-2 border-white rounded-full"></span>
             </div>
@@ -191,6 +196,18 @@ const AdminSidebar = () => {
               </motion.div>
             )}
           </div>
+
+          {/* Return to App Button */}
+          <Link
+            to="/"
+            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#1E5A9C] hover:bg-black/5 transition-all cursor-pointer ${
+              isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
+            }`}
+            title={!isExpanded ? "Volver a la App" : ""}
+          >
+            <ArrowLeft size={20} strokeWidth={2.5} className="shrink-0" />
+            {isExpanded && <span className="font-medium whitespace-nowrap text-xs">Volver a la App</span>}
+          </Link>
 
           {/* Logout Button */}
           <button

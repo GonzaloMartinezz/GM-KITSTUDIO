@@ -46,7 +46,7 @@ const AdminInventario = () => {
   const [reserveForm, setReserveForm] = useState({
     doctor: '',
     clinic: '',
-    kits: 5,
+    kits: '',
     surgeryDate: '18 Sep 2026 - 10:00 am',
     surgeryType: 'Cirugía de Implantes Dentales',
     paymentStatus: 'Seña 50% Pagada',
@@ -54,7 +54,7 @@ const AdminInventario = () => {
   });
 
   // Form state for Adding Stock
-  const [stockAddCount, setStockAddCount] = useState(50);
+  const [stockAddCount, setStockAddCount] = useState('');
 
   const stockAvailable = inventoryData?.stockAvailable ?? 86;
   const stockReserved = inventoryData?.stockReserved ?? 34;
@@ -79,7 +79,7 @@ const AdminInventario = () => {
     setReserveForm({
       doctor: '',
       clinic: '',
-      kits: 5,
+      kits: '',
       surgeryDate: '18 Sep 2026 - 10:00 am',
       surgeryType: 'Cirugía de Implantes Dentales',
       paymentStatus: 'Seña 50% Pagada',
@@ -310,8 +310,8 @@ const AdminInventario = () => {
         <button
           onClick={() => setActiveTab('reservados')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${activeTab === 'reservados'
-              ? 'bg-[#1E5A9C] text-white shadow-xs'
-              : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+            ? 'bg-[#1E5A9C] text-white shadow-xs'
+            : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
             }`}
         >
           <Clock size={16} />
@@ -321,8 +321,8 @@ const AdminInventario = () => {
         <button
           onClick={() => setActiveTab('lotes')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${activeTab === 'lotes'
-              ? 'bg-[#1E5A9C] text-white shadow-xs'
-              : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+            ? 'bg-[#1E5A9C] text-white shadow-xs'
+            : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
             }`}
         >
           <ShieldCheck size={16} />
@@ -332,8 +332,8 @@ const AdminInventario = () => {
         <button
           onClick={() => setActiveTab('componentes')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${activeTab === 'componentes'
-              ? 'bg-[#1E5A9C] text-white shadow-xs'
-              : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+            ? 'bg-[#1E5A9C] text-white shadow-xs'
+            : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
             }`}
         >
           <Layers size={16} />
@@ -504,8 +504,8 @@ const AdminInventario = () => {
                         {lot.lotNumber}
                       </span>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${lot.status.includes('Tránsito')
-                          ? 'bg-blue-100 text-[#1E5A9C]'
-                          : 'bg-[#10B981]/15 text-[#059669]'
+                        ? 'bg-blue-100 text-[#1E5A9C]'
+                        : 'bg-[#10B981]/15 text-[#059669]'
                         }`}>
                         {lot.status}
                       </span>
@@ -641,7 +641,7 @@ const AdminInventario = () => {
                     placeholder="Ej. Consultorios Yerba Buena"
                     value={reserveForm.clinic}
                     onChange={(e) => setReserveForm({ ...reserveForm, clinic: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
                     required
                   />
                 </div>
@@ -651,11 +651,10 @@ const AdminInventario = () => {
                     <label className="block text-[#64748B] font-semibold mb-1">Cantidad de Kits</label>
                     <input
                       type="number"
-                      min="1"
-                      max={stockAvailable}
                       value={reserveForm.kits}
-                      onChange={(e) => setReserveForm({ ...reserveForm, kits: Number(e.target.value) })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs font-bold text-orange-600"
+                      onChange={(e) => setReserveForm({ ...reserveForm, kits: e.target.value === '' ? '' : Number(e.target.value) })}
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-semibold"
+                      min="1"
                       required
                     />
                     <span className="text-[10px] text-[#64748B]">Max disponible: {stockAvailable} kits</span>
@@ -673,10 +672,10 @@ const AdminInventario = () => {
                     <label className="block text-[#64748B] font-semibold mb-1">Fecha & Hora Cirugía</label>
                     <input
                       type="text"
-                      placeholder="Ej. 19 Sep 2026 - 10:00 am"
                       value={reserveForm.surgeryDate}
                       onChange={(e) => setReserveForm({ ...reserveForm, surgeryDate: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
+                      placeholder="Ej. 18 Sep 2026 - 10:00 am"
                       required
                     />
                   </div>
@@ -685,7 +684,7 @@ const AdminInventario = () => {
                     <select
                       value={reserveForm.paymentStatus}
                       onChange={(e) => setReserveForm({ ...reserveForm, paymentStatus: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs font-semibold"
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-semibold"
                     >
                       <option value="Seña 50% Pagada">Seña 50% Pagada</option>
                       <option value="100% Pagado">100% Pagado</option>
@@ -702,7 +701,7 @@ const AdminInventario = () => {
                     placeholder="Ej. Implantes / Terceros Molares"
                     value={reserveForm.surgeryType}
                     onChange={(e) => setReserveForm({ ...reserveForm, surgeryType: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
                   />
                 </div>
 
@@ -710,10 +709,11 @@ const AdminInventario = () => {
                   <label className="block text-[#64748B] font-semibold mb-1">Teléfono / WhatsApp de Contacto</label>
                   <input
                     type="text"
-                    placeholder="+54 9 381 ..."
                     value={reserveForm.contact}
                     onChange={(e) => setReserveForm({ ...reserveForm, contact: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
+                    placeholder="Ej. +54 9 381 000 0000"
+                    required
                   />
                 </div>
 
@@ -763,10 +763,10 @@ const AdminInventario = () => {
                   <label className="block text-[#64748B] font-semibold mb-1">Cantidad de Kits a Ingresar</label>
                   <input
                     type="number"
-                    min="1"
                     value={stockAddCount}
-                    onChange={(e) => setStockAddCount(Number(e.target.value))}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-sm font-black text-[#1E5A9C]"
+                    onChange={(e) => setStockAddCount(e.target.value === '' ? '' : Number(e.target.value))}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="1"
                     required
                   />
                 </div>

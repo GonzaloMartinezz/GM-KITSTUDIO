@@ -27,7 +27,7 @@ export default {
       fontFamily: {
         'bebas': ['"Bebas Neue"', 'sans-serif'],
         'changa': ['"Changa One"', 'sans-serif'],
-        'geist': ['"Geist Pixel"', 'sans-serif'],
+        'geist': ['Inter', 'sans-serif'],
         'display': ['Oswald', 'sans-serif'],
         'sans': ['Inter', 'sans-serif'],
       },

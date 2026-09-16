@@ -1,33 +1,113 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, register, googleLogin, authError, clearError, isAuthenticated, isAdmin } = useAuth();
+
   const [view, setView] = useState('home');
   const [mode, setMode] = useState('login');
   const [formData, setFormData] = useState({ email: '', name: '', password: '' });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [isWelcoming, setIsWelcoming] = useState(false);
+  const [welcomeUser, setWelcomeUser] = useState(null);
+
+  const redirectTarget = location.state?.from?.pathname;
+
+  // Si ya hay sesión activa, redirigir directamente (evita re-loguear)
+  useEffect(() => {
+    if (isAuthenticated && !isWelcoming) {
+      navigate(redirectTarget || (isAdmin ? '/admin' : '/'), { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, isWelcoming]);
+
+  const handleSuccess = (user) => {
+    setWelcomeUser(user);
+    setIsWelcoming(true);
+    setTimeout(() => {
+      navigate(redirectTarget || (user?.role === 'admin' ? '/admin' : '/'), { replace: true });
+    }, 2500);
+  };
 
   const updateForm = (field, value) => setFormData(prev => ({ ...prev, [field]: value }));
 
   const switchMode = (newMode) => {
+    clearError();
     setMode(newMode);
     setView(newMode === 'login' ? 'login-form' : 'step-email');
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem('currentUser', formData.email.split('@')[0]);
-    localStorage.setItem('userEmail', formData.email);
-    navigate('/admin');
+    setSubmitting(true);
+    const result = await login({ email: formData.email, password: formData.password, rememberMe });
+    setSubmitting(false);
+    if (result.ok) {
+      handleSuccess(result.user);
+    }
   };
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem('currentUser', formData.name);
-    localStorage.setItem('userEmail', formData.email);
-    navigate('/admin');
+    setSubmitting(true);
+    const result = await register({ name: formData.name, email: formData.email, password: formData.password });
+    setSubmitting(false);
+    if (result.ok) {
+      handleSuccess(result.user);
+    }
   };
+
+  const handleGoogleCredential = async (credential) => {
+    setSubmitting(true);
+    const result = await googleLogin(credential);
+    setSubmitting(false);
+    if (result.ok) {
+      handleSuccess(result.user);
+    }
+  };
+
+  // Carga el script de Google Identity Services y renderiza el botón (solo si hay Client ID configurado)
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID || view !== 'home') return undefined;
+
+    const initGoogle = () => {
+      if (!window.google?.accounts?.id) return;
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: (response) => handleGoogleCredential(response.credential),
+      });
+      const el = document.getElementById('google-btn-container');
+      if (el) {
+        el.innerHTML = '';
+        window.google.accounts.id.renderButton(el, { theme: 'outline', size: 'large', shape: 'pill', width: 280 });
+      }
+    };
+
+    if (window.google?.accounts?.id) {
+      initGoogle();
+      return undefined;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = initGoogle;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
 
   return (
     <div className="min-h-screen font-sans antialiased flex flex-col lg:flex-row overflow-y-auto" style={{ background: 'transparent' }}>
@@ -72,6 +152,11 @@ const Login = () => {
           box-shadow: 0 14px 28px -4px rgba(69,90,109,0.28);
           transform: translateY(-1px);
         }
+        .action-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
         .right-pill {
           background: rgba(255,255,255,0.18);
           border: 1px solid rgba(255,255,255,0.35);
@@ -86,6 +171,12 @@ const Login = () => {
           backdrop-filter: blur(16px);
         }
       `}</style>
+
+      {/* Back to Home (Fixed so it doesn't break layout) */}
+      <Link to="/" className="fixed top-6 left-6 sm:top-10 sm:left-10 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#364B5D] hover:text-[#0C3B45] transition-colors z-50">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg>
+        Volver al Inicio
+      </Link>
 
       {/* LEFT — Auth Card */}
       <section className="w-full lg:w-[45%] flex items-center justify-center lg:justify-end px-4 sm:px-8 lg:pr-14 xl:pr-20 py-8 sm:py-12 min-h-screen lg:min-h-0">
@@ -105,6 +196,12 @@ const Login = () => {
             ))}
           </div>
 
+          {authError && (
+            <div className="mb-5 px-4 py-2.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-700 text-xs font-medium text-center">
+              {authError}
+            </div>
+          )}
+
           <AnimatePresence mode="wait">
 
             {/* HOME */}
@@ -115,9 +212,19 @@ const Login = () => {
                   <p className="text-sm text-[#546A7E] mt-1">Ingresá o registrate para comenzar</p>
                 </div>
                 <div className="flex flex-col gap-3 pt-1">
-                  <button onClick={() => { setMode('login'); setView('login-form'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Iniciar Sesión</button>
-                  <button onClick={() => { setMode('register'); setView('step-email'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta Nueva</button>
+                  <button onClick={() => { clearError(); setMode('login'); setView('login-form'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Iniciar Sesión</button>
+                  <button onClick={() => { clearError(); setMode('register'); setView('step-email'); }} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta Nueva</button>
                 </div>
+                {GOOGLE_CLIENT_ID && (
+                  <div className="pt-2 flex flex-col items-center gap-2">
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1 h-px bg-[#364B5D]/15" />
+                      <span className="text-[10px] uppercase tracking-widest text-[#546A7E]/70">o continuá con</span>
+                      <div className="flex-1 h-px bg-[#364B5D]/15" />
+                    </div>
+                    <div id="google-btn-container" />
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -173,11 +280,20 @@ const Login = () => {
                   <p className="text-xs text-[#546A7E] mt-1">Último paso para proteger tu cuenta</p>
                 </div>
                 <form onSubmit={handleRegisterSubmit} className="space-y-4">
-                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3 relative">
                     <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
-                    <input required type="password" placeholder="Contraseña segura" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                    <input required minLength={6} type={showPassword ? 'text' : 'password'} placeholder="Contraseña segura (mín. 6 caracteres)" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 pr-8 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 text-[#546A7E] hover:text-[#1e2f3e] focus:outline-none">
+                      {showPassword ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      )}
+                    </button>
                   </label>
-                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">Crear Cuenta</button>
+                  <button type="submit" disabled={submitting} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e]">
+                    {submitting ? 'Creando cuenta...' : 'Crear Cuenta'}
+                  </button>
                 </form>
                 <button onClick={() => setView('step-name')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" /></svg> Volver
@@ -197,12 +313,26 @@ const Login = () => {
                     <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
                     <input required type="email" placeholder="Correo" value={formData.email} onChange={e => updateForm('email', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
                   </label>
-                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3">
+                  <label className="pill-input rounded-full px-5 py-3.5 flex items-center gap-3 relative">
                     <svg className="w-4 h-4 text-[#546A7E] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>
-                    <input required type="password" placeholder="Contraseña" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                    <input required type={showPassword ? 'text' : 'password'} placeholder="Contraseña" value={formData.password} onChange={e => updateForm('password', e.target.value)} className="w-full bg-transparent border-0 p-0 pr-8 text-sm text-[#1e2f3e] placeholder-[#546A7E]/60 focus:ring-0 outline-none" />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 text-[#546A7E] hover:text-[#1e2f3e] focus:outline-none">
+                      {showPassword ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      )}
+                    </button>
                   </label>
-                  <button type="submit" className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
-                    Continuar <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>
+                  <div className="flex items-center justify-between px-1">
+                    <label className="flex items-center gap-2 text-[11px] font-medium text-[#546A7E] cursor-pointer select-none">
+                      <input type="checkbox" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="rounded border-[#546A7E]/40 text-[#364B5D] focus:ring-[#364B5D]" />
+                      Recordar sesión
+                    </label>
+                  </div>
+                  <button type="submit" disabled={submitting} className="action-btn w-full py-3.5 rounded-full text-xs font-bold uppercase tracking-widest text-[#1e2f3e] flex items-center justify-center gap-2">
+                    {submitting ? 'Ingresando...' : 'Continuar'}
+                    {!submitting && <svg className="w-4 h-4 text-[#546A7E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" /></svg>}
                   </button>
                 </form>
                 <button onClick={() => setView('home')} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#546A7E] hover:text-[#1e2f3e] transition-colors">
@@ -283,9 +413,87 @@ const Login = () => {
             <p className="text-[11px] text-[#1e2f3e]/45 mt-1.5">Clínica certificada en Tucumán, Argentina.</p>
           </div>
         </div>
-
       </section>
-    </div>
+
+    {/* Welcome Modal */ }
+  <AnimatePresence>
+    {isWelcoming && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-md px-4"
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: -20 }}
+          transition={{ type: "spring", duration: 0.8 }}
+          className="bg-white rounded-3xl shadow-2xl p-8 sm:p-12 max-w-lg w-full text-center border border-white/50 relative overflow-hidden"
+        >
+          {/* Decorative Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-32 bg-linear-to-b from-[#88C9C4]/20 to-transparent -z-10" />
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#0C3B45]/5 rounded-full blur-3xl -z-10" />
+
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="w-20 h-20 sm:w-24 sm:h-24 bg-[#0C3B45] rounded-full mx-auto flex items-center justify-center shadow-xl mb-6 border-4 border-[#88C9C4]/30"
+          >
+            <span className="font-bebas text-4xl sm:text-5xl text-white">
+              {welcomeUser?.name?.charAt(0).toUpperCase() || 'G'}
+            </span>
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="font-bebas text-4xl sm:text-5xl text-[#364B5D] mb-2 leading-none"
+          >
+            ¡BIENVENIDO!
+          </motion.h2>
+
+          <motion.h3
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="font-geist text-xl sm:text-2xl font-bold text-[#0C3B45] mb-4 capitalize"
+          >
+            {welcomeUser?.name || 'Usuario'}
+          </motion.h3>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+            className="font-geist text-sm sm:text-base text-[#8CA0B2]"
+          >
+            Ingresando a <span className="font-bold text-[#88C9C4]">GM KIT STUDIO</span>...
+          </motion.p>
+
+          {/* Loading Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-8 flex justify-center gap-2"
+          >
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
+                className="w-2.5 h-2.5 bg-[#88C9C4] rounded-full"
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+    </div >
   );
 };
 

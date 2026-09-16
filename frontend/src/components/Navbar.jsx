@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="absolute top-0 left-0 w-full z-50 py-4 md:py-8 px-4 md:px-12 pointer-events-none">
-        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+        <div className="max-w-400 mx-auto flex justify-between items-center">
 
           {/* Mobile Menu & Logo (Visible only on small screens) */}
           <div className="pointer-events-auto md:hidden flex items-center gap-2.5">
@@ -31,16 +31,15 @@ const Navbar = () => {
                 <Menu size={20} />
               </button>
             </div>
-            <Link to="/" className="flex items-center">
-              <span className="font-bebas text-lg xs:text-xl text-brand-5 tracking-wider leading-none">
-                GM KIT <span className="text-[#88C9C4]">STUDIO</span>
-              </span>
-            </Link>
+
           </div>
 
-          {/* Left Navigation Pills (Hidden on mobile) */}
-          <div className="pointer-events-auto hidden md:flex items-center bg-brand-1 rounded-full px-2 py-2 shadow-sm border border-brand-2/20">
-            <Link to="/" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 text-center ${isActive('/') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'}`}>
+          {/* Desktop Logo & Navigation Pills (Hidden on mobile) */}
+          <div className="pointer-events-auto hidden md:flex items-center gap-6">
+
+
+            <div className="flex items-center bg-brand-1 rounded-full px-2 py-2 shadow-sm border border-brand-2/20">
+              <Link to="/" className={`relative px-6 py-2 rounded-full font-geist text-sm tracking-wide transition-colors z-10 text-center ${isActive('/') ? 'text-brand-1' : 'text-brand-5 hover:text-brand-4'}`}>
               {isActive('/') && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
               Inicio
             </Link>
@@ -52,6 +51,7 @@ const Navbar = () => {
               {isActive('/nosotros') && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-brand-5 rounded-full -z-10" />}
               Nosotros
             </Link>
+            </div>
           </div>
 
           {/* Right Action Pills */}
@@ -60,17 +60,23 @@ const Navbar = () => {
             {/* User Profile / Login */}
             {currentUser ? (
               <div className="flex items-center gap-1.5 sm:gap-2 bg-brand-5 text-brand-1 px-2 py-1.5 md:px-3 md:py-2 rounded-full border border-brand-2/20 shadow-lg">
-                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg shrink-0">
-                  {currentUser.charAt(0).toUpperCase()}
-                </div>
-                <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-30 truncate">
-                  Hola, <b className="capitalize">{currentUser}</b>
-                </span>
-
-                {isAdmin && (
-                  <Link to="/admin" className="ml-1 md:ml-2 text-brand-3 hover:text-white transition-colors" title="Panel de Admin">
-                    <Shield className="w-4 h-4 md:w-5 md:h-5" />
+                
+                {isAdmin ? (
+                  <Link to="/admin" className="flex items-center gap-2 hover:text-[#88C9C4] transition-colors pl-2 pr-1">
+                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-brand-3" />
+                    <span className="font-bebas text-sm sm:text-base tracking-wider hidden sm:inline leading-none">
+                      ADMINISTRADOR
+                    </span>
                   </Link>
+                ) : (
+                  <>
+                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg shrink-0">
+                      {currentUser.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-30 truncate">
+                      Hola, <b className="capitalize">{currentUser}</b>
+                    </span>
+                  </>
                 )}
 
                 <button
@@ -79,7 +85,7 @@ const Navbar = () => {
                     localStorage.removeItem('userEmail');
                     window.location.reload();
                   }}
-                  className={`ml-1 ${isAdmin ? 'md:ml-1' : 'md:ml-2'} mr-1 text-brand-1/50 hover:text-red-500 transition-colors`}
+                  className={`ml-1 md:ml-2 mr-1 text-brand-1/50 hover:text-red-500 transition-colors shrink-0`}
                   title="Cerrar sesión"
                 >
                   <LogOut className="w-4 h-4 md:w-5 md:h-5" />
@@ -98,20 +104,7 @@ const Navbar = () => {
               </Link>
             )}
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsCartOpen(true)}
-              className="relative bg-brand-5 text-brand-1 w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-brand-4 transition-colors border border-brand-2/20"
-              aria-label="Carrito de compras"
-            >
-              <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-3 text-brand-5 w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold border-2 border-brand-5">
-                  {totalItems}
-                </span>
-              )}
-            </motion.button>
+
           </div>
         </div>
       </nav>

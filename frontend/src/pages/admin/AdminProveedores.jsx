@@ -47,14 +47,14 @@ const AdminProveedores = () => {
 
   // Form states for New Order Modal
   const [newOrderForm, setNewOrderForm] = useState({
-    kits: 50,
+    kits: '',
     costPerKit: supplierData?.costPerKit || 5000,
     paymentMethod: 'Transferencia Bancaria CBU',
     paymentDate: '50% Anticipo hoy • 50% contra entrega',
     dueDate: '20 Sep 2026',
     invoiceNumber: '',
     status: 'Pendiente',
-    pendingAmount: 250000,
+    pendingAmount: '',
   });
 
   const handleCopy = (text, fieldName) => {
@@ -80,14 +80,14 @@ const AdminProveedores = () => {
     });
     setIsNewOrderModalOpen(false);
     setNewOrderForm({
-      kits: 50,
+      kits: '',
       costPerKit: supplierData?.costPerKit || 5000,
       paymentMethod: 'Transferencia Bancaria CBU',
       paymentDate: '50% Anticipo hoy • 50% contra entrega',
       dueDate: '20 Sep 2026',
       invoiceNumber: '',
       status: 'Pendiente',
-      pendingAmount: 250000,
+      pendingAmount: '',
     });
   };
 
@@ -781,8 +781,8 @@ const AdminProveedores = () => {
                     <input
                       type="number"
                       value={newOrderForm.kits}
-                      onChange={(e) => setNewOrderForm({ ...newOrderForm, kits: Number(e.target.value) })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs font-bold"
+                      onChange={(e) => setNewOrderForm({ ...newOrderForm, kits: e.target.value === '' ? '' : Number(e.target.value) })}
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-bold"
                       min="1"
                       required
                     />
@@ -792,8 +792,8 @@ const AdminProveedores = () => {
                     <input
                       type="number"
                       value={newOrderForm.costPerKit}
-                      onChange={(e) => setNewOrderForm({ ...newOrderForm, costPerKit: Number(e.target.value) })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs font-bold"
+                      onChange={(e) => setNewOrderForm({ ...newOrderForm, costPerKit: e.target.value === '' ? '' : Number(e.target.value) })}
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-bold"
                       min="1"
                       required
                     />
@@ -809,11 +809,11 @@ const AdminProveedores = () => {
 
                 <div>
                   <label className="block text-[#64748B] font-semibold mb-1">Condición / Fechas de Pago</label>
-                  <input
+                    <input
                     type="text"
                     value={newOrderForm.paymentDate}
                     onChange={(e) => setNewOrderForm({ ...newOrderForm, paymentDate: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
                     placeholder="Ej. 50% anticipo hoy • 50% saldo al recibir"
                     required
                   />
@@ -826,7 +826,7 @@ const AdminProveedores = () => {
                       type="text"
                       value={newOrderForm.dueDate}
                       onChange={(e) => setNewOrderForm({ ...newOrderForm, dueDate: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
                       placeholder="Ej. 20 Sep 2026"
                     />
                   </div>
@@ -835,7 +835,7 @@ const AdminProveedores = () => {
                     <select
                       value={newOrderForm.status}
                       onChange={(e) => setNewOrderForm({ ...newOrderForm, status: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs font-semibold"
+                      className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-semibold"
                     >
                       <option value="Pendiente">Pendiente</option>
                       <option value="Parcial 50%">Parcial 50% (Anticipo)</option>
@@ -846,11 +846,11 @@ const AdminProveedores = () => {
 
                 <div>
                   <label className="block text-[#64748B] font-semibold mb-1">N° de Factura / Remito (Opcional)</label>
-                  <input
+                    <input
                     type="text"
                     value={newOrderForm.invoiceNumber}
                     onChange={(e) => setNewOrderForm({ ...newOrderForm, invoiceNumber: e.target.value })}
-                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-xs"
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs"
                     placeholder="Ej. FC-A 0012-00050110"
                   />
                 </div>

@@ -4,7 +4,7 @@ import { Star } from 'lucide-react';
 const RecentReviews = () => {
   const recentReviews = [
     {
-      name: "Dr. Roberto Sánchez",
+      name: "Dra. Rocío Pérez",
       text: "Excelente calidad de los kits, la entrega siempre es puntual y el soporte técnico es de primera. Muy recomendados.",
       stars: 5,
       img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=150&q=80"

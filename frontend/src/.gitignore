@@ -1,0 +1,19 @@
+# Env files (contienen credenciales)
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build
+frontend/dist
+frontend/dist-ssr
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.local

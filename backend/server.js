@@ -7,6 +7,7 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 // Config
 const connectDB = require('./config/db');
 const seedAdmin = require('./utils/seedAdmin');
+const seedBusinessData = require('./utils/seedBusinessData');
 
 // Middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -18,6 +19,10 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
+const supplierOrderRoutes = require('./routes/supplierOrderRoutes');
+const dispatchRoutes = require('./routes/dispatchRoutes');
+const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,7 +34,7 @@ app.use(helmet());
 
 // CORS configurado para el frontend con cookies
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5174', process.env.CLIENT_URL],
   credentials: true,
 }));
 
@@ -58,6 +63,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/suppliers', supplierRoutes);
+app.use('/api/reservations', reservationRoutes);
+app.use('/api/supplier-orders', supplierOrderRoutes);
+app.use('/api/dispatches', dispatchRoutes);
+app.use('/api/payment-methods', paymentMethodRoutes);
 
 /* ─── ERROR HANDLER ─────────────────────────────── */
 
@@ -78,6 +87,9 @@ const startServer = async () => {
 
     // Crear admin si no existe
     await seedAdmin();
+
+    // Crear datos base del negocio (producto kit, proveedor, métodos de pago)
+    await seedBusinessData();
 
     // Iniciar servidor
     app.listen(PORT, () => {

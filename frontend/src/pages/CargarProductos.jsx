@@ -21,6 +21,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 /* ─── DATA ─────────────────────────────────────────── */
 const kitItems = [
@@ -145,6 +146,7 @@ const stepLabels = ['Contenido', 'El Kit', 'Cantidad', 'Envío', 'Pago', 'Confir
 const CargarProductos = () => {
   const navigate = useNavigate();
   const { cartItems, setIsCartOpen } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const [step, setStep] = useState(1);
   const [personalization, setPersonalization] = useState('Completo');
@@ -184,6 +186,11 @@ const CargarProductos = () => {
   };
 
   const handleFinalize = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/cargarproductos' } });
+      return;
+    }
+
     const shippingMap = {
       domicilio: promo.freeShipping ? 'Envío a Domicilio (¡Bonificado Gratis!)' : 'Envío a Domicilio (Tucumán)',
       sucursal: promo.freeShipping ? 'Retiro en Sucursal (¡Bonificado Gratis!)' : 'Retiro en Sucursal (Punto designado)',
@@ -243,7 +250,7 @@ const CargarProductos = () => {
 
       {/* ── TOP NAV HEADER ── */}
       <header className="w-full px-3.5 sm:px-6 md:px-10 lg:px-14 pt-3.5 sm:pt-5 pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
-        <div className="w-full max-w-[1700px] mx-auto flex items-center justify-between gap-3 sm:gap-6">
+        <div className="w-full max-w-425 mx-auto flex items-center justify-between gap-3 sm:gap-6">
 
           {/* Left: Salir button + GM KIT STUDIO Logo (Pinned to Left) */}
           <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
@@ -323,7 +330,7 @@ const CargarProductos = () => {
         </div>
 
         {/* ── PROGRESS BAR & STEP TITLE ── */}
-        <div className="w-full max-w-[1700px] mx-auto pt-2.5 pb-0.5">
+        <div className="w-full max-w-425 mx-auto pt-2.5 pb-0.5">
           <div className="flex items-center justify-between text-xs mb-1.5">
             <span className="text-[11px] sm:text-xs font-bold text-[#364B5D] uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-5 h-5 rounded-full bg-[#364B5D] text-white flex items-center justify-center text-[10px] font-bold">
@@ -378,17 +385,17 @@ const CargarProductos = () => {
                     <div
                       key={i}
                       className={`rounded-xl sm:rounded-2xl p-3 flex items-start gap-2.5 sm:gap-3 shadow-xs border transition-all overflow-hidden group ${item.isBadge
-                          ? 'bg-[#88C9C4]/15 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
-                          : isQty2
-                            ? 'bg-white border-orange-200/90 hover:border-orange-400 hover:shadow-md'
-                            : 'bg-white border-[#E1D9CC]/60 hover:border-[#88C9C4]/70'
+                        ? 'bg-[#88C9C4]/15 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
+                        : isQty2
+                          ? 'bg-white border-orange-200/90 hover:border-orange-400 hover:shadow-md'
+                          : 'bg-white border-[#E1D9CC]/60 hover:border-[#88C9C4]/70'
                         }`}
                     >
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${item.isBadge
-                          ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
-                          : isQty2
-                            ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-100'
-                            : 'bg-[#F4F2EC] text-[#364B5D] group-hover:bg-[#88C9C4]/20'
+                        ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
+                        : isQty2
+                          ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-100'
+                          : 'bg-[#F4F2EC] text-[#364B5D] group-hover:bg-[#88C9C4]/20'
                         }`}>
                         {item.isBadge ? (
                           <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0C3B45]" />
@@ -584,8 +591,8 @@ const CargarProductos = () => {
                           setIsTrial(preset.trial);
                         }}
                         className={`flex-1 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${quantity === preset.q && isTrial === preset.trial
-                            ? 'bg-[#364B5D] text-white shadow-xs scale-105'
-                            : 'bg-white/80 text-[#546A7E] hover:bg-white border border-[#E1D9CC]/60'
+                          ? 'bg-[#364B5D] text-white shadow-xs scale-105'
+                          : 'bg-white/80 text-[#546A7E] hover:bg-white border border-[#E1D9CC]/60'
                           }`}
                       >
                         {preset.lbl}
@@ -618,8 +625,8 @@ const CargarProductos = () => {
                               setIsTrial(false);
                             }}
                             className={`cursor-pointer rounded-xl p-2 sm:p-2.5 text-center border transition-all ${isUnlocked
-                                ? 'border-[#88C9C4] bg-[#88C9C4]/15 shadow-xs ring-1 ring-[#88C9C4]/30'
-                                : 'border-[#E1D9CC]/60 bg-white/50 hover:bg-white/70'
+                              ? 'border-[#88C9C4] bg-[#88C9C4]/15 shadow-xs ring-1 ring-[#88C9C4]/30'
+                              : 'border-[#E1D9CC]/60 bg-white/50 hover:bg-white/70'
                               }`}
                           >
                             <p className={`font-bebas text-lg leading-tight ${isUnlocked ? 'text-[#0C3B45]' : 'text-[#546A7E]'}`}>
@@ -649,8 +656,8 @@ const CargarProductos = () => {
                 <div className="md:col-span-5 flex flex-col gap-2.5">
                   {/* Promo Banner */}
                   <div className={`w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${promo.discount > 0 || isTrial
-                      ? 'bg-[#88C9C4]/25 text-[#0C3B45] border border-[#88C9C4]/50'
-                      : 'bg-[#EBE7DF] text-[#8CA0B2]'
+                    ? 'bg-[#88C9C4]/25 text-[#0C3B45] border border-[#88C9C4]/50'
+                    : 'bg-[#EBE7DF] text-[#8CA0B2]'
                     }`}>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className={`w-2 h-2 rounded-full ${promo.discount > 0 || isTrial ? 'bg-[#0C3B45]' : 'bg-[#D9D1C7]'}`} />
@@ -744,8 +751,8 @@ const CargarProductos = () => {
 
                   {/* 1. Kit de Muestra (Trial) */}
                   <div className={`rounded-2xl p-3.5 border transition-all flex flex-col justify-between ${isTrial && quantity === 1
-                      ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
-                      : 'bg-white border-[#E1D9CC]/70 hover:border-[#88C9C4]/50'
+                    ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
+                    : 'bg-white border-[#E1D9CC]/70 hover:border-[#88C9C4]/50'
                     }`}>
                     <div>
                       <div className="flex items-center justify-between gap-1 mb-1.5">
@@ -766,8 +773,8 @@ const CargarProductos = () => {
                         setIsTrial(true);
                       }}
                       className={`w-full py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${isTrial && quantity === 1
-                          ? 'bg-[#0C3B45] text-[#88C9C4] shadow-xs'
-                          : 'bg-[#F4F2EC] text-[#0C3B45] hover:bg-[#88C9C4]/30 border border-[#E1D9CC]'
+                        ? 'bg-[#0C3B45] text-[#88C9C4] shadow-xs'
+                        : 'bg-[#F4F2EC] text-[#0C3B45] hover:bg-[#88C9C4]/30 border border-[#E1D9CC]'
                         }`}
                     >
                       <Check className="w-3.5 h-3.5" />
@@ -777,8 +784,8 @@ const CargarProductos = () => {
 
                   {/* 2. Envío Bonificado */}
                   <div className={`rounded-2xl p-3.5 border transition-all flex flex-col justify-between ${promo.freeShipping
-                      ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
-                      : 'bg-white border-[#E1D9CC]/70'
+                    ? 'bg-[#88C9C4]/20 border-[#88C9C4] shadow-sm ring-1 ring-[#88C9C4]'
+                    : 'bg-white border-[#E1D9CC]/70'
                     }`}>
                     <div>
                       <div className="flex items-center justify-between gap-1 mb-1.5">
@@ -866,8 +873,8 @@ const CargarProductos = () => {
                       key={opt.id}
                       onClick={() => setSelectedShipping(opt.id)}
                       className={`relative cursor-pointer rounded-2xl p-4 sm:p-5 border-2 transition-all flex items-center md:block gap-3.5 select-none ${isSelected
-                          ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
-                          : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
+                        ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
+                        : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
                         }`}
                     >
                       {/* Radio checkmark visible on BOTH mobile and desktop */}
@@ -888,8 +895,8 @@ const CargarProductos = () => {
                           </h3>
                           {opt.badge && (
                             <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0 ${isFree
-                                ? 'bg-emerald-600 text-white shadow-xs'
-                                : 'text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40'
+                              ? 'bg-emerald-600 text-white shadow-xs'
+                              : 'text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40'
                               }`}>
                               {isFree ? '¡BONIFICADO GRATIS!' : opt.badge}
                             </span>
@@ -936,8 +943,8 @@ const CargarProductos = () => {
                       key={opt.id}
                       onClick={() => setSelectedPayment(opt.id)}
                       className={`relative cursor-pointer rounded-2xl p-4 sm:p-5 border-2 transition-all flex items-center md:block gap-3.5 select-none ${isSelected
-                          ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
-                          : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
+                        ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
+                        : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
                         }`}
                     >
                       {/* Radio checkmark visible on BOTH mobile and desktop */}

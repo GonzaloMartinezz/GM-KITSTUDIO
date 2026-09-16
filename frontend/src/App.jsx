@@ -5,6 +5,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
 
+// Auth guards
+import ProtectedRoute from './components/ProtectedRoute';
+import ClientRoute from './components/ClientRoute';
+import SiteNotice from './components/SiteNotice';
+
 // Loading fallback component
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center bg-brand-5">
@@ -30,12 +35,19 @@ function App() {
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          
+
           {/* === AUTH ROUTES === */}
           <Route path="/login" element={<Login />} />
 
           {/* === PUBLIC E-COMMERCE ROUTES === */}
-          <Route path="/cargarproductos" element={<CargarProductos />} />
+          <Route
+            path="/cargarproductos"
+            element={
+              <ClientRoute>
+                <CargarProductos />
+              </ClientRoute>
+            }
+          />
           <Route path="/comprarproducto" element={<Navigate to="/cargarproductos" replace />} />
           <Route path="/comprarproductos" element={<Navigate to="/cargarproductos" replace />} />
           <Route element={<PublicLayout />}>
@@ -45,8 +57,15 @@ function App() {
             <Route path="/nosotros" element={<About />} />
           </Route>
 
-          {/* === ADMIN DASHBOARD ROUTES === */}
-          <Route path="/admin" element={<AdminLayout />}>
+          {/* === ADMIN DASHBOARD ROUTES (requieren rol admin) === */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<AdminDashboard />} />
             <Route path="inventario" element={<AdminInventario />} />
             <Route path="ventas" element={<AdminVentas />} />
@@ -57,6 +76,7 @@ function App() {
 
         </Routes>
       </Suspense>
+      <SiteNotice />
     </Router>
   );
 }

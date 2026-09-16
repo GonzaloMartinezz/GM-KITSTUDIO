@@ -8,13 +8,35 @@ const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'El usuario es obligatorio'],
+  },
+  // Datos de venta manual cargada por el admin (cliente sin cuenta registrada)
+  customerName: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  customerClinic: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  customerPhone: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  createdByAdmin: {
+    type: Boolean,
+    default: false,
   },
   items: [{
     product: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
-      required: true,
+    },
+    productName: {
+      type: String,
+      default: '',
     },
     quantity: {
       type: Number,

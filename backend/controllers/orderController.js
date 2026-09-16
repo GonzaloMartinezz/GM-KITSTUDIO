@@ -212,4 +212,126 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
-module.exports = { createOrder, getMyOrders, getAllOrders, getOrderById, updateOrderStatus };
+
+/**
+ * @desc    Crear una venta manual (walk-in / WhatsApp) cargada por el admin.
+ *          No requiere que el cliente tenga cuenta registrada.
+ * @route   POST /api/orders/manual
+ * @access  Admin
+ */
+const createManualOrder = async (req, res, next) => {
+  try {
+    const {
+      customerName, customerClinic, customerPhone,
+      productId, productName, quantity, unitPrice,
+      paymentMethod, status, notes,
+    } = req.body;
+
+    if (!customerName || !quantity || !unitPrice) {
+      res.status(400);
+      throw new Error('Cliente, cantidad y precio unitario son obligatorios.');
+    }
+
+    const qty = Number(quantity);
+    const price = Number(unitPrice);
+    let item = { quantity: qty, priceAtPurchase: price, productName: productName || 'Kit Odontológico Completo' };
+
+    if (productId) {
+      const product = await Product.findById(productId);
+      if (product) {
+        if (product.stock < qty) {
+          res.status(400);
+          throw new Error(`Stock insuficiente para "${product.name}". Disponible: ${product.stock}`);
+        }
+        product.stock -= qty;
+        await product.save();
+        item.product = product._id;
+        item.productName = product.name;
+      }
+    }
+
+    const totalAmount = qty * price;
+
+    const order = await Order.create({
+      customerName,
+      customerClinic: customerClinic || '',
+      customerPhone: customerPhone || '',
+      createdByAdmin: true,
+      items: [item],
+      totalAmount,
+      paymentMethod: paymentMethod || 'efectivo',
+      status: status || 'confirmado',
+      notes: notes || '',
+    });
+
+    await Transaction.create({
+      order: order._id,
+      type: 'income',
+      amount: totalAmount,
+      description: `Venta manual ${order.orderNumber} - ${customerName}`,
+      category: 'venta',
+    });
+
+    const populated = await Order.findById(order._id).populate('items.product', 'name price image');
+    res.status(201).json(populated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Editar una orden (venta) existente — uso administrativo.
+ * @route   PUT /api/orders/:id
+ * @access  Admin
+ */
+const updateOrder = async (req, res, next) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      res.status(404);
+      throw new Error('Orden no encontrada.');
+    }
+
+    const allowedFields = ['customerName', 'customerClinic', 'customerPhone', 'paymentMethod', 'status', 'notes', 'shippingAddress', 'shippingMethod', 'discount'];
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) order[field] = req.body[field];
+    });
+
+    if (req.body.quantity !== undefined && order.items[0]) {
+      order.items[0].quantity = Number(req.body.quantity);
+    }
+    if (req.body.unitPrice !== undefined && order.items[0]) {
+      order.items[0].priceAtPurchase = Number(req.body.unitPrice);
+    }
+    if (order.items[0]) {
+      order.totalAmount = order.items.reduce((sum, it) => sum + it.priceAtPurchase * it.quantity, 0) - (order.discount || 0);
+    }
+
+    await order.save();
+    const populated = await Order.findById(order._id).populate('user', 'name email clinicName').populate('items.product', 'name price image');
+    res.json(populated);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Eliminar una orden (uso administrativo — corrige cargas erróneas).
+ * @route   DELETE /api/orders/:id
+ * @access  Admin
+ */
+const deleteOrder = async (req, res, next) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) {
+      res.status(404);
+      throw new Error('Orden no encontrada.');
+    }
+    await Transaction.deleteMany({ order: order._id });
+    res.json({ message: 'Orden eliminada.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createOrder, getMyOrders, getAllOrders, getOrderById, updateOrderStatus, createManualOrder, updateOrder, deleteOrder };

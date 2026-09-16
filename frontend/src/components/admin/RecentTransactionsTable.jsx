@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Plus, MoreHorizontal, Inbox } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
+import NewTransactionModal from './modals/NewTransactionModal';
 
 const RecentTransactionsTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { transactions = [], addTransaction } = useAdminData();
 
   const filteredTransactions = (transactions || []).filter(
@@ -75,6 +77,7 @@ const RecentTransactionsTable = () => {
           {/* Add Transaction Button */}
           <button
             type="button"
+            onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer whitespace-nowrap"
           >
             <Plus size={14} strokeWidth={2.5} />

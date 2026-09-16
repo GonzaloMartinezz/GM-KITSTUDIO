@@ -6,7 +6,17 @@ const supplierSchema = new mongoose.Schema({
     required: [true, 'El nombre de la empresa es obligatorio'],
     trim: true,
   },
+  subtitle: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   contactName: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  role: {
     type: String,
     default: '',
     trim: true,
@@ -42,12 +52,19 @@ const supplierSchema = new mongoose.Schema({
     default: 'Responsable Inscripto',
     trim: true,
   },
-  bankInfo: {
-    bank: { type: String, default: '' },
-    cbu: { type: String, default: '' },
-    alias: { type: String, default: '' },
+  bank: {
+    type: String,
+    default: '',
   },
-  anmatCert: {
+  cbu: {
+    type: String,
+    default: '',
+  },
+  alias: {
+    type: String,
+    default: '',
+  },
+  anmatPm: {
     type: String,
     default: '',
     trim: true,
@@ -57,6 +74,38 @@ const supplierSchema = new mongoose.Schema({
     default: 0,
     min: 0,
   },
+  regularSalePrice: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  nextPaymentDate: {
+    type: String,
+    default: 'Sin pagos pendientes',
+  },
+  nextPaymentAmount: {
+    type: Number,
+    default: 0,
+  },
+  nextPaymentConcept: {
+    type: String,
+    default: 'No hay pagos programados pendientes',
+  },
+  nextPaymentStatus: {
+    type: String,
+    default: 'Al día',
+  },
+  itemsBreakdown: [{
+    name: { type: String },
+    qty: { type: String },
+    cost: { type: Number, default: 0 },
+  }],
+  tierPricing: [{
+    tier: { type: String },
+    costPerKit: { type: Number, default: 0 },
+    unitMargin: { type: Number, default: 0 },
+    marginPct: { type: String },
+  }],
   paymentTerms: {
     type: String,
     default: '',

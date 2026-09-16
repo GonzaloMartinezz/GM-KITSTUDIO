@@ -82,14 +82,14 @@ const About = () => {
       <section className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto relative z-10 mb-28 md:mb-36">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-brand-1 border-2 border-brand-5 transition-transform hover:-translate-y-1">
-            <Activity className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
-            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">5+</h3>
-            <p className="text-base font-geist font-medium text-brand-5/80">Años de experiencia en el sector.</p>
+            <Award className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
+            <h3 className="font-bebas text-4xl md:text-5xl text-brand-5 leading-none mb-2">PREMIUM</h3>
+            <p className="text-base font-geist font-medium text-brand-5/80">La mejor calidad de producto.</p>
           </div>
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-white border-2 border-brand-5 transition-transform hover:-translate-y-1">
             <Users className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
-            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">50+</h3>
-            <p className="text-base font-geist font-medium text-brand-5/80">Clínicas asociadas en todo el país.</p>
+            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">5+</h3>
+            <p className="text-base font-geist font-medium text-brand-5/80">Clínicas asociadas.</p>
           </div>
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-white border-2 border-brand-5 transition-transform hover:-translate-y-1">
             <ShieldCheck className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
