@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight } from 'lucide-react';
+import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
 
 const Products = () => {
@@ -258,33 +258,33 @@ const Products = () => {
               <div>
                 <div className="flex items-center justify-between gap-2 mb-4">
                   <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white group-hover:scale-105 transition-transform">
-                    <ShieldCheck className="w-6 h-6" />
+                    <Star className="w-6 h-6" />
                   </div>
                   <span className="bg-white/15 text-white border border-white/25 font-bold text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wide">
-                    Sin Costo • 100%
+                    DESCUENTOS EXCLUSIVOS
                   </span>
                 </div>
                 <h3 className="font-bebas text-2xl sm:text-3xl text-white tracking-wide mb-1">
-                  GARANTÍA DE RECAMBIO
+                  CLIENTE DE CONFIANZA
                 </h3>
                 <p className="text-xs text-white/70 font-semibold mb-3">
-                  Compromiso absoluto de bioseguridad
+                  Beneficios de ser cliente de confianza con descuentos!
                 </p>
                 <p className="text-xs sm:text-sm text-brand-1/80 font-geist leading-relaxed mb-5">
-                  Si cualquier empaque estéril llega vulnerado, abierto o con daño en el transporte, te reponemos la unidad completa sin cargo de forma inmediata y sin vueltas.
+                  Premiamos tu fidelidad. Al convertirte en un cliente habitual de GM Kit Studio, accederás de forma automática a descuentos preferenciales y ofertas exclusivas en tus próximos pedidos de kits y equipamiento.
                 </p>
                 <div className="space-y-2 border-t border-white/10 pt-4 mb-6 text-xs text-brand-1/90">
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Reposición inmediata sin complicaciones</span>
+                    <span>Descuentos fijos por compras recurrentes</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Esterilización certificada por Óxido de Etileno</span>
+                    <span>Promociones especiales en nuevos lanzamientos</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Atención y soporte directo por WhatsApp</span>
+                    <span>Atención prioritaria y soporte directo por WhatsApp</span>
                   </div>
                 </div>
               </div>
@@ -292,7 +292,7 @@ const Products = () => {
                 onClick={() => navigate('/cargarproductos')}
                 className="w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 border border-white/20 cursor-pointer active:scale-[0.98]"
               >
-                <span>Garantía GM Certificada</span>
+                <span>Conocer Beneficios</span>
                 <Check className="w-4 h-4 text-[#88C9C4]" />
               </button>
             </motion.div>

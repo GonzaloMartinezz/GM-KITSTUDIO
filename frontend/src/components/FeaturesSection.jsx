@@ -40,8 +40,8 @@ const FeaturesSection = () => {
             {/* Card 1 */}
             <div className="bg-brand-2/30 border border-brand-2/50 backdrop-blur-md p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl flex flex-col items-center text-center justify-center gap-3 sm:gap-4 hover:bg-brand-2/50 transition-colors">
               <ShieldCheck size={44} className="text-brand-4 mb-1" strokeWidth={1.5} />
-              <h3 className="font-bebas text-2xl sm:text-3xl text-brand-5 tracking-wide">Validación Estricta</h3>
-              <p className="text-brand-5/90 text-xs sm:text-sm font-medium leading-relaxed">Garantizamos que cada lote cumple con los más altos estándares bioseguros del mercado.</p>
+              <h3 className="font-bebas text-2xl sm:text-3xl text-brand-5 tracking-wide">Calidad Garantizada</h3>
+              <p className="text-brand-5/90 text-xs sm:text-sm font-medium leading-relaxed">Garantizamos la calidad de principio a fin. Los productos están 100% controlados y armados perfectamente.</p>
             </div>
             {/* Card 2 (Dark) */}
             <div className="bg-brand-5 text-brand-1 p-6 sm:p-8 md:p-10 rounded-3xl sm:rounded-4xl flex flex-col items-center text-center justify-center gap-3 sm:gap-4 shadow-[0_20px_40px_rgba(62,92,118,0.3)] relative overflow-hidden group cursor-default">
