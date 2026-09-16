@@ -83,7 +83,7 @@ const ProductModal = ({ isOpen, onClose }) => {
   };
 
   const handleEmail = () => {
-    const url = `mailto:gonnnchimartinez9@gmail.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
+    const url = `mailto:gonzalomartinezzz04@gmail.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
     window.open(url, '_blank');
   };
 

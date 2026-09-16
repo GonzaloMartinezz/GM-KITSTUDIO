@@ -214,7 +214,7 @@ const Home = () => {
               <img
                 src="/images/kitsodontologico.webp"
                 alt="Kit Quirúrgico Odontológico Completo GM Kit"
-                fetchpriority="high"
+                fetchPriority="high"
                 loading="eager"
                 className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
               />
@@ -392,7 +392,7 @@ const Home = () => {
                     <MessageCircle size={22} /> WhatsApp
                   </a>
                   <a
-                    href="mailto:gonnnchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
+                    href="mailto:gonzalomartinezzz04@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
                     className="bg-[#EA4335] hover:bg-[#d9382b] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg flex items-center justify-center gap-3 cursor-pointer"
                   >
                     <Mail size={22} /> Gmail

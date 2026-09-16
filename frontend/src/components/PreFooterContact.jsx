@@ -159,10 +159,10 @@ const PreFooterContact = () => {
                 <div className="flex items-center gap-4">
                   <Mail className="w-6 h-6 text-brand-3 shrink-0" />
                   <a
-                    href="mailto:gonchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
+                    href="mailto:gonzalomartinezzz04@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
                     className="opacity-90 hover:text-brand-3 hover:underline transition-colors break-all font-medium"
                   >
-                    gonchimartinez9@gmail.com
+                    gonzalomartinezzz04@gmail.com
                   </a>
                 </div>
               </div>
@@ -207,9 +207,9 @@ const PreFooterContact = () => {
 
               {/* Mail Directo */}
               <a
-                href="mailto:gonchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
-                title="Email: gonchimartinez9@gmail.com"
-                aria-label="Email gonchimartinez9@gmail.com"
+                href="mailto:gonzalomartinezzz04@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
+                title="Email: gonzalomartinezzz04@gmail.com"
+                aria-label="Email gonzalomartinezzz04@gmail.com"
                 className="w-11 h-11 rounded-full bg-brand-5 border border-brand-1/20 flex items-center justify-center text-brand-1 hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] hover:scale-110 transition-all shadow-md group cursor-pointer"
               >
                 <Mail size={20} className="group-hover:scale-110 transition-transform" />

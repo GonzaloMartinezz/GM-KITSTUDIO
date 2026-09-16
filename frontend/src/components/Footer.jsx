@@ -164,10 +164,10 @@ const Footer = () => {
 
             {/* 4. GMAIL (ROJO) */}
             <a
-              href="mailto:gonchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
+              href="mailto:gonzalomartinezzz04@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
               className="w-full max-w-xs px-4 py-2.5 rounded-2xl bg-[#EA4335]/15 hover:bg-[#EA4335] text-white border border-[#EA4335]/40 hover:border-[#EA4335] transition-all duration-300 flex items-center justify-between group shadow-sm hover:shadow-[0_4px_20px_rgba(234,67,53,0.4)] active:scale-[0.98] cursor-pointer"
-              title="Enviar correo a gonchimartinez9@gmail.com"
-              aria-label="Enviar correo a gonchimartinez9@gmail.com"
+              title="Enviar correo a gonzalomartinezzz04@gmail.com"
+              aria-label="Enviar correo a gonzalomartinezzz04@gmail.com"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-[#EA4335] text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform shadow-sm">
@@ -175,7 +175,7 @@ const Footer = () => {
                 </div>
                 <div className="text-left">
                   <span className="text-xs font-bold block leading-tight text-white">Gmail</span>
-                  <span className="text-[10px] text-white/70 block leading-tight">gonchimartinez9@gmail.com</span>
+                  <span className="text-[10px] text-white/70 block leading-tight">gonzalomartinezzz04@gmail.com</span>
                 </div>
               </div>
               <ArrowUpRight size={15} className="text-white/60 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
