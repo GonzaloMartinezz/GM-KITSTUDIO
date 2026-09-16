@@ -11,34 +11,44 @@ const About = () => {
       {/* 1. Hero */}
       <Hero
         title="HOLA, SOMOS <br/> GM KIT STUDIO."
-        subtitle="BIOSEGURIDAD ✦ KITS DESCARTABLES ✦ IMPLANTES"
+        items={[
+          "BIOSEGURIDAD",
+          "KITS DESCARTABLES",
+          "ESTERILIDAD CERTIFICADA",
+          "MATERIAL SMS 45G",
+          "ÓXIDO DE ETILENO",
+          "CIRUGÍA ODONTOLÓGICA",
+          "CERTIFICACIÓN ANMAT",
+          "ENTREGA INMEDIATA"
+        ]}
+        subtitle="BIOSEGURIDAD ✦ KITS DESCARTABLES ✦ ESTERILIDAD CERTIFICADA ✦ MATERIAL SMS 45G ✦ ÓXIDO DE ETILENO ✦ CIRUGÍA ODONTOLÓGICA ✦ CERTIFICACIÓN ANMAT ✦ ENTREGA INMEDIATA"
         eyebrow="TUCUMÁN, ARGENTINA"
         ctaLabel="CATÁLOGO"
         ctaHref="/productos"
       />
 
       {/* 2. Slanted Marquee Bar */}
-      <div className="relative w-[110%] left-[-5%] bg-brand-5 text-brand-1 py-5 md:py-7 transform -rotate-2 md:-rotate-3 shadow-[0_-15px_40px_rgba(0,0,0,0.25),0_15px_40px_rgba(0,0,0,0.3)] z-30 overflow-x-hidden flex whitespace-nowrap -mt-16 md:-mt-24 border-y border-brand-3/30 backdrop-blur-md">
+      <div className="relative w-[110%] left-[-5%] bg-brand-5 text-brand-1 py-4 md:py-5.5 transform -rotate-2 md:-rotate-3 shadow-[0_-15px_40px_rgba(0,0,0,0.25),0_15px_40px_rgba(0,0,0,0.3)] z-30 overflow-x-hidden flex whitespace-nowrap -mt-10 md:-mt-14 border-y border-brand-3/30 backdrop-blur-md">
         <motion.div
           animate={{ x: [0, -1000] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="flex items-center gap-8 font-bebas text-2xl md:text-3xl tracking-widest uppercase"
+          transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+          className="flex items-center gap-10 md:gap-14 font-bebas text-xl md:text-2xl tracking-[0.2em] uppercase"
         >
-          {Array(10).fill("✦ DISEÑO ✦ BIOSEGURIDAD ✦ PROTECCIÓN TOTAL ✦ LOGÍSTICA").map((text, i) => (
+          {Array(10).fill("✦ BIOSEGURIDAD ✦ KITS DESCARTABLES ✦ ESTERILIDAD CERTIFICADA ✦ SMS 45G ✦ ÓXIDO DE ETILENO ✦ CIRUGÍA ODONTOLÓGICA ✦ CERTIFICACIÓN ANMAT ✦ ENTREGA INMEDIATA").map((text, i) => (
             <span key={i}>{text}</span>
           ))}
         </motion.div>
       </div>
 
       {/* 3. About info */}
-      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-350 mx-auto relative z-10 flex flex-col lg:flex-row gap-16 lg:gap-24">
+      <section className="py-20 md:py-28 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-20">
         <div className="lg:w-1/2">
           <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-5/5 border border-brand-5/10 mb-8">
             <span className="text-xs uppercase tracking-[0.2em] font-bold text-brand-5/80">GM KIT STUDIO</span>
             <span className="text-brand-3">✦</span>
             <span className="text-xs uppercase tracking-[0.2em] font-bold text-brand-5/80">SAN MIGUEL DE TUCUMÁN</span>
           </div>
-          <h2 className="font-bebas text-5xl md:text-7xl text-brand-5 leading-[0.9] tracking-tight">
+          <h2 className="font-bebas text-4xl sm:text-5xl lg:text-6xl text-brand-5 leading-[1.05] tracking-wide">
             NUESTRA MISIÓN:<br />
             <span className="text-brand-3">TRANSFORMAR Y AGILIZAR</span><br />
             LA COMPRA DE KITS QUIRÚRGICOS.
@@ -46,21 +56,21 @@ const About = () => {
         </div>
 
         <div className="lg:w-1/2 flex flex-col justify-center">
-          <p className="text-lg md:text-2xl text-brand-5/80 leading-relaxed font-geist font-light mb-12">
+          <p className="text-base sm:text-lg md:text-xl text-brand-5/80 leading-relaxed font-geist font-light mb-10">
             Queremos eliminar las demoras y complicaciones, brindando un e-commerce rápido, intuitivo y estético que entregue calidad certificada en tiempo récord. Sabemos que en el quirófano no hay margen de error. Por eso, todos nuestros productos están rigurosamente testeados, esterilizados bajo normas internacionales y cuentan con aprobación. Tu seguridad y la de tu paciente es nuestra prioridad.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 border-t border-brand-5/10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-8 border-t border-brand-5/10">
             {[
               { Icon: MapPin, label: 'UBICACIÓN', value: 'TUCUMÁN, ARG' },
               { Icon: Stethoscope, label: 'ESPECIALIDAD', value: 'ODONTOLOGÍA' },
               { Icon: Truck, label: 'ENVÍOS', value: 'NACIONALES' },
             ].map(({ Icon, label, value }) => (
-              <div key={label} className="flex flex-col gap-3 p-6 rounded-2xl bg-white border border-brand-5/5 shadow-sm hover:shadow-md transition-shadow">
+              <div key={label} className="flex flex-col gap-3 p-5 md:p-6 rounded-2xl bg-white border border-brand-5/5 shadow-xs hover:shadow-md transition-shadow">
                 <Icon className="w-6 h-6 text-brand-3" />
                 <div>
                   <p className="text-[10px] text-brand-5/50 font-bold uppercase tracking-widest mb-1">{label}</p>
-                  <p className="font-bebas text-2xl text-brand-5 leading-none">{value}</p>
+                  <p className="font-bebas text-xl md:text-2xl text-brand-5 leading-none">{value}</p>
                 </div>
               </div>
             ))}
@@ -69,21 +79,21 @@ const About = () => {
       </section>
 
       {/* 4. Stat Blocks */}
-      <section className="px-6 md:px-12 lg:px-24 max-w-350 mx-auto relative z-10 mb-32">
+      <section className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto relative z-10 mb-28 md:mb-36">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-brand-1 border-2 border-brand-5 transition-transform hover:-translate-y-1">
-            <Activity className="w-8 h-8 text-brand-5 mb-16" strokeWidth={1.5} />
-            <h3 className="font-bebas text-6xl md:text-7xl text-brand-5 leading-none mb-2">5+</h3>
+            <Activity className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
+            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">5+</h3>
             <p className="text-base font-geist font-medium text-brand-5/80">Años de experiencia en el sector.</p>
           </div>
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-white border-2 border-brand-5 transition-transform hover:-translate-y-1">
-            <Users className="w-8 h-8 text-brand-5 mb-16" strokeWidth={1.5} />
-            <h3 className="font-bebas text-6xl md:text-7xl text-brand-5 leading-none mb-2">50+</h3>
+            <Users className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
+            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">50+</h3>
             <p className="text-base font-geist font-medium text-brand-5/80">Clínicas asociadas en todo el país.</p>
           </div>
           <div className="flex flex-col items-start p-8 md:p-10 rounded-2xl bg-white border-2 border-brand-5 transition-transform hover:-translate-y-1">
-            <ShieldCheck className="w-8 h-8 text-brand-5 mb-16" strokeWidth={1.5} />
-            <h3 className="font-bebas text-6xl md:text-7xl text-brand-5 leading-none mb-2">100%</h3>
+            <ShieldCheck className="w-8 h-8 text-brand-5 mb-10 md:mb-12" strokeWidth={1.5} />
+            <h3 className="font-bebas text-5xl md:text-6xl text-brand-5 leading-none mb-2">100%</h3>
             <p className="text-base font-geist font-medium text-brand-5/80">Aprobación y certificación ANMAT.</p>
           </div>
         </div>

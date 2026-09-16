@@ -8,6 +8,7 @@ export function Marquee({
   children,
   vertical = false,
   repeat = 4,
+  duration = 16,
   ...props
 }) {
   return (
@@ -27,7 +28,7 @@ export function Marquee({
               y: vertical ? (reverse ? ["-100%", "0%"] : ["0%", "-100%"]) : 0,
             }}
             transition={{
-              duration: 30, // Default duration, could be extracted from props but 30 is a good baseline
+              duration: duration,
               repeat: Infinity,
               ease: "linear",
               repeatType: "loop"

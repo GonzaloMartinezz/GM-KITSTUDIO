@@ -28,17 +28,16 @@ export function ProductShowcase({ products = [], onProductSelect }) {
   if (!products || products.length === 0) return null;
 
   return (
-    <div className="w-full max-w-7xl mx-auto min-h-[580px] xs:min-h-[640px] md:h-200 bg-[#0A0A0A] rounded-3xl sm:rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+    <div className="w-full max-w-7xl mx-auto min-h-145 xs:min-h-[640px] md:h-200 bg-[#0A0A0A] rounded-3xl sm:rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden flex flex-col md:flex-row shadow-2xl">
       {/* Left Panel: Menu */}
-      <div className="w-full md:w-[32%] lg:w-[35%] bg-brand-4 p-3.5 sm:p-6 md:p-12 flex flex-col justify-center gap-1.5 sm:gap-2 z-20 relative shrink-0">
-        <h3 className="text-white/80 font-bebas text-base sm:text-2xl tracking-widest mb-1.5 sm:mb-4 md:mb-8 px-1 md:px-4">
+      <div className="w-full md:w-[32%] lg:w-[35%] bg-brand-4 p-3.5 sm:p-6 md:p-12 flex flex-col justify-center gap-2 sm:gap-3 z-20 relative shrink-0">
+        <h3 className="text-white/80 font-bebas text-base sm:text-2xl tracking-widest mb-1 sm:mb-4 md:mb-8 px-1 md:px-4 text-center md:text-left">
           SELECCIONAR PRODUCTO
         </h3>
 
-        {/* Scrollable list on mobile, column on desktop */}
-        <div 
-          className="flex md:flex-col overflow-x-auto md:overflow-visible gap-1.5 sm:gap-2 pb-1.5 md:pb-0 scrollbar-none"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        {/* 2 to 3 rows on mobile so all products in the kit are visible at a glance; column on desktop */}
+        <div
+          className="flex flex-wrap md:flex-col gap-1.5 sm:gap-2 justify-center md:justify-start"
         >
           {products.map((product, idx) => {
             const isActive = activeIndex === idx;
@@ -48,11 +47,10 @@ export function ProductShowcase({ products = [], onProductSelect }) {
               <button
                 key={product._id || idx}
                 onClick={() => setActiveIndex(idx)}
-                className={`relative shrink-0 md:shrink w-auto md:w-full flex items-center gap-2 sm:gap-4 px-3.5 sm:px-6 py-2 sm:py-3.5 md:py-4 rounded-full transition-all duration-200 whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? 'bg-brand-1 text-brand-5 shadow-xl scale-[1.02]'
-                    : 'bg-transparent text-white/60 border border-white/10 hover:bg-white/10'
-                }`}
+                className={`relative w-auto md:w-full flex items-center justify-center md:justify-start gap-1.5 sm:gap-3 px-3 py-1.5 sm:px-6 sm:py-3.5 md:py-4 rounded-full transition-all duration-200 cursor-pointer ${isActive
+                    ? 'bg-brand-1 text-brand-5 shadow-lg font-bold scale-[1.02]'
+                    : 'bg-white/10 text-white/80 border border-white/15 hover:bg-white/20 active:scale-95'
+                  }`}
               >
                 {isActive && (
                   <motion.div
@@ -63,12 +61,12 @@ export function ProductShowcase({ products = [], onProductSelect }) {
                 )}
 
                 {isActive ? (
-                  <CheckCircle2 size={15} className="text-brand-3 shrink-0" />
+                  <CheckCircle2 size={13} className="text-brand-3 shrink-0" />
                 ) : (
-                  <Icon size={15} className="opacity-70 shrink-0" />
+                  <Icon size={13} className="opacity-70 shrink-0" />
                 )}
 
-                <span className={`text-xs sm:text-sm md:text-[15px] font-medium tracking-wide ${isActive ? 'font-bold' : ''}`}>
+                <span className={`text-[11px] sm:text-sm md:text-[15px] font-medium tracking-wide whitespace-nowrap ${isActive ? 'font-bold' : ''}`}>
                   {product.name.toUpperCase()}
                 </span>
               </button>
@@ -78,8 +76,8 @@ export function ProductShowcase({ products = [], onProductSelect }) {
       </div>
 
       {/* Right Panel: Stacked Cards (Expanded for larger mobile images) */}
-      <div className="w-full md:w-[68%] lg:w-[65%] relative h-[520px] xs:h-[580px] sm:h-[620px] md:h-full flex items-center justify-center px-2 py-3 xs:p-4 sm:p-8 overflow-hidden">
-        <div className="relative w-full max-w-[340px] xs:max-w-[380px] sm:max-w-125 h-[470px] xs:h-[520px] sm:h-[560px] md:h-full md:aspect-4/5 perspective-1000">
+      <div className="w-full md:w-[68%] lg:w-[65%] relative h-130 xs:h-[580px] sm:h-155 md:h-full flex items-center justify-center px-2 py-3 xs:p-4 sm:p-8 overflow-hidden">
+        <div className="relative w-full max-w-85 xs:max-w-[380px] sm:max-w-125 h-117.5 xs:h-[520px] sm:h-140 md:h-full md:aspect-4/5 perspective-1000">
           <AnimatePresence mode="popLayout">
             {products.map((product, idx) => {
               const offset = idx - activeIndex;
@@ -118,7 +116,7 @@ export function ProductShowcase({ products = [], onProductSelect }) {
                     />
 
                     {/* Gradient Overlay focused only on bottom text area */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[45%] sm:h-[48%] bg-gradient-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 h-[45%] sm:h-[48%] bg-linear-to-t from-black/95 via-black/50 to-transparent pointer-events-none" />
 
                     {/* Product Info at bottom */}
                     <div className="absolute bottom-0 left-0 w-full p-4 sm:p-8 flex flex-col gap-1.5 sm:gap-3 z-20">
@@ -130,7 +128,7 @@ export function ProductShowcase({ products = [], onProductSelect }) {
                       <h3 className="text-white text-lg sm:text-2xl md:text-3xl font-bebas leading-tight tracking-wide line-clamp-2">
                         {product.description}
                       </h3>
-                      <button 
+                      <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();

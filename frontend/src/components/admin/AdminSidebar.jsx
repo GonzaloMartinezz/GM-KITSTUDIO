@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, PackageSearch, Menu, X, ChevronRight } from 'lucide-react';
+import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminSidebar = () => {
@@ -14,7 +14,6 @@ const AdminSidebar = () => {
     { icon: Package, path: '/admin/inventario', label: '02_Inventario' },
     { icon: Truck, path: '/admin/proveedores', label: '03_Proveedores' },
     { icon: ShoppingCart, path: '/admin/ventas', label: '04_Ventas' },
-    { icon: PackageSearch, path: '/admin/logistica', label: '05_Logística' },
   ];
 
   const handleLogout = () => {
@@ -62,6 +61,26 @@ const AdminSidebar = () => {
                   <span>{item.label}</span>
                 </NavLink>
               ))}
+            </div>
+
+            {/* User Profile Card (Mobile) */}
+            <div className="p-4 border-t border-[#EBEBEB] bg-[#F8FAFC]">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80"
+                    alt="Gonzalo Martínez"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-[#1E5A9C]"
+                  />
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] border-2 border-white rounded-full"></span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-[#0F172A] leading-tight">Gonzalo Martínez</span>
+                  <span className="text-[11px] font-semibold text-[#1E5A9C] flex items-center gap-1">
+                    <ShieldCheck size={12} /> Administrador Único
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div className="p-4 border-t border-[#EBEBEB]">
@@ -144,11 +163,44 @@ const AdminSidebar = () => {
           </div>
         </div>
 
-        {/* Bottom section */}
-        <div className={`flex flex-col gap-4 px-6 mt-auto ${isExpanded ? 'items-start' : 'items-center'}`}>
-          <button onClick={handleLogout} className={`h-12 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all cursor-pointer ${isExpanded ? 'px-4 gap-4 w-full' : 'justify-center w-12 mx-auto'}`}>
-            <LogOut size={22} strokeWidth={2.5} className="shrink-0" />
-            {isExpanded && <span className="font-medium whitespace-nowrap text-sm">Cerrar Sesión</span>}
+        {/* Bottom section: Profile & Logout */}
+        <div className={`flex flex-col gap-3 px-3 mt-auto border-t border-[#EBEBEB] pt-4 w-full ${isExpanded ? 'items-start' : 'items-center'}`}>
+          {/* User Profile */}
+          <div
+            title={!isExpanded ? "Gonzalo Martínez - Administrador Único" : ""}
+            className={`w-full flex items-center transition-all ${
+              isExpanded
+                ? 'p-2.5 rounded-xl bg-white border border-[#E5E7EB] shadow-xs gap-3'
+                : 'justify-center py-1'
+            }`}
+          >
+            <div className="relative shrink-0">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80"
+                alt="Gonzalo Martínez"
+                className="w-10 h-10 rounded-full object-cover border-2 border-[#1E5A9C]"
+              />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#10B981] border-2 border-white rounded-full"></span>
+            </div>
+            {isExpanded && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col overflow-hidden">
+                <span className="text-xs font-bold text-[#0F172A] truncate">Gonzalo Martínez</span>
+                <span className="text-[10px] font-semibold text-[#1E5A9C] flex items-center gap-1">
+                  <ShieldCheck size={11} className="shrink-0" /> Admin Único
+                </span>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all cursor-pointer ${
+              isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
+            }`}
+          >
+            <LogOut size={20} strokeWidth={2.5} className="shrink-0" />
+            {isExpanded && <span className="font-medium whitespace-nowrap text-xs">Cerrar Sesión</span>}
           </button>
         </div>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, ArrowRight, MessageCircle, Mail, FileText, Ruler, Activity, BookOpen, HeartHandshake, Star, Award, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ArrowRight, MessageCircle, Mail, FileText, Ruler, Activity, BookOpen, HeartHandshake, Star, Award, CheckCircle2, ShoppingCart, Package, Sparkles, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Particles } from '../components/ui/Particles';
 import FeaturesSection from '../components/FeaturesSection';
@@ -14,6 +15,8 @@ const Home = () => {
   const [_products, setProducts] = useState([]);
   const [_loading, setLoading] = useState(true);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [activeBentoCard, setActiveBentoCard] = useState(null);
+  const [isWideActive, setIsWideActive] = useState(false);
   const { addToCart: _addToCart } = useCart();
 
   useEffect(() => {
@@ -47,16 +50,16 @@ const Home = () => {
 
   const servicesList = [
     {
-      title: "Protección Total",
-      desc: "Sistemas integrales de barrera bacteriológica diseñados para entornos clínicos de alta exigencia."
+      title: "Protección Quirúrgica Total",
+      desc: "Barreras bacteriológicas infalibles para máxima seguridad en cada procedimiento."
     },
     {
-      title: "Logística Segura",
-      desc: "Envíos protegidos y controlados para garantizar que el material llegue en condiciones óptimas."
+      title: "Entregas Garantizadas",
+      desc: "Logística especializada que preserva la integridad y esterilidad de cada kit hasta llegar a tus manos."
     },
     {
-      title: "Soporte Técnico",
-      desc: "Asesoramiento especializado en la elección del kit adecuado para cada tipo de intervención."
+      title: "Asesoría Clínica Especializada",
+      desc: "Acompañamiento profesional personalizado para definir el equipamiento exacto que requiere cada tipo de intervención."
     }
   ];
 
@@ -97,60 +100,166 @@ const Home = () => {
     <div className="bg-brand-1 min-h-screen text-brand-5 font-geist">
 
       {/* Asymmetric Split Layout (Hero) */}
-      <div className="flex flex-col lg:flex-row min-h-screen relative">
+      <div className="flex flex-col lg:flex-row min-h-auto lg:min-h-screen relative">
 
         {/* Left Side: Typography & Content */}
-        <div className="w-full lg:w-[45%] px-6 sm:px-8 md:px-12 pt-28 sm:pt-36 lg:pt-40 pb-12 lg:pb-32 flex flex-col justify-center">
+        <div className="w-full lg:w-[45%] px-4 xs:px-6 sm:px-10 lg:px-12 pt-20 xs:pt-24 sm:pt-32 lg:pt-36 pb-8 lg:pb-24 flex flex-col justify-center">
+
+          {/* Top Pill Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-[#88C9C4]/25 border border-[#88C9C4]/50 text-[#0C3B45] px-3.5 py-1.5 rounded-full text-[10px] xs:text-xs font-bold tracking-wider uppercase mb-3.5 sm:mb-5 w-fit shadow-xs"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-[#0C3B45]" />
+            <span>Bioseguridad Odontológica ANMAT</span>
+          </motion.div>
+
+          {/* High-Impact Title with Marked Keywords */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-[7rem] font-bebas leading-[0.9] tracking-tight mb-6 sm:mb-8 break-words"
+            className="text-[2.6rem] xs:text-[3.2rem] sm:text-6xl md:text-7xl lg:text-[6.6rem] font-bebas leading-[0.92] tracking-tight mb-4 sm:mb-6 text-[#364B5D]"
           >
-            Siente la <br />
-            Seguridad <br />
-            Con GM Kit - <br />
-            Bioseguridad
+            TU{' '}
+            <span className="text-[#0C3B45] relative inline-block">
+              <span className="relative z-10">SEGURIDAD QUIRÚRGICA</span>
+              <span className="absolute bottom-1 left-0 w-full h-2.5 sm:h-4 bg-[#88C9C4]/40 rounded z-0"></span>
+            </span>
+            ,<br />
+            <span className="inline-flex items-center gap-1.5 bg-[#0C3B45] text-[#88C9C4] px-3 sm:px-4 py-0.5 sm:py-1 rounded-xl sm:rounded-2xl shadow-lg my-1 align-middle">
+              GARANTIZADA.
+            </span>
           </motion.h1>
 
-          {/* Removed Scroll Indicator as requested */}
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-            className="max-w-sm"
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-xs sm:text-sm md:text-base text-[#546A7E] font-medium leading-relaxed max-w-lg mb-5 sm:mb-7"
           >
-            <div className="w-4 h-4 bg-brand-3 mb-4"></div>
-            <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-brand-5/80 leading-relaxed">
-              GM Kit Studio es una opción premium y confiable para profesionales con un sistema eficiente de protección.
-            </p>
+            Un sistema eficiente de protección descartable que simplifica tu día a día con los más altos estándares de calidad del mercado.{' '}
+            <span className="font-bold text-[#0C3B45]">Kit integral a $8.500</span>.
+          </motion.p>
+
+          {/* Mobile First Call-To-Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.6 }}
+            className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3.5 mb-6 sm:mb-8"
+          >
+            <Link
+              to="/cargarproductos"
+              className="flex items-center justify-center gap-2 bg-[#0C3B45] hover:bg-[#124b57] text-[#88C9C4] px-5 sm:px-7 py-3.5 sm:py-4 rounded-xl sm:rounded-full font-bebas text-lg sm:text-xl tracking-wider shadow-lg hover:shadow-xl transition-all active:scale-[0.98] group cursor-pointer"
+            >
+              <Package className="w-4 h-4 text-[#88C9C4] group-hover:scale-110 transition-transform" />
+              <span>EXPLORAR KITS</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <a
+              href="https://wa.me/5493816242482?text=¡Hola!%20Quiero%20solicitar%20el%20catálogo%20completo%20de%20GM%20KIT%20STUDIO."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-white/90 hover:bg-white text-[#364B5D] border border-[#D9D1C7] px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl sm:rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-all active:scale-[0.98] shadow-xs cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-[#8CA0B2]" />
+              <span>SOLICITAR CATÁLOGO</span>
+            </a>
           </motion.div>
+
+          {/* Trust Strategies Badges */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55, duration: 0.6 }}
+            className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-4 text-[10px] sm:text-xs text-[#364B5D] font-semibold"
+          >
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+              <Truck className="w-3 h-3 text-emerald-600 shrink-0" /> Envío Gratis en 10+ kits
+            </span>
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+              <Sparkles className="w-3 h-3 text-[#0C3B45] shrink-0" /> Kit Trial a Precio Costo
+            </span>
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+              <ShieldCheck className="w-3 h-3 text-[#0C3B45] shrink-0" /> Garantía de Recambio 100%
+            </span>
+          </motion.div>
+
+          {/* Micro-Stats / Trust Bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="grid grid-cols-3 gap-2 py-3 border-t border-[#E1D9CC]/70 max-w-md"
+          >
+            <div className="flex flex-col">
+              <span className="font-bebas text-base sm:text-xl text-[#0C3B45] leading-none">100% ESTÉRIL</span>
+              <span className="text-[10px] text-[#8CA0B2] font-semibold leading-tight mt-0.5">Óxido de Etileno</span>
+            </div>
+            <div className="flex flex-col border-x border-[#E1D9CC] px-2 text-center">
+              <span className="font-bebas text-base sm:text-xl text-[#0C3B45] leading-none">ANMAT</span>
+              <span className="text-[10px] text-[#8CA0B2] font-semibold leading-tight mt-0.5">Aprobación Oficial</span>
+            </div>
+            <div className="flex flex-col text-right">
+              <span className="font-bebas text-base sm:text-xl text-[#0C3B45] leading-none">8 INSUMOS</span>
+              <span className="text-[10px] text-[#8CA0B2] font-semibold leading-tight mt-0.5">Kit Único $8.500</span>
+            </div>
+          </motion.div>
+
         </div>
 
-        {/* Right Side: Massive Image & Floating Elements */}
-        <div className="w-full lg:w-[55%] p-4 sm:p-6 lg:p-8 lg:pl-0 h-[48vh] sm:h-[60vh] lg:h-screen relative">
+        {/* Right Side: Product Showcase Card */}
+        <div className="w-full lg:w-[55%] p-4 xs:p-5 sm:p-6 lg:p-8 lg:pl-0 flex items-center justify-center relative">
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="w-full h-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden relative shadow-2xl"
+            transition={{ duration: 0.8 }}
+            className="w-full aspect-4/3 xs:aspect-[16/11] sm:aspect-square lg:aspect-auto lg:h-[88vh] max-h-170 rounded-3xl sm:rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden relative shadow-2xl border border-black/5 group"
           >
             <img
               src="/images/kitsodontologico.jpg"
-              alt="Kit Quirúrgico"
-              className="w-full h-full object-cover"
+              alt="Kit Quirúrgico Odontológico Completo GM Kit"
+              className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
             />
 
-            {/* Top Left Vertical Tag */}
-            <div className="absolute top-6 left-6 sm:top-12 sm:left-8 bg-brand-1 text-brand-5 px-2.5 py-4 sm:px-3 sm:py-6 rounded-full flex flex-col items-center gap-3 sm:gap-4 shadow-md">
-              <span className="[writing-mode:vertical-lr] rotate-180 font-bebas tracking-widest text-base sm:text-lg">GM KIT STUDIO</span>
-              <div className="bg-brand-5 text-brand-1 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 -rotate-45" />
+            {/* Top Badge: Floating Pill */}
+            <div className="absolute top-3.5 left-3.5 sm:top-6 sm:left-6 z-20 flex items-center gap-2 bg-[#0C3B45]/90 backdrop-blur-md text-[#88C9C4] px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-[#88C9C4]/30 shadow-lg">
+              <Sparkles className="w-3.5 h-3.5 text-[#88C9C4]" />
+              <span className="font-bebas text-xs sm:text-sm tracking-wider uppercase">KIT ODONTOLÓGICO COMPLETO</span>
+            </div>
+
+            {/* Top Right Price Tag */}
+            <div className="absolute top-3.5 right-3.5 sm:top-6 sm:right-6 z-20 bg-white/95 backdrop-blur-md px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-[#E1D9CC] shadow-lg flex items-baseline gap-1">
+              <span className="font-bebas text-lg sm:text-2xl text-[#0C3B45] leading-none">$8.500</span>
+              <span className="text-[9px] sm:text-[11px] font-bold text-[#8CA0B2] uppercase">/ kit</span>
+            </div>
+
+            {/* Bottom Overlay Card */}
+            <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-[#E1D9CC]/80 shadow-lg flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-bebas text-sm sm:text-lg text-[#364B5D] leading-tight truncate">
+                  8 INSUMOS QUIRÚRGICOS DESCARTABLES
+                </p>
+                <p className="text-[10px] sm:text-xs text-[#8CA0B2] truncate">
+                  Batas con puños • Compresas 1x1m y 50x50 • Campo fenestrado • Cubre suctores y más
+                </p>
               </div>
+              <Link
+                to="/cargarproductos"
+                className="shrink-0 px-3.5 py-2 sm:px-4 sm:py-2 rounded-xl bg-[#88C9C4] hover:bg-[#6EB8B2] text-[#0C3B45] font-bebas text-sm sm:text-base tracking-wider transition-colors shadow-xs flex items-center gap-1 cursor-pointer"
+              >
+                <span>PEDIR</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
           </motion.div>
         </div>
+
       </div>
 
       {/* Original Services Section */}
@@ -167,9 +276,9 @@ const Home = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="font-bebas text-center mb-4 md:mb-8 text-[clamp(4rem,12vw,120px)] uppercase leading-none tracking-wider text-brand-1"
+            className="font-bebas text-center mb-4 md:mb-8 text-[clamp(3.5rem,10vw,110px)] uppercase leading-none tracking-wider text-brand-1"
           >
-            SERVICES
+            SOLUCIONES <span className="text-[#88C9C4]">INTEGRALES</span>
           </motion.h2>
 
           {servicesList.map((service, index) => (
@@ -215,32 +324,49 @@ const Home = () => {
           {/* Bento Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
-            {bentoCards.map((card, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative overflow-hidden group bg-brand-5 rounded-3xl sm:rounded-4xl md:rounded-[3rem] p-6 sm:p-8 md:p-10 min-h-[260px] h-auto md:h-75 flex flex-col justify-center items-center shadow-xl cursor-pointer"
-              >
-                {/* Wave effect */}
-                <div className="absolute top-[120%] left-1/2 -translate-x-1/2 w-[250%] aspect-square bg-[#88C9C4] rounded-[45%] group-hover:top-[-50%] group-hover:rotate-170 transition-all duration-1200 ease-in-out z-0 pointer-events-none"></div>
+            {bentoCards.map((card, index) => {
+              const isBentoActive = activeBentoCard === index;
 
-                {/* Content */}
-                <div className="relative z-10 pointer-events-none w-full flex flex-col items-center text-center gap-3 sm:gap-4">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-[#88C9C4] text-[#0C3B45] group-hover:bg-[#0C3B45] group-hover:text-[#88C9C4] flex items-center justify-center transition-colors duration-800 shadow-sm shrink-0">
-                    <card.icon size={26} />
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  onClick={() => setActiveBentoCard(prev => prev === index ? null : index)}
+                  className="relative overflow-hidden group bg-brand-5 rounded-3xl sm:rounded-4xl md:rounded-[3rem] p-6 sm:p-8 md:p-10 min-h-65 h-auto md:h-75 flex flex-col justify-center items-center shadow-xl cursor-pointer select-none active:scale-[0.98]"
+                >
+                  {/* Wave effect */}
+                  <div
+                    className={`absolute left-1/2 -translate-x-1/2 w-[250%] aspect-square bg-[#88C9C4] rounded-[45%] transition-all duration-1000 ease-in-out z-0 pointer-events-none ${isBentoActive ? 'top-[-50%] rotate-170' : 'top-[120%] group-hover:top-[-50%] group-hover:rotate-170'
+                      }`}
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10 pointer-events-none w-full flex flex-col items-center text-center gap-3 sm:gap-4">
+                    <div
+                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-colors duration-800 shadow-sm shrink-0 ${isBentoActive ? 'bg-[#0C3B45] text-[#88C9C4]' : 'bg-[#88C9C4] text-[#0C3B45] group-hover:bg-[#0C3B45] group-hover:text-[#88C9C4]'
+                        }`}
+                    >
+                      <card.icon size={26} />
+                    </div>
+                    <h3
+                      className={`font-bebas text-[clamp(1.5rem,2vw,2rem)] leading-none transition-colors duration-800 ${isBentoActive ? 'text-[#0C3B45]' : 'text-[#88C9C4] group-hover:text-[#0C3B45]'
+                        }`}
+                    >
+                      {card.title}
+                    </h3>
+                    <p
+                      className={`font-geist transition-colors duration-800 text-xs sm:text-sm md:text-base font-light px-2 leading-relaxed ${isBentoActive ? 'text-[#0C3B45]' : 'text-brand-1 group-hover:text-[#0C3B45]'
+                        }`}
+                    >
+                      {card.desc}
+                    </p>
                   </div>
-                  <h3 className="font-bebas text-[clamp(1.5rem,2vw,2rem)] leading-none text-[#88C9C4] group-hover:text-[#0C3B45] transition-colors duration-800">
-                    {card.title}
-                  </h3>
-                  <p className="font-geist text-brand-1 group-hover:text-[#0C3B45] transition-colors duration-800 text-xs sm:text-sm md:text-base font-light px-2 leading-relaxed">
-                    {card.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
 
             {/* Wide Card */}
             <motion.div
@@ -248,30 +374,48 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="md:col-span-2 relative overflow-hidden group bg-[#88C9C4] rounded-3xl sm:rounded-4xl md:rounded-[3rem] p-6 sm:p-8 md:p-12 min-h-auto md:min-h-87.5 flex flex-col justify-center shadow-xl cursor-pointer"
+              onClick={() => setIsWideActive(prev => !prev)}
+              className="md:col-span-2 relative overflow-hidden group bg-linear-to-br from-[#0C3B45] via-[#0A2E36] to-[#061F24] border border-[#88C9C4]/30 rounded-3xl sm:rounded-4xl md:rounded-[3rem] p-6 sm:p-8 md:p-12 min-h-auto md:min-h-87.5 flex flex-col justify-center shadow-2xl cursor-pointer select-none active:scale-[0.99]"
             >
               {/* Wave effect for wide card */}
-              <div className="absolute top-[120%] left-1/2 -translate-x-1/2 w-[200%] md:w-[150%] aspect-square bg-[#0C3B45] rounded-[40%] group-hover:top-[-120%] md:group-hover:-top-full group-hover:rotate-150 transition-all duration-1500 ease-in-out z-0 pointer-events-none"></div>
+              <div
+                className={`absolute left-1/2 -translate-x-1/2 w-[200%] md:w-[150%] aspect-square bg-[#88C9C4] rounded-[40%] transition-all duration-1000 ease-in-out z-0 pointer-events-none ${isWideActive ? 'top-[-120%] rotate-150' : 'top-[120%] group-hover:top-[-120%] md:group-hover:-top-full group-hover:rotate-150'
+                  }`}
+              />
               <div className="relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-8 pointer-events-none">
                 <div className="max-w-lg">
-                  <h3 className="font-bebas text-4xl sm:text-5xl md:text-7xl text-[#0C3B45] group-hover:text-[#88C9C4] transition-colors duration-700 mb-4 leading-[0.9]">
+                  <div className="inline-flex items-center gap-2 bg-[#88C9C4]/20 text-[#88C9C4] group-hover:text-[#0C3B45] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transition-colors duration-700">
+                    <span>Atención Inmediata</span>
+                  </div>
+                  <h3 className="font-bebas text-4xl sm:text-5xl md:text-7xl text-white group-hover:text-[#0C3B45] transition-colors duration-700 mb-4 leading-[0.9]">
                     CONTÁCTANOS
                   </h3>
-                  <p className="font-geist text-[#0C3B45]/80 group-hover:text-[#88C9C4]/90 transition-colors duration-700 text-sm sm:text-base md:text-lg font-medium">
+                  <p className="font-geist text-white/85 group-hover:text-[#0C3B45]/90 transition-colors duration-700 text-sm sm:text-base md:text-lg font-medium leading-relaxed">
                     Contáctanos para brindarte información detallada del producto, nuestros sistemas de bioseguridad y resolver todas tus dudas.
                   </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row md:flex-col gap-3 pointer-events-auto shrink-0 w-full md:w-auto">
-                  <a href="#" className="bg-[#25D366] hover:bg-[#128C7E] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg flex items-center justify-center gap-3">
+                  <a
+                    href="https://wa.me/5493816242482?text=¡Hola!%20Quiero%20más%20información%20sobre%20los%20Kits%20de%20GM%20Kit%20Studio."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#25D366] hover:bg-[#1ebd59] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg flex items-center justify-center gap-3 cursor-pointer"
+                  >
                     <MessageCircle size={22} /> WhatsApp
                   </a>
-                  <a href="#" className="bg-[#EA4335] hover:bg-[#C5221F] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg flex items-center justify-center gap-3">
+                  <a
+                    href="mailto:gonnnchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio"
+                    className="bg-[#EA4335] hover:bg-[#d9382b] text-white px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg flex items-center justify-center gap-3 cursor-pointer"
+                  >
                     <Mail size={22} /> Gmail
                   </a>
-                  <button className="bg-[#0C3B45] group-hover:bg-[#88C9C4] text-[#88C9C4] group-hover:text-[#0C3B45] px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors duration-700 flex items-center justify-center">
-                    OBTENER PROPUESTA
-                  </button>
+                  <Link
+                    to="/cargarproductos"
+                    className="bg-[#88C9C4] group-hover:bg-[#0C3B45] text-[#0C3B45] group-hover:text-[#88C9C4] hover:bg-[#6EB8B2] px-6 sm:px-8 py-3 rounded-full font-bebas text-lg sm:text-xl tracking-wider transition-colors duration-700 flex items-center justify-center cursor-pointer shadow-md"
+                  >
+                    PEDIR KIT ($8.500)
+                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -283,20 +427,44 @@ const Home = () => {
       {/* NEW COMPONENTS ADDED FROM USER REQUESTS */}
       <TestimonialsSection
         title="LO QUE DICEN NUESTROS CLIENTES"
-        description="Descubre por qué cientos de profesionales odontológicos en Tucumán confían en GM Kit Studio para sus procedimientos diarios."
+        description="Descubre por qué clínicas líderes y odontólogos destacados en Tucumán confían en GM Kit Studio para sus procedimientos diarios."
         testimonials={[
           {
             author: {
+              name: "Centro Odontológico C&M",
+              handle: "@centrodontologico_cm • San Miguel",
+              avatar: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+            },
+            text: "Estandarizamos el uso de los kits de GM Kit Studio en todos nuestros quirófanos. La calidad del SMS 45g y la esterilidad garantizada nos brindan total seguridad quirúrgica."
+          },
+          {
+            author: {
+              name: "Studio Dental",
+              handle: "@studiodental_tuc • Consultorio Quirúrgico",
+              avatar: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+            },
+            text: "La presentación cerrada con los 8 insumos acelera los tiempos entre cirugías y proyecta una imagen de bioseguridad insuperable ante nuestros pacientes."
+          },
+          {
+            author: {
+              name: "3D Dental Studio",
+              handle: "@3ddentalstudio • Implantología & 3D",
+              avatar: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
+            },
+            text: "En cirugías guiadas e implantes 3D no hay margen de error. Los campos y camisolines de GM Kit responden con la máxima exigencia médica."
+          },
+          {
+            author: {
               name: "Dr. Roberto Sánchez",
-              handle: "@rsanchez_odonto",
+              handle: "@rsanchez_odonto • Cirujano Maxilofacial",
               avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
             },
-            text: "La bioseguridad es innegociable. Con GM Kit tengo la tranquilidad de que cada insumo cumple con los más altos estándares. Mis pacientes y yo estamos seguros."
+            text: "La bioseguridad es innegociable. Con GM Kit tengo la tranquilidad de que cada insumo cumple con los más altos estándares ANMAT. Mis pacientes y yo estamos seguros."
           },
           {
             author: {
               name: "Dra. María Gómez",
-              handle: "@mariagomez_implantes",
+              handle: "@mariagomez_implantes • Implantología",
               avatar: "https://images.unsplash.com/photo-1594824432240-84c6c2162ebc?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
             },
             text: "El servicio y la rapidez de entrega han transformado la forma en que organizo mis cirugías. Excelente atención y calidad de primera."
@@ -304,18 +472,18 @@ const Home = () => {
           {
             author: {
               name: "Dr. Carlos Ruiz",
-              handle: "@cruiz_dental",
+              handle: "@cruiz_dental • Periodoncia Clínica",
               avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
             },
-            text: "Encontrar un proveedor local con esta calidad era impensado. Los kits quirúrgicos son excepcionales y el trato es súper profesional."
+            text: "Encontrar un proveedor local en Tucumán con esta calidad era impensado. Los kits quirúrgicos son excepcionales y el trato es súper profesional."
           },
           {
             author: {
               name: "Dra. Laura Fernández",
-              handle: "@laura_ortodoncia",
+              handle: "@laura_ortodoncia • Odontología Integral",
               avatar: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80"
             },
-            text: "Cada kit viene en perfectas condiciones, listo para usar. Recomiendo GM Kit Studio a todos mis colegas sin dudarlo."
+            text: "Cada kit viene en perfectas condiciones, listo para usar. Recomiendo GM Kit Studio a todos mis colegas odontólogos sin dudarlo."
           }
         ]}
       />
@@ -371,7 +539,7 @@ const Home = () => {
             </div>
 
             {/* Phone Mockup */}
-            <div className="w-full max-w-[270px] sm:max-w-[280px] h-[480px] sm:h-[540px] lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-2xl relative lg:absolute lg:-bottom-12 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
+            <div className="w-full max-w-67.5 sm:max-w-70 h-120 sm:h-135 lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-2xl relative lg:absolute lg:-bottom-12 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-6 sm:h-7 bg-[#111] rounded-full z-20"></div>
 
               <div className="flex-1 bg-brand-5 p-5 sm:p-6 pt-16 sm:pt-18 flex flex-col items-center justify-between relative overflow-hidden pb-6 sm:pb-8">
@@ -409,7 +577,7 @@ const Home = () => {
           {/* Column 2 — Kit Validado Especialista Gonzalo Martinez */}
           <div className="bg-brand-1 rounded-3xl sm:rounded-[40px] lg:rounded-b-none lg:rounded-t-[60px] p-6 sm:p-8 lg:p-0 lg:px-10 lg:h-175 flex flex-col items-center relative w-full z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.15)] group overflow-hidden lg:overflow-visible">
             {/* Phone Mockup */}
-            <div className="w-full max-w-[270px] sm:max-w-[280px] h-[480px] sm:h-[540px] lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.3)] relative lg:absolute lg:-top-20 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
+            <div className="w-full max-w-67.5 sm:max-w-70 h-120 sm:h-135 lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.3)] relative lg:absolute lg:-top-20 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-6 sm:h-7 bg-[#111] rounded-full z-20"></div>
 
               <div className="flex-1 bg-brand-1/40 p-5 sm:p-6 pt-14 sm:pt-16 flex flex-col items-center relative">
@@ -460,7 +628,7 @@ const Home = () => {
             <div className="relative lg:absolute lg:bottom-12 w-full px-4 sm:px-5 text-center flex flex-col items-center mt-6 lg:mt-0">
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bebas text-brand-5 tracking-wide mb-1 group-hover:text-brand-3 transition-colors">Kit Validado</h3>
               <p className="font-geist text-brand-5/70 text-xs sm:text-sm mb-3 font-medium">Validado por Especialista Gonzalo Martínez.</p>
-              
+
               <button
                 onClick={() => setIsReviewModalOpen(true)}
                 className="inline-flex items-center gap-2 bg-[#5D7E8E] hover:bg-[#6E93A5] text-white px-6 sm:px-7 py-2.5 sm:py-3 rounded-full font-bebas tracking-widest text-sm sm:text-lg shadow-[0_0_20px_rgba(93,126,142,0.4)] hover:shadow-[0_0_30px_rgba(93,126,142,0.6)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
@@ -479,7 +647,7 @@ const Home = () => {
             </div>
 
             {/* Phone Mockup */}
-            <div className="w-full max-w-[270px] sm:max-w-[280px] h-[480px] sm:h-[540px] lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-2xl relative lg:absolute lg:-bottom-6 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
+            <div className="w-full max-w-67.5 sm:max-w-70 h-120 sm:h-135 lg:w-70 lg:h-140 bg-white border-8 border-[#111] rounded-[2.5rem] sm:rounded-[3rem] shadow-2xl relative lg:absolute lg:-bottom-6 flex flex-col overflow-hidden group-hover:-translate-y-2 lg:group-hover:-translate-y-4 transition-transform duration-700 my-2 lg:my-0">
               <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-20 sm:w-24 h-6 sm:h-7 bg-[#111] rounded-full z-20"></div>
 
               <div className="flex-1 bg-[#F8F9FA] p-4 sm:p-4.5 pt-14 sm:pt-18 flex flex-col justify-between pb-5 sm:pb-6">

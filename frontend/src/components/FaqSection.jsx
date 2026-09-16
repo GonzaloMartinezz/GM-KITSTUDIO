@@ -28,15 +28,15 @@ const FaqSection = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 sm:mb-16 bg-white/5 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-3xl sm:rounded-4xl border border-white/10">
           <div>
             <p className="text-white/50 text-xs font-bold mb-1 ml-1 uppercase tracking-wider">Email Directo</p>
-            <a href="mailto:contacto@gmkitstudio.com" className="text-white font-bebas tracking-wide text-xl sm:text-2xl md:text-3xl hover:text-brand-3 transition-colors break-all sm:break-normal">
-              contacto@gmkitstudio.com
+            <a href="mailto:gonchimartinez9@gmail.com" className="text-white font-bebas tracking-wide text-xl sm:text-2xl md:text-3xl hover:text-brand-3 transition-colors break-all sm:break-normal">
+              gonchimartinez9@gmail.com
             </a>
           </div>
 
-          <button className="bg-brand-3 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-brand-4 transition-colors shadow-xl shadow-brand-3/20 cursor-pointer">
+          <a href="mailto:gonchimartinez9@gmail.com?subject=Consulta%20GM%20Kit%20Studio" className="bg-brand-3 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-xs sm:text-sm uppercase tracking-widest flex items-center gap-3 hover:bg-brand-4 transition-colors shadow-xl shadow-brand-3/20 cursor-pointer">
             <Mail size={18} />
             <span>Ponerse en contacto</span>
-          </button>
+          </a>
         </div>
 
         {/* FAQ Sticky Cards */}

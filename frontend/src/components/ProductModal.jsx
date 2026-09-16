@@ -33,17 +33,18 @@ const ProductModal = ({ isOpen, onClose }) => {
   };
 
   const kitItems = [
-    { icon: Package, title: "Cubrecalzados", desc: "Protección descartable para calzado." },
-    { icon: Package, title: "Cubremangueras", desc: "Funda estéril para mangueras." },
-    { icon: Package, title: "Capuchón", desc: "Cobertura protectora para motor." },
-    { icon: Package, title: "Campo Quirúrgico", desc: "Campo estéril de 100x100cm." },
-    { icon: Package, title: "Camisolín", desc: "Camisolín quirúrgico SMS." },
-    { icon: Package, title: "Cofia", desc: "Cofia quirúrgica ajustable." },
-    { icon: Package, title: "Barbijo", desc: "Barbijo tricapa con ajuste." }
+    { icon: Package, title: "Batas con Puños", desc: "Batas quirúrgicas con puños elastizados (Cant. 2)." },
+    { icon: Package, title: "Compresa 1x1 mt", desc: "Compresa estéril impermeable de 1x1 mt (Cant. 1)." },
+    { icon: Package, title: "Compresa 50x50 cm", desc: "Compresa estéril impermeable de 50x50 cm (Cant. 1)." },
+    { icon: Package, title: "Campo Fenestrado", desc: "Campo fenestrado para paciente (Cant. 1)." },
+    { icon: Package, title: "Cubre Suctores", desc: "Fundas protectoras para suctores (Cant. 2)." },
+    { icon: Package, title: "Gorros Clásicos", desc: "Gorros quirúrgicos clásicos descartables (Cant. 2)." },
+    { icon: Package, title: "Barbijos", desc: "Barbijos descartables termosellados (Cant. 2)." },
+    { icon: Package, title: "Cubrecalzados Elastizados", desc: "Protección descartable elastizada (Cant. 2)." }
   ];
 
   const quantities = [
-    { title: "1 Kit", desc: "Precio regular por unidad." },
+    { title: "1 Kit", desc: "$8.500 (Precio regular por kit completo)." },
     { title: "5 Kits", desc: "10% de descuento en el total." },
     { title: "10 Kits o más", desc: "20% de descuento y envío prioritario." },
     { title: "Personalizado", desc: "Consultar cantidad específica." }
@@ -66,9 +67,15 @@ const ProductModal = ({ isOpen, onClose }) => {
   const generateMessage = () => {
     const qty = quantities[selectedQty].title;
     const shipping = shippings[selectedShipping].title;
-    const addr = selectedShipping === 0 ? ` a: ${address}` : '';
+    const addr = selectedShipping === 0 && address ? ` (${address})` : '';
 
-    return `Hola GM KIT STUDIO! Quiero hacer un pedido:%0A- Producto: *Kit Odontológico Completo*%0A- Cantidad: *${qty}*%0A- Envío: *${shipping}*${addr}`;
+    let msg = `¡Hola GM Kit Studio! 👋\nQuiero confirmar mi pedido desde la web:\n\n`;
+    msg += `📦 *Producto:* Kit Odontológico Completo (8 Insumos)\n`;
+    msg += `🔢 *Cantidad:* ${qty}\n`;
+    msg += `🚚 *Entrega:* ${shipping}${addr}\n\n`;
+    msg += `💰 *TOTAL DE COMPRA:* A confirmar según escala\n\n`;
+    msg += `Quedo a la espera de su confirmación para coordinar la entrega. ¡Muchas gracias!`;
+    return encodeURIComponent(msg);
   };
 
   const handleWhatsApp = () => {
@@ -77,7 +84,7 @@ const ProductModal = ({ isOpen, onClose }) => {
   };
 
   const handleEmail = () => {
-    const url = `mailto:gonchimartinez9@gmail.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
+    const url = `mailto:gonnnchimartinez9@gmail.com?subject=Nuevo Pedido de Kits Quirúrgicos&body=${generateMessage().replace(/%0A/g, '%0D%0A')}`;
     window.open(url, '_blank');
   };
 

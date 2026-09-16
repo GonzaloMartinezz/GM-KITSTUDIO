@@ -20,6 +20,9 @@ const Products = lazy(() => import('./pages/Products'));
 const Login = lazy(() => import('./pages/Login'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminVentas = lazy(() => import('./pages/admin/AdminVentas'));
+const AdminInventario = lazy(() => import('./pages/admin/AdminInventario'));
+const AdminFinanzas = lazy(() => import('./pages/admin/AdminFinanzas'));
+const AdminProveedores = lazy(() => import('./pages/admin/AdminProveedores'));
 const CargarProductos = lazy(() => import('./pages/CargarProductos'));
 
 function App() {
@@ -45,7 +48,10 @@ function App() {
           {/* === ADMIN DASHBOARD ROUTES === */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="inventario" element={<AdminInventario />} />
             <Route path="ventas" element={<AdminVentas />} />
+            <Route path="finanzas" element={<AdminFinanzas />} />
+            <Route path="proveedores" element={<AdminProveedores />} />
             {/* Future admin routes like /admin/employees can go here */}
           </Route>
 

@@ -105,7 +105,8 @@ export function SmoothCursor({
     const mediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY)
 
     const updateEnabled = () => {
-      const nextIsEnabled = mediaQuery.matches
+      const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024 && !('ontouchstart' in window)
+      const nextIsEnabled = mediaQuery.matches && isDesktop
       setIsEnabled(nextIsEnabled)
 
       if (!nextIsEnabled) {
@@ -115,9 +116,11 @@ export function SmoothCursor({
 
     updateEnabled()
     mediaQuery.addEventListener("change", updateEnabled)
+    window.addEventListener("resize", updateEnabled)
 
     return () => {
       mediaQuery.removeEventListener("change", updateEnabled)
+      window.removeEventListener("resize", updateEnabled)
     }
   }, [])
 
@@ -213,7 +216,7 @@ export function SmoothCursor({
     }
   }, [cursorX, cursorY, rotation, scale, isEnabled])
 
-  if (!isEnabled) {
+  if (!isEnabled || !isVisible) {
     return null
   }
 

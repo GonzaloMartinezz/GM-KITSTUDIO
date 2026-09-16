@@ -7,13 +7,14 @@ export function Hero({
   eyebrow = "Innovate Without Limits",
   title,
   subtitle,
+  items,
   ctaLabel = "Explore Now",
   ctaHref = "#",
 }) {
   return (
     <section
       id="hero"
-      className="relative mx-auto w-full pt-24 sm:pt-32 pb-32 sm:pb-48 px-4 sm:px-6 md:px-8 text-center 
+      className="relative mx-auto w-full pt-20 sm:pt-28 pb-10 sm:pb-14 px-4 sm:px-6 md:px-8 text-center 
       overflow-hidden flex flex-col items-center justify-center
       bg-[linear-gradient(to_bottom,#F1E8D9,#F1E8D9_50%,#E3D4C1_100%)]  
       dark:bg-[linear-gradient(to_bottom,#3E5C76,#3E5C76_40%,#54728C_100%)]"
@@ -27,10 +28,10 @@ export function Hero({
         mask-[radial-gradient(ellipse_80%_80%_at_50%_0%,#000_60%,transparent_110%)]"
       />
 
-      {/* Radial Accent */}
+      {/* Radial Accent (Curved dome) */}
       <div
-        className="absolute left-1/2 -bottom-37.5 md:-bottom-62.5 lg:-bottom-87.5 
-        h-75 w-[150%] md:h-125 md:w-[120%] lg:h-175 lg:w-[110%] 
+        className="absolute left-1/2 -bottom-24 sm:-bottom-36 md:-bottom-44 
+        h-60 w-[160%] sm:h-96 sm:w-[130%] md:h-120 md:w-[115%] 
         -translate-x-1/2 rounded-[100%] bg-brand-1 dark:bg-brand-5 
         bg-[radial-gradient(closest-side,#ffffff_40%,#F1E8D9_100%)] 
         dark:bg-[radial-gradient(closest-side,#54728C_40%,#3E5C76_100%)] 
@@ -41,10 +42,10 @@ export function Hero({
       {eyebrow && (
         <a href="#" className="group">
           <span
-            className="text-xs text-brand-5 dark:text-brand-1/70 font-bebas mx-auto px-6 py-2.5 
-            bg-linear-to-tr from-brand-5/5 via-brand-5/5 to-transparent  
-            border-2 border-brand-5/20 dark:border-white/5 
-            rounded-3xl w-fit tracking-[0.2em] uppercase flex items-center justify-center mb-8"
+            className="text-xs text-brand-5 dark:text-brand-1/90 font-bebas mx-auto px-6 py-2.5 
+            bg-linear-to-tr from-brand-5/5 via-brand-5/5 to-transparent dark:from-white/10 dark:via-white/5 dark:to-transparent
+            border-2 border-brand-5/20 dark:border-white/20 
+            rounded-3xl w-fit tracking-[0.2em] uppercase flex items-center justify-center mb-8 md:mb-12 shadow-xs backdrop-blur-xs"
           >
             {eyebrow}
             <ChevronRight className="inline w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
@@ -57,28 +58,48 @@ export function Hero({
         <h1
           className="animate-fade-in -translate-y-4 text-balance 
           bg-linear-to-br from-brand-5 from-30% to-brand-4/60 
-          bg-clip-text py-4 sm:py-6 text-4xl sm:text-6xl md:text-8xl lg:text-[7.5rem] font-bebas leading-[0.88] tracking-tight 
-          text-transparent opacity-0 break-words
+          bg-clip-text py-2 sm:py-4 text-[3.25rem] xs:text-[3.8rem] sm:text-5xl md:text-6xl lg:text-[4.75rem] font-bebas leading-[0.92] tracking-wide 
+          text-transparent opacity-0 wrap-break-word
           dark:from-brand-1 dark:to-brand-1/40"
           dangerouslySetInnerHTML={{ __html: title }}
         />
       </div>
 
-      {/* Subtitle */}
-      <p
-        className="animate-fade-in mt-4 mb-12 -translate-y-4 text-balance 
-        text-lg md:text-xl font-bebas tracking-widest text-brand-5/60 dark:text-brand-1/60 
-        opacity-0"
-      >
-        {subtitle}
-      </p>
+      {/* Items list */}
+      {items && Array.isArray(items) && items.length > 0 ? (
+        <div className="animate-fade-in mt-6 md:mt-8 mb-12 md:mb-16 -translate-y-4 max-w-3xl mx-auto px-4 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 opacity-0">
+          {items.map((item, idx) => (
+            <span
+              key={idx}
+              className="inline-flex items-center gap-2 px-3.5 sm:px-4.5 py-1.5 sm:py-2 rounded-full 
+              bg-brand-5/10 border border-brand-5/20 text-brand-5 
+              dark:bg-white/10 dark:border-white/25 dark:text-brand-1 dark:hover:bg-white/20 dark:hover:border-white/40
+              hover:border-brand-3/50 hover:bg-brand-5/15 
+              font-bebas text-xs sm:text-sm md:text-base tracking-widest uppercase shadow-xs transition-all backdrop-blur-xs"
+            >
+              <span className="text-brand-3 dark:text-brand-2 text-xs">✦</span>
+              {item}
+            </span>
+          ))}
+        </div>
+      ) : subtitle ? (
+        <p
+          className="animate-fade-in mt-6 md:mt-8 mb-12 md:mb-16 -translate-y-4 text-balance 
+          text-base sm:text-lg md:text-xl font-bebas tracking-widest text-brand-5/60 dark:text-brand-1/70 
+          opacity-0"
+        >
+          {subtitle}
+        </p>
+      ) : null}
 
       {/* CTA */}
       {ctaLabel && (
         <div className="flex justify-center relative z-20">
           <Button
             asChild
-            className="-mt-5 w-fit md:w-52 font-bebas tracking-widest text-center text-xl rounded-full h-14 bg-brand-5 text-brand-1 hover:bg-brand-4 hover:scale-105 transition-transform shadow-lg"
+            className="w-fit md:w-52 font-bebas tracking-widest text-center text-lg md:text-xl rounded-full h-12 md:h-14 px-8 
+            bg-brand-5 text-brand-1 hover:bg-brand-4 hover:scale-105 transition-all shadow-lg
+            dark:bg-brand-1 dark:text-brand-5 dark:hover:bg-white"
           >
             <Link to={ctaHref}>{ctaLabel}</Link>
           </Button>
@@ -87,9 +108,8 @@ export function Hero({
 
       {/* Bottom Fade */}
       <div
-        className="animate-fade-up relative mt-32 opacity-0 perspective-[2000px] 
-        after:absolute after:inset-0 after:z-50 
-        after:[background:linear-gradient(to_top,#F1E8D9_10%,transparent)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16 
+        bg-linear-to-t from-brand-1/40 to-transparent dark:from-brand-5/40"
       />
     </section>
   )

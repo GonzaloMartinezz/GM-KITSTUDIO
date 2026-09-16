@@ -10,7 +10,7 @@ const Navbar = () => {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const currentUser = localStorage.getItem('currentUser');
   const userEmail = localStorage.getItem('userEmail');
-  const isAdmin = userEmail === 'gonchimartinez9@gmail.com' || userEmail === 'admin@gmkitstudio.com' || currentUser?.toLowerCase() === 'admin';
+  const isAdmin = userEmail === 'gonnnchimartinez9@gmail.com' || userEmail === 'gonchimartinez9@gmail.com' || userEmail === 'admin@gmkitstudio.com' || currentUser?.toLowerCase() === 'admin';
 
   const isActive = (path) => location.pathname === path;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,15 +20,22 @@ const Navbar = () => {
       <nav className="absolute top-0 left-0 w-full z-50 py-4 md:py-8 px-4 md:px-12 pointer-events-none">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center">
 
-          {/* Mobile Menu Toggle (Visible only on small screens) */}
-          <div className="pointer-events-auto md:hidden flex items-center bg-brand-1 rounded-full p-1.5 shadow-sm border border-brand-2/20">
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 text-brand-5 hover:text-brand-4"
-              aria-label="Abrir menú"
-            >
-              <Menu size={22} />
-            </button>
+          {/* Mobile Menu & Logo (Visible only on small screens) */}
+          <div className="pointer-events-auto md:hidden flex items-center gap-2.5">
+            <div className="flex items-center bg-brand-1 rounded-full p-1 shadow-xs border border-brand-2/20">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="p-2 text-brand-5 hover:text-brand-4 active:scale-95 transition-transform cursor-pointer"
+                aria-label="Abrir menú"
+              >
+                <Menu size={20} />
+              </button>
+            </div>
+            <Link to="/" className="flex items-center">
+              <span className="font-bebas text-lg xs:text-xl text-brand-5 tracking-wider leading-none">
+                GM KIT <span className="text-[#88C9C4]">STUDIO</span>
+              </span>
+            </Link>
           </div>
 
           {/* Left Navigation Pills (Hidden on mobile) */}
@@ -49,24 +56,24 @@ const Navbar = () => {
 
           {/* Right Action Pills */}
           <div className="pointer-events-auto flex items-center gap-2 md:gap-4">
-            
+
             {/* User Profile / Login */}
             {currentUser ? (
               <div className="flex items-center gap-1.5 sm:gap-2 bg-brand-5 text-brand-1 px-2 py-1.5 md:px-3 md:py-2 rounded-full border border-brand-2/20 shadow-lg">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-brand-3 text-brand-5 flex items-center justify-center font-bebas text-sm md:text-lg shrink-0">
                   {currentUser.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-[120px] truncate">
+                <span className="font-geist text-xs sm:text-sm md:text-base hidden sm:inline max-w-30 truncate">
                   Hola, <b className="capitalize">{currentUser}</b>
                 </span>
-                
+
                 {isAdmin && (
                   <Link to="/admin" className="ml-1 md:ml-2 text-brand-3 hover:text-white transition-colors" title="Panel de Admin">
                     <Shield className="w-4 h-4 md:w-5 md:h-5" />
                   </Link>
                 )}
 
-                <button 
+                <button
                   onClick={() => {
                     localStorage.removeItem('currentUser');
                     localStorage.removeItem('userEmail');
@@ -116,7 +123,7 @@ const Navbar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[60] bg-brand-5 flex flex-col items-center justify-center px-6"
+            className="fixed inset-0 z-60 bg-brand-5 flex flex-col items-center justify-center px-6"
           >
             <button
               onClick={() => setIsMobileMenuOpen(false)}

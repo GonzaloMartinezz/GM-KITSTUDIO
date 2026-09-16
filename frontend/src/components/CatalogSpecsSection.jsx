@@ -1,67 +1,273 @@
-import React from 'react';
-import { ShieldCheck, PackageCheck, MessageCircle, Clock, Tag, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ShieldCheck, PackageCheck, MessageCircle, ArrowRight, Sparkles, CheckCircle2, Truck } from 'lucide-react';
 
 const CatalogSpecsSection = () => {
-  const services = [
-    { title: "Validar Productos", icon: <PackageCheck size={24} />, desc: "Sistemas integrales para certificar la calidad y el estado de cada insumo antes de la entrega." },
-    { title: "Precios", icon: <Tag size={24} />, desc: "Ofrecemos los costos más competitivos del mercado sin comprometer la bioseguridad ni la calidad." },
-  { title: "Confianza", icon: <ShieldCheck size={24} />, desc: "Cientos de profesionales en Tucumán respaldan la seguridad y efectividad de nuestros kits quirúrgicos." },
-  { title: "Material Premium", icon: <CheckCircle2 size={24} />, desc: "Insumos de la más alta calidad que cumplen con estrictas normativas nacionales e internacionales." },
-  { title: "Asesoría Continua", icon: <MessageCircle size={24} />, desc: "Acompañamiento constante y comunicación directa para resolver cualquier duda de tu equipo." },
-  { title: "Entregas Rápidas", icon: <Clock size={24} />, desc: "Tiempos de entrega optimizados para que tu consultorio nunca se quede sin stock operativo." },
+  const [activeTab, setActiveTab] = useState(1); // Default to featured card (02) on mobile
+
+  const premiumServices = [
+    {
+      id: "01",
+      shortTitle: "Bioseguridad",
+      tag: "ESTÁNDAR QUIRÚRGICO",
+      title: "BIOSEGURIDAD & ESTERILIDAD TOTAL",
+      subtitle: "Barrera bacteriológica al 99.8% libre de partículas",
+      description: "Insumos confeccionados en tela no tejida SMS 45g de triple capa hemorrepelente. Procesados con esterilización certificada por Óxido de Etileno (ETO) para garantizar campos estériles sin riesgo de contaminación cruzada en el quirófano.",
+      specs: [
+        { label: "Material", val: "SMS 45g Tricapa" },
+        { label: "Barrera", val: "99.8% Bacteriológica" },
+        { label: "Normativa", val: "Certificación ANMAT" },
+      ],
+      badge: "100% Estéril ETO",
+      icon: ShieldCheck,
+      featured: false,
+    },
+    {
+      id: "02",
+      shortTitle: "Kits Listos",
+      tag: "LISTO PARA OPERAR",
+      title: "KITS ESTÉRILES DESCARTABLES",
+      subtitle: "Todo listo para abrir directo en la mesa quirúrgica",
+      description: "Eliminamos el armado manual y las demoras preoperatorias. Cada kit integral incluye 8 insumos críticos con doble envoltorio estéril termosellado. Un único valor transparente de $8.500 por kit completo.",
+      specs: [
+        { label: "Precio Kit", val: "$8.500 Final" },
+        { label: "Contenido", val: "8 Insumos Estériles" },
+        { label: "Empaque", val: "Doble Envoltorio" },
+      ],
+      badge: "✦ MÁS ELEGIDO",
+      icon: PackageCheck,
+      featured: true,
+    },
+    {
+      id: "03",
+      shortTitle: "Asesoría & Logística",
+      tag: "SOPORTE 1 A 1",
+      title: "ASESORÍA CLÍNICA & LOGÍSTICA EXPRESS",
+      subtitle: "Atención personalizada para que tu clínica nunca se detenga",
+      description: "Canal prioritario directo para coordinar despachos express y asesorarte en el dimensionamiento exacto de kits para cirugías odontológicas, implantes o periodoncia. Envíos en 24/48h a todo el país.",
+      specs: [
+        { label: "Despachos", val: "24/48h Nacional" },
+        { label: "Canal", val: "WhatsApp Directo" },
+        { label: "Respuesta", val: "< 15 minutos" },
+      ],
+      badge: "Atención Dedicada",
+      icon: MessageCircle,
+      featured: false,
+    },
   ];
 
-return (
-  <section className="bg-brand-1 text-brand-5 py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-12 lg:px-24 font-geist relative z-30">
-    <div className="max-w-7xl mx-auto bg-white rounded-3xl sm:rounded-[3rem] p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-6 sm:gap-8 shadow-2xl">
-
-      {/* Left Dark Card */}
-      <div className="lg:w-[45%] bg-brand-5 text-brand-1 rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 flex flex-col justify-between min-h-auto md:min-h-112.5 relative overflow-hidden shadow-inner group">
-        <div className="relative z-10">
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bebas leading-none mb-4 sm:mb-6 tracking-wide">
-            NUESTROS<br />SERVICIOS<br />PREMIUM.
-          </h2>
-          <p className="text-brand-1/70 mt-3 sm:mt-6 max-w-87.5 font-medium text-sm sm:text-base leading-relaxed">
-            Soluciones integrales pensadas para potenciar la eficiencia y seguridad en cada intervención de tu clínica.
-          </p>
-        </div>
-
-        <div className="relative z-10 mt-8 sm:mt-12">
-          <button className="w-full bg-[#0C0C0C] hover:bg-brand-2 hover:text-brand-5 text-white py-3.5 sm:py-4 md:py-5 rounded-2xl font-bebas text-lg sm:text-xl tracking-wider transition-colors shadow-lg cursor-pointer">
-            VER TODOS LOS SERVICIOS
-          </button>
-        </div>
-
-        {/* Decorative background wave/circle */}
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-brand-1/5 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-1/10 transition-colors duration-700"></div>
-      </div>
-
-      {/* Right Grid */}
-      <div className="lg:w-[55%] py-4 sm:py-10 px-2 sm:px-4 lg:px-12">
-
-        <div className="flex justify-between items-center mb-6 sm:mb-10 pb-4 sm:pb-6 border-b border-gray-100">
-          <span className="font-bebas text-lg sm:text-xl text-gray-400 tracking-widest">Servicios</span>
-          <span className="font-bebas text-lg sm:text-xl text-gray-400 tracking-widest hidden md:block">Beneficios</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 sm:gap-x-12 gap-y-6 sm:gap-y-10">
-          {services.map((spec, idx) => (
-            <div key={idx} className="flex gap-3 sm:gap-6 group cursor-pointer">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 shrink-0 rounded-xl sm:rounded-2xl bg-brand-1 flex items-center justify-center text-brand-5 group-hover:bg-brand-5 group-hover:text-brand-1 group-hover:shadow-lg transition-all duration-300">
-                {spec.icon}
-              </div>
-              <div className="flex flex-col justify-center">
-                <h4 className="font-bebas tracking-wide text-xl sm:text-2xl mb-1 text-gray-800">{spec.title}</h4>
-                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{spec.desc}</p>
-              </div>
+  return (
+    <section id="servicios-premium" className="bg-brand-1 text-brand-5 py-14 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20 font-geist relative z-30">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Compact Header Bar */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8 sm:mb-12">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-5/5 border border-brand-5/15 text-brand-5 font-bebas text-xs sm:text-sm tracking-widest uppercase mb-3 shadow-xs">
+              <Sparkles size={14} className="text-brand-3" />
+              <span>EXCELENCIA QUIRÚRGICA ✦ GM KIT STUDIO</span>
             </div>
-          ))}
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bebas leading-[0.95] text-brand-5 tracking-wide uppercase">
+              SERVICIOS PREMIUM <br className="hidden sm:inline" />
+              <span className="text-brand-3">CON MÁXIMA PROFUNDIDAD.</span>
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              to="/productos"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-5 text-brand-1 font-bebas text-base sm:text-lg tracking-wider hover:bg-[#0C3B45] hover:scale-105 transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              <span>EXPLORAR KITS ($8.500)</span>
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobile View: Compact Tab Switcher (Takes very little vertical space!) */}
+        <div className="block md:hidden mb-6">
+          <div className="flex items-center justify-between p-1 bg-white/70 backdrop-blur-md rounded-2xl border border-brand-5/10 shadow-xs mb-4">
+            {premiumServices.map((service, idx) => (
+              <button
+                key={service.id}
+                onClick={() => setActiveTab(idx)}
+                className={`flex-1 py-2.5 px-2 rounded-xl font-bebas text-xs sm:text-sm tracking-wider transition-all text-center cursor-pointer ${
+                  activeTab === idx
+                    ? 'bg-brand-5 text-brand-1 shadow-md'
+                    : 'text-brand-5/70 hover:text-brand-5'
+                }`}
+              >
+                {service.id}. {service.shortTitle}
+              </button>
+            ))}
+          </div>
+
+          {/* Active Card on Mobile */}
+          {(() => {
+            const service = premiumServices[activeTab];
+            const Icon = service.icon;
+            return (
+              <div
+                className={`rounded-3xl p-6 transition-all duration-300 shadow-xl ${
+                  service.featured
+                    ? 'bg-linear-to-br from-[#0C3B45] via-[#0A2E36] to-[#061F24] text-brand-1 border-2 border-[#88C9C4]/40 shadow-[0_20px_50px_rgba(12,59,69,0.3)]'
+                    : 'bg-white text-brand-5 border border-brand-5/10'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bebas text-base ${
+                      service.featured ? 'bg-[#88C9C4]/20 text-[#88C9C4] border border-[#88C9C4]/40' : 'bg-brand-5/5 text-brand-5 border border-brand-5/15'
+                    }`}>
+                      {service.id}
+                    </span>
+                    <span className={`text-[11px] font-bold tracking-widest uppercase ${
+                      service.featured ? 'text-[#88C9C4]' : 'text-brand-5/60'
+                    }`}>
+                      {service.tag}
+                    </span>
+                  </div>
+                  <div className={`w-11 h-11 rounded-2xl flex items-center justify-center ${
+                    service.featured ? 'bg-[#88C9C4]/15 text-[#88C9C4]' : 'bg-brand-5/5 text-brand-3'
+                  }`}>
+                    <Icon size={22} />
+                  </div>
+                </div>
+
+                <h3 className={`font-bebas text-2xl tracking-wide mb-1 ${
+                  service.featured ? 'text-brand-1' : 'text-brand-5'
+                }`}>
+                  {service.title}
+                </h3>
+                <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
+                  service.featured ? 'text-[#88C9C4]' : 'text-brand-3'
+                }`}>
+                  {service.subtitle}
+                </p>
+                <p className={`text-sm leading-relaxed mb-6 font-normal ${
+                  service.featured ? 'text-brand-1/80' : 'text-brand-5/75'
+                }`}>
+                  {service.description}
+                </p>
+
+                {/* Specs Box */}
+                <div className={`p-4 rounded-2xl border flex flex-col gap-2.5 ${
+                  service.featured
+                    ? 'bg-black/20 border-white/10'
+                    : 'bg-brand-1/40 border-brand-5/10'
+                }`}>
+                  {service.specs.map(spec => (
+                    <div key={spec.label} className="flex items-center justify-between text-xs">
+                      <span className={service.featured ? 'text-brand-1/60' : 'text-brand-5/60'}>{spec.label}</span>
+                      <span className={`font-bold px-2 py-0.5 rounded-md ${
+                        service.featured ? 'bg-[#88C9C4]/15 text-[#88C9C4]' : 'bg-white text-brand-5 shadow-2xs'
+                      }`}>{spec.val}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+
+        {/* Desktop View: Symmetrical 3-Column Bento Grid with Rich Depth */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6 items-stretch">
+          {premiumServices.map((service) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={service.id}
+                className={`rounded-3xl p-7 lg:p-8 flex flex-col justify-between transition-all duration-300 group hover:-translate-y-1.5 ${
+                  service.featured
+                    ? 'bg-linear-to-br from-[#0C3B45] via-[#0A2E36] to-[#061F24] text-brand-1 border-2 border-[#88C9C4]/40 shadow-[0_25px_60px_rgba(12,59,69,0.35)] relative overflow-hidden'
+                    : 'bg-white text-brand-5 border border-brand-5/10 shadow-sm hover:shadow-xl hover:border-brand-3/40'
+                }`}
+              >
+                {/* Top Section */}
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-2.5">
+                      <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bebas text-base ${
+                        service.featured
+                          ? 'bg-[#88C9C4]/20 text-[#88C9C4] border border-[#88C9C4]/40'
+                          : 'bg-brand-5/5 text-brand-5 border border-brand-5/15'
+                      }`}>
+                        {service.id}
+                      </span>
+                      <span className={`text-[11px] font-bold tracking-widest uppercase ${
+                        service.featured ? 'text-[#88C9C4]' : 'text-brand-5/60'
+                      }`}>
+                        {service.tag}
+                      </span>
+                    </div>
+
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                      service.featured ? 'bg-[#88C9C4]/15 text-[#88C9C4]' : 'bg-brand-5/5 text-brand-3 group-hover:bg-brand-5 group-hover:text-brand-1'
+                    }`}>
+                      <Icon size={24} strokeWidth={1.75} />
+                    </div>
+                  </div>
+
+                  <h3 className={`font-bebas text-2xl lg:text-3xl tracking-wide mb-1 leading-tight ${
+                    service.featured ? 'text-brand-1' : 'text-brand-5'
+                  }`}>
+                    {service.title}
+                  </h3>
+                  
+                  <p className={`text-xs font-semibold uppercase tracking-wider mb-4 ${
+                    service.featured ? 'text-[#88C9C4]' : 'text-brand-3'
+                  }`}>
+                    {service.subtitle}
+                  </p>
+
+                  <p className={`text-sm leading-relaxed mb-6 font-normal ${
+                    service.featured ? 'text-brand-1/80' : 'text-brand-5/75'
+                  }`}>
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Bottom Technical Specifications */}
+                <div className={`pt-5 border-t mt-auto flex flex-col gap-2.5 ${
+                  service.featured ? 'border-white/10' : 'border-brand-5/10'
+                }`}>
+                  {service.specs.map(spec => (
+                    <div key={spec.label} className="flex items-center justify-between text-xs">
+                      <span className={service.featured ? 'text-brand-1/60 font-medium' : 'text-brand-5/60 font-medium'}>
+                        {spec.label}
+                      </span>
+                      <span className={`font-bold font-geist px-2.5 py-0.5 rounded-full border ${
+                        service.featured
+                          ? 'bg-[#88C9C4]/15 text-[#88C9C4] border-[#88C9C4]/30'
+                          : 'bg-brand-5/5 text-brand-5 border-brand-5/10'
+                      }`}>
+                        {spec.val}
+                      </span>
+                    </div>
+                  ))}
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <span className={`text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+                      service.featured ? 'text-brand-1/70' : 'text-brand-5/60'
+                    }`}>
+                      <CheckCircle2 size={13} className={service.featured ? 'text-[#88C9C4]' : 'text-brand-3'} />
+                      {service.badge}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Decorative background glow on featured card */}
+                {service.featured && (
+                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#88C9C4]/10 rounded-full blur-2xl pointer-events-none"></div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
 };
 
 export default CatalogSpecsSection;
