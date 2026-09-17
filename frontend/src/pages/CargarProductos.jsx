@@ -19,7 +19,10 @@ import {
   Sparkles,
   ShieldCheck,
   MessageCircle,
-  LogOut
+  LogOut,
+  ChevronDown,
+  Calendar,
+  Clock
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -102,8 +105,96 @@ const getPromo = (qty) => {
   };
 };
 
-const TOTAL_STEPS = 6;
-const stepLabels = ['Contenido', 'El Kit', 'Cantidad', 'Envío', 'Pago', 'Confirmar'];
+const getNextBusinessDays = (numDays = 7) => {
+  const days = [];
+  let current = new Date();
+  current.setDate(current.getDate() + 1); // Start from tomorrow minimum
+  
+  const options = { weekday: 'long', day: 'numeric', month: 'long' };
+  
+  while (days.length < numDays) {
+    const dayOfWeek = current.getDay();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      const dateStr = current.toISOString().split('T')[0];
+      let label = current.toLocaleDateString('es-AR', options);
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+      days.push({ value: dateStr, label: label });
+    }
+    current.setDate(current.getDate() + 1);
+  }
+  return days;
+};
+
+const dateOptions = getNextBusinessDays(10);
+const timeOptions = [
+  { value: '09:00', label: '09:00 AM' },
+  { value: '10:00', label: '10:00 AM' },
+  { value: '11:00', label: '11:00 AM' },
+  { value: '12:00', label: '12:00 PM' },
+  { value: '13:00', label: '13:00 PM' },
+  { value: '14:00', label: '14:00 PM' },
+  { value: '15:00', label: '15:00 PM' },
+  { value: '16:00', label: '16:00 PM' },
+  { value: '17:00', label: '17:00 PM' },
+];
+
+/* ─── CUSTOM DROPDOWN ─── */
+const CustomDropdown = ({ value, options, onChange, placeholder, icon: Icon }) => {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedLabel = options.find(o => o.value === value)?.label;
+
+  return (
+    <div className="relative w-full" ref={ref}>
+      <div 
+        onClick={() => setOpen(!open)}
+        className={`w-full p-3.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer shadow-xs ${open ? 'border-[#88C9C4] bg-white ring-2 ring-[#88C9C4]/20' : 'border-[#E1D9CC]/80 bg-[#F4F2EC]/30 hover:bg-white hover:border-[#88C9C4]/60'}`}
+      >
+        <div className="flex items-center gap-2.5">
+          {Icon && <Icon className={`w-4 h-4 ${value ? 'text-[#88C9C4]' : 'text-[#8CA0B2]'}`} />}
+          <span className={`text-sm ${value ? "text-[#364B5D] font-bold" : "text-[#8CA0B2]"}`}>
+            {value ? selectedLabel : placeholder}
+          </span>
+        </div>
+        <ChevronDown className={`w-4 h-4 text-[#8CA0B2] transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+      </div>
+      
+      <AnimatePresence>
+        {open && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10, scaleY: 0.95 }}
+            animate={{ opacity: 1, y: 0, scaleY: 1 }}
+            exit={{ opacity: 0, y: -10, scaleY: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute top-full left-0 w-full mt-2 bg-white border border-[#E1D9CC]/80 rounded-xl shadow-xl z-50 max-h-56 overflow-y-auto origin-top"
+          >
+            {options.map((opt) => (
+              <div 
+                key={opt.value}
+                onClick={() => { onChange(opt.value); setOpen(false); }}
+                className={`px-4 py-3 cursor-pointer text-sm transition-colors border-b border-[#F4F2EC] last:border-0 flex items-center justify-between ${value === opt.value ? 'bg-[#88C9C4]/10 text-[#0C3B45] font-bold' : 'text-[#546A7E] hover:bg-[#F4F2EC]'}`}
+              >
+                {opt.label}
+                {value === opt.value && <Check className="w-3.5 h-3.5 text-[#88C9C4]" />}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 /* ─── COMPONENT ─────────────────────────────────────── */
 const CargarProductos = () => {
@@ -116,6 +207,19 @@ const CargarProductos = () => {
   const [quantity, setQuantity] = useState(5);
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  const [pickupDate, setPickupDate] = useState('');
+  const [pickupTime, setPickupTime] = useState('');
+
+  const isPickup = selectedShipping === 'sucursal';
+  const TOTAL_STEPS = isPickup ? 7 : 6;
+  const stepLabels = isPickup 
+    ? ['Contenido', 'El Kit', 'Cantidad', 'Envío', 'Retiro', 'Pago', 'Confirmar'] 
+    : ['Contenido', 'El Kit', 'Cantidad', 'Envío', 'Pago', 'Confirmar'];
+
+  const stepEnvio = 4;
+  const stepRetiro = isPickup ? 5 : -1;
+  const stepPago = isPickup ? 6 : 5;
+  const stepConfirmar = isPickup ? 7 : 6;
 
   const basePrice = 9500;
   const promo = getPromo(quantity);
@@ -126,8 +230,9 @@ const CargarProductos = () => {
   const totalCartItems = cartItems.reduce((s, i) => s + i.quantity, 0);
 
   const canAdvance = () => {
-    if (step === 4) return !!selectedShipping;
-    if (step === 5) {
+    if (step === stepEnvio) return !!selectedShipping;
+    if (step === stepRetiro) return !!pickupDate && !!pickupTime;
+    if (step === stepPago) {
       if (!selectedPayment) return false;
       if (selectedPayment === 'tarjeta') return false;
       return true;
@@ -196,6 +301,10 @@ const CargarProductos = () => {
     }
 
     msg += `\n🚚 *Método de Envío:* ${shippingLabel}\n`;
+    if (isPickup) {
+      msg += `📅 *Día de Retiro:* ${pickupDate}\n`;
+      msg += `⏰ *Horario:* ${pickupTime}\n`;
+    }
     msg += `💳 *Método de Pago:* ${paymentLabel}\n`;
 
     msg += `\n💰 *TOTAL DE COMPRA:* $${Math.round(total).toLocaleString()}\n\n`;
@@ -783,10 +892,58 @@ const CargarProductos = () => {
             </motion.div>
           )}
 
-          {/* ════════════ PASO 5: Pago ════════════ */}
-          {step === 5 && (
+          {/* ════════════ PASO RETIRO (SI APLICA) ════════════ */}
+          {step === stepRetiro && (
             <motion.div
-              key="s5"
+              key="sRetiro"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col items-center text-center w-full"
+            >
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+                <MapPin className="w-3.5 h-3.5 text-[#88C9C4]" /> Retiro en Sucursal
+              </span>
+              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+                DÍA Y HORARIO
+              </h1>
+              <p className="text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
+                Seleccioná cuándo pasarás a retirar tu pedido por nuestra sucursal. Horario de atención: de 9:00 a 17:00hs.
+              </p>
+
+              <div className="w-full max-w-md mx-auto text-left bg-white/95 backdrop-blur-md rounded-3xl p-6 border border-[#E1D9CC]/80 shadow-lg ring-1 ring-[#88C9C4]/10 flex flex-col gap-5">
+                <div className="flex flex-col gap-2 relative z-20">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#364B5D] ml-1">Día de Retiro</label>
+                  <CustomDropdown 
+                    value={pickupDate}
+                    onChange={setPickupDate}
+                    options={dateOptions}
+                    placeholder="Seleccioná un día..."
+                    icon={Calendar}
+                  />
+                </div>
+                <div className="flex flex-col gap-2 relative z-10">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#364B5D] ml-1">Horario Estimado</label>
+                  <CustomDropdown 
+                    value={pickupTime}
+                    onChange={setPickupTime}
+                    options={timeOptions}
+                    placeholder="Seleccioná un horario..."
+                    icon={Clock}
+                  />
+                  <span className="text-[10px] font-medium text-[#8CA0B2] bg-[#F4F2EC] px-2 py-1 rounded-md inline-block w-max mt-1">
+                    Horario de corrido (9:00 a 17:00hs)
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ════════════ PASO 5 (o 6): Pago ════════════ */}
+          {step === stepPago && (
+            <motion.div
+              key="sPago"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
@@ -878,10 +1035,10 @@ const CargarProductos = () => {
             </motion.div>
           )}
 
-          {/* ════════════ PASO 6: Confirmar ════════════ */}
-          {step === 6 && (
+          {/* ════════════ PASO 6 (o 7): Confirmar ════════════ */}
+          {step === stepConfirmar && (
             <motion.div
-              key="s6"
+              key="sConfirmar"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}

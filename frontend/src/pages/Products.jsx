@@ -70,13 +70,14 @@ const Products = () => {
               initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
               animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative w-full h-80 sm:h-100 md:h-115 lg:h-130 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#0C1517] group"
+              className="relative w-full h-[400px] sm:h-[500px] md:h-[580px] lg:h-[650px] rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#0C1517] group"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] sm:w-[120%] lg:w-[110%] aspect-[9/16] pointer-events-none transition-all duration-1000">
                 <iframe
-                  src="https://www.youtube.com/embed/P83Y_BXiT0w?autoplay=1&loop=1&playlist=P83Y_BXiT0w&controls=0&mute=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1"
+                  src="https://www.youtube.com/embed/P83Y_BXiT0w?autoplay=1&mute=1&loop=1&playlist=P83Y_BXiT0w&controls=0&playsinline=1&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
                   title="GM KIT STUDIO Short"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
                   className="w-full h-full border-0"
                 />
               </div>
