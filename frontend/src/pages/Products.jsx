@@ -73,9 +73,12 @@ const Products = () => {
               transition={{ duration: 1.2, ease: "easeOut" }}
               className="relative w-full h-76 xs:h-88 sm:h-96 md:h-112.5 lg:h-125 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-brand-5/20"
             >
-              <img
-                src="/images/kitsodontologico.webp"
-                alt="Colección GM KIT"
+              <video
+                src="/video-muestra.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal hover:scale-105 transition-all duration-1000 cursor-pointer"
               />
               {/* Subtle overlay gradient to blend bottom edge into background */}

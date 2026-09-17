@@ -165,15 +165,15 @@ const Home = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.55, duration: 0.6 }}
-            className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-4 text-[10px] sm:text-xs text-[#364B5D] font-semibold"
+            className="flex flex-wrap lg:flex-nowrap items-center gap-1.5 sm:gap-2 mb-4 text-[10px] lg:text-[9.5px] xl:text-[11px] text-[#364B5D] font-semibold"
           >
-            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs whitespace-nowrap">
               <Truck className="w-3 h-3 text-emerald-600 shrink-0" /> Envío Gratis en 10+ kits
             </span>
-            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs whitespace-nowrap">
               <Sparkles className="w-3 h-3 text-[#0C3B45] shrink-0" /> Kit Trial a Precio Costo
             </span>
-            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs">
+            <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs whitespace-nowrap">
               <ShieldCheck className="w-3 h-3 text-[#0C3B45] shrink-0" /> Garantía de Recambio 100%
             </span>
           </motion.div>
@@ -202,7 +202,7 @@ const Home = () => {
         </div>
 
         {/* Right Side: Product Showcase Card */}
-        <div className="w-full lg:w-[55%] p-4 xs:p-5 sm:p-6 lg:p-8 lg:pl-0 lg:pt-24 flex items-center justify-center relative">
+        <div className="w-full lg:w-[55%] p-4 xs:p-5 sm:p-6 lg:p-8 lg:pl-0 lg:pt-8 flex items-center justify-center relative">
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

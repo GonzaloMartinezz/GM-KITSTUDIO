@@ -127,24 +127,76 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-60 bg-brand-5 flex flex-col items-center justify-center px-6"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: "spring", damping: 28, stiffness: 200 }}
+            className="fixed inset-0 z-60 bg-brand-5/95 backdrop-blur-2xl flex flex-col justify-between px-6 py-8 sm:px-10 sm:py-12"
           >
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute top-6 right-6 text-brand-1 p-2 rounded-full hover:bg-brand-4 transition-colors"
-              aria-label="Cerrar menú"
-            >
-              <X size={28} />
-            </button>
+            {/* Top Bar inside Menu */}
+            <div className="flex justify-between items-center w-full">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-brand-1 font-bebas text-xl sm:text-2xl tracking-widest flex items-center gap-2"
+              >
+                {isAdmin && <Shield size={20} className="text-brand-3" />}
+                {isAdmin ? 'ADMINISTRADOR' : 'GM KIT STUDIO'}
+              </motion.div>
 
-            <div className="flex flex-col items-center gap-8">
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/') ? 'text-brand-3' : 'text-brand-1'}`}>INICIO</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/productos" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/productos') ? 'text-brand-3' : 'text-brand-1'}`}>PRODUCTOS</Link>
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/nosotros" className={`font-bebas text-4xl sm:text-5xl tracking-widest ${isActive('/nosotros') ? 'text-brand-3' : 'text-brand-1'}`}>NOSOTROS</Link>
+              <motion.button
+                initial={{ opacity: 0, rotate: -90 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                transition={{ delay: 0.1 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-brand-1 p-2 rounded-full hover:bg-white/10 active:scale-95 transition-all"
+                aria-label="Cerrar menú"
+              >
+                <X size={32} strokeWidth={1.5} />
+              </motion.button>
             </div>
+
+            {/* Menu Links */}
+            <div className="flex flex-col items-start gap-6 sm:gap-8 mt-12 flex-1 justify-center w-full max-w-md mx-auto">
+              {[
+                { name: 'INICIO', path: '/' },
+                { name: 'PRODUCTOS', path: '/productos' },
+                { name: 'NOSOTROS', path: '/nosotros' }
+              ].map((item, i) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 + i * 0.1 }}
+                  className="w-full"
+                >
+                  <Link
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    to={item.path}
+                    className="group flex items-center justify-between w-full border-b border-brand-1/10 pb-4"
+                  >
+                    <span className={`font-bebas text-5xl sm:text-6xl tracking-widest transition-colors ${isActive(item.path) ? 'text-brand-3' : 'text-brand-1 group-hover:text-white'}`}>
+                      {item.name}
+                    </span>
+                    <span className={`transition-all duration-300 ${isActive(item.path) ? 'text-brand-3 translate-x-0 opacity-100' : 'text-brand-1 -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Footer inside Menu */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-col gap-1.5 mt-8 text-left text-brand-1/40 font-geist text-[10px] sm:text-xs uppercase tracking-widest"
+            >
+              <span>Bioseguridad Odontológica</span>
+              <span>© {new Date().getFullYear()} GM Kit Studio</span>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
