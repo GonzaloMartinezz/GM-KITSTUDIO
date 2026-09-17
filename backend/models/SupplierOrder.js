@@ -58,9 +58,10 @@ const supplierOrderSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-supplierOrderSchema.pre('save', function (next) {
+// Mongoose 9 saco el callback "next" en los hooks pre('save', ...);
+// ahora son sincronicos/async puros, sin argumento.
+supplierOrderSchema.pre('save', function () {
   this.total = (this.kits || 0) * (this.costPerKit || 0);
-  next();
 });
 
 module.exports = mongoose.model('SupplierOrder', supplierOrderSchema);
