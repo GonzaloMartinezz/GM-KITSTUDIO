@@ -20,6 +20,7 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
     updateDispatch,
     deleteDispatch,
     timeframe,
+    kitProduct,
   } = useAdminData();
 
   // Local form states
@@ -174,79 +175,112 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
     }
   }, [isOpen, modalType, initialData, paymentMethods, salesTrend]);
 
+  const [saveError, setSaveError] = useState('');
+  const [saving, setSaving] = useState(false);
+
   if (!isOpen) return null;
 
-  // Handlers
-  const handleSaveStat = (e) => {
+  // Handlers: todos async y con manejo de error — antes se cerraba el
+  // modal igual aunque la llamada al backend fallara, y el error quedaba
+  // silencioso (unhandled promise rejection), asi que desde afuera
+  // parecia que "no guardaba nada".
+  const handleSaveStat = async (e) => {
     e.preventDefault();
+    setSaveError('');
     if (initialData?.id) {
       updateStat(initialData.id, statForm);
     }
     onClose();
   };
 
-  const handleSavePayment = (e) => {
+  const handleSavePayment = async (e) => {
     e.preventDefault();
     const formattedAmount = paymentForm.amount.startsWith('$')
       ? paymentForm.amount
       : `$${paymentForm.amount}`;
 
-    if (paymentForm.id) {
-      updatePaymentMethod(paymentForm.id, {
-        name: paymentForm.name,
-        percentage: Number(paymentForm.percentage),
-        amount: formattedAmount,
-        numericAmount: Number(paymentForm.numericAmount) || 0,
-        description: paymentForm.description,
-      });
-    } else {
-      addPaymentMethod({
-        name: paymentForm.name,
-        percentage: Number(paymentForm.percentage),
-        amount: formattedAmount,
-        numericAmount: Number(paymentForm.numericAmount) || 0,
-        description: paymentForm.description,
-      });
-    }
-    onClose();
-  };
-
-  const handleDeletePayment = (id) => {
-    if (window.confirm('¿Eliminar este método de pago?')) {
-      deletePaymentMethod(id);
+    setSaving(true);
+    setSaveError('');
+    try {
+      if (paymentForm.id) {
+        await updatePaymentMethod(paymentForm.id, {
+          name: paymentForm.name,
+          percentage: Number(paymentForm.percentage),
+          amount: formattedAmount,
+          numericAmount: Number(paymentForm.numericAmount) || 0,
+          description: paymentForm.description,
+        });
+      } else {
+        await addPaymentMethod({
+          name: paymentForm.name,
+          percentage: Number(paymentForm.percentage),
+          amount: formattedAmount,
+          numericAmount: Number(paymentForm.numericAmount) || 0,
+          description: paymentForm.description,
+        });
+      }
       onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo guardar el método de pago.');
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleSaveTransaction = (e) => {
+  const handleDeletePayment = async (id) => {
+    if (!window.confirm('¿Eliminar este método de pago?')) return;
+    setSaveError('');
+    try {
+      await deletePaymentMethod(id);
+      onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo eliminar el método de pago.');
+    }
+  };
+
+  const handleSaveTransaction = async (e) => {
     e.preventDefault();
     const cleanQty = Number(txForm.qty) || 1;
-    const cleanUnitNum = 14500; // precio standard
+    // Precio real del kit desde la base (antes era un "14500" fijo que no
+    // tenia nada que ver con el precio real del producto, $8.500).
+    const cleanUnitNum = kitProduct?.price || 8500;
     const calcTotalNum = cleanQty * cleanUnitNum;
     const formattedTotal = `$${calcTotalNum.toLocaleString('es-AR')}`;
 
-    if (txForm.id) {
-      updateTransaction(txForm.id, {
-        ...txForm,
-        qty: cleanQty,
-        total: formattedTotal,
-        numericTotal: calcTotalNum,
-      });
-    } else {
-      addTransaction({
-        ...txForm,
-        qty: cleanQty,
-        total: formattedTotal,
-        numericTotal: calcTotalNum,
-      });
+    setSaving(true);
+    setSaveError('');
+    try {
+      if (txForm.id) {
+        await updateTransaction(txForm.id, {
+          ...txForm,
+          qty: cleanQty,
+          total: formattedTotal,
+          numericTotal: calcTotalNum,
+        });
+      } else {
+        await addTransaction({
+          ...txForm,
+          qty: cleanQty,
+          total: formattedTotal,
+          numericTotal: calcTotalNum,
+        });
+      }
+      onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo guardar el pedido. Revisá los datos e intentá de nuevo.');
+    } finally {
+      setSaving(false);
     }
-    onClose();
   };
 
-  const handleDeleteTransaction = () => {
-    if (txForm.id && window.confirm('¿Estás seguro de eliminar este pedido/transacción?')) {
-      deleteTransaction(txForm.id);
+  const handleDeleteTransaction = async () => {
+    if (!txForm.id || !window.confirm('¿Estás seguro de eliminar este pedido/transacción?')) return;
+    setSaveError('');
+    try {
+      await deleteTransaction(txForm.id);
       onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo eliminar el pedido.');
     }
   };
 
@@ -256,20 +290,32 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
     onClose();
   };
 
-  const handleSaveDispatch = (e) => {
+  const handleSaveDispatch = async (e) => {
     e.preventDefault();
-    if (dispForm.id) {
-      updateDispatch(dispForm.id, dispForm);
-    } else {
-      addDispatch(dispForm);
+    setSaving(true);
+    setSaveError('');
+    try {
+      if (dispForm.id) {
+        await updateDispatch(dispForm.id, dispForm);
+      } else {
+        await addDispatch(dispForm);
+      }
+      onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo guardar el despacho.');
+    } finally {
+      setSaving(false);
     }
-    onClose();
   };
 
-  const handleDeleteDispatch = () => {
-    if (dispForm.id && window.confirm('¿Eliminar este despacho programado?')) {
-      deleteDispatch(dispForm.id);
+  const handleDeleteDispatch = async () => {
+    if (!dispForm.id || !window.confirm('¿Eliminar este despacho programado?')) return;
+    setSaveError('');
+    try {
+      await deleteDispatch(dispForm.id);
       onClose();
+    } catch (err) {
+      setSaveError(err.response?.data?.message || 'No se pudo eliminar el despacho.');
     }
   };
 
@@ -309,6 +355,12 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
             <X size={18} />
           </button>
         </div>
+
+        {saveError && (
+          <div className="mb-4 px-3.5 py-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+            {saveError}
+          </div>
+        )}
 
         {/* 1. EDIT KPI FORM */}
         {modalType === 'stat' && (
