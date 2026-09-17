@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star, Volume2, VolumeX } from 'lucide-react';
+import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
 
 const Products = () => {
@@ -10,7 +10,6 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeStepCard, setActiveStepCard] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     // Simulate fetching
@@ -31,7 +30,7 @@ const Products = () => {
   return (
     <div className="bg-[#0C1517] min-h-screen text-brand-1 font-geist selection:bg-brand-3 selection:text-white">
       {/* Top Padding for Navbar */}
-      <div className="pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
+      <div className="pt-28 sm:pt-32 md:pt-36 pb-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
 
         {/* HERO SECTION */}
         <section className="flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 lg:gap-24 mb-16 sm:mb-24 md:mb-32">
@@ -75,24 +74,13 @@ const Products = () => {
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] sm:w-[120%] lg:w-[110%] aspect-[9/16] pointer-events-none transition-all duration-1000">
                 <iframe
-                  src={`https://www.youtube.com/embed/28gDBoRZEq4?autoplay=1&loop=1&playlist=28gDBoRZEq4&controls=0&mute=${isMuted ? '1' : '0'}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1`}
+                  src="https://www.youtube.com/embed/P83Y_BXiT0w?autoplay=1&loop=1&playlist=P83Y_BXiT0w&controls=0&mute=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1"
                   title="GM KIT STUDIO Short"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   className="w-full h-full border-0"
                 />
               </div>
 
-              {/* Audio Toggle Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMuted(!isMuted);
-                }}
-                className="absolute bottom-4 right-4 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 cursor-pointer shadow-lg hover:scale-105"
-                title={isMuted ? "Activar sonido" : "Silenciar"}
-              >
-                {isMuted ? <VolumeX className="w-4.5 h-4.5" /> : <Volume2 className="w-4.5 h-4.5" />}
-              </button>
               {/* Subtle overlay gradient to blend bottom edge into background */}
               <div className="absolute inset-0 bg-linear-to-t from-[#0C1517] via-transparent to-transparent opacity-90 pointer-events-none"></div>
             </motion.div>

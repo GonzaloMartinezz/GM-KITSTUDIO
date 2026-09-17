@@ -351,7 +351,7 @@ const CargarProductos = () => {
       </header>
 
       {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className="flex-1 flex flex-col justify-start md:justify-center max-w-7xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative pb-24 md:pb-28 lg:pb-32">
+      <main className="flex-1 flex flex-col justify-start md:justify-center max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative pb-24 md:pb-28 lg:pb-32">
         <AnimatePresence mode="wait">
 
           {/* ════════════ PASO 1: Contenido del Kit ════════════ */}
@@ -454,40 +454,40 @@ const CargarProductos = () => {
               </p>
 
               {/* Compact & Refined Card for mobile & desktop */}
-              <div className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-8 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
+              <div className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
 
                 {/* Card Top: Title & Price side-by-side */}
-                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 lg:gap-6 pb-3 lg:pb-5 mb-3 lg:mb-5 border-b border-[#F4F2EC] text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 lg:gap-5 pb-3 lg:pb-4 mb-3 lg:mb-4 border-b border-[#F4F2EC] text-center sm:text-left">
                   <div className="flex flex-col items-center sm:items-start">
-                    <div className="flex items-center justify-center sm:justify-start gap-1.5 lg:gap-2.5 mb-1 lg:mb-2">
-                      <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bold shrink-0">
-                        <Check className="w-3 h-3 lg:w-4 lg:h-4 stroke-3" />
+                    <div className="flex items-center justify-center sm:justify-start gap-1.5 lg:gap-2 mb-1 lg:mb-1.5">
+                      <div className="w-5 h-5 lg:w-7 lg:h-7 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bold shrink-0">
+                        <Check className="w-3 h-3 lg:w-3.5 lg:h-3.5 stroke-3" />
                       </div>
-                      <h3 className="font-bebas text-xl sm:text-2xl lg:text-4xl text-[#364B5D] leading-none tracking-wide">
+                      <h3 className="font-bebas text-xl sm:text-2xl lg:text-3xl text-[#364B5D] leading-none tracking-wide">
                         KIT CIRUGÍA ODONTOLÓGICA
                       </h3>
                     </div>
-                    <span className="text-[9px] sm:text-[10px] lg:text-xs font-bold tracking-wider px-2 py-0.5 lg:px-3 lg:py-1 rounded-full bg-[#0C3B45] text-[#88C9C4] uppercase inline-block">
+                    <span className="text-[9px] sm:text-[10px] lg:text-[11px] font-bold tracking-wider px-2 py-0.5 lg:px-2.5 lg:py-0.5 rounded-full bg-[#0C3B45] text-[#88C9C4] uppercase inline-block">
                       100% ESTÉRIL • CERTIFICADO ANMAT
                     </span>
                   </div>
 
-                  <div className="text-center sm:text-right shrink-0 bg-[#88C9C4]/10 px-4 py-2 lg:px-6 lg:py-3.5 rounded-xl border border-[#88C9C4]/30 w-full sm:w-auto mt-1 sm:mt-0">
-                    <div className="text-2xl sm:text-3xl lg:text-5xl font-bebas text-[#0C3B45] leading-none">
+                  <div className="text-center sm:text-right shrink-0 bg-[#88C9C4]/10 px-4 py-2 lg:px-5 lg:py-3 rounded-xl border border-[#88C9C4]/30 w-full sm:w-auto mt-1 sm:mt-0">
+                    <div className="text-2xl sm:text-3xl lg:text-4xl font-bebas text-[#0C3B45] leading-none">
                       $9.500
                     </div>
-                    <div className="text-[9px] lg:text-xs text-[#546A7E] font-semibold lg:mt-1">
+                    <div className="text-[9px] lg:text-[11px] text-[#546A7E] font-semibold lg:mt-0.5">
                       por kit (8 insumos)
                     </div>
                   </div>
                 </div>
 
                 {/* Insumos List in compact 2-column grid */}
-                <div className="bg-[#F8F9FA] rounded-xl p-3 lg:p-5 mb-3 lg:mb-5 border border-[#EBE7DF]/80">
-                  <p className="text-[10px] lg:text-xs font-bold text-[#364B5D] uppercase tracking-wider mb-2 lg:mb-4 flex items-center gap-1.5">
-                    <Package className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#88C9C4]" /> Insumos incluidos en el kit:
+                <div className="bg-[#F8F9FA] rounded-xl p-3 lg:p-4 mb-3 lg:mb-4 border border-[#EBE7DF]/80">
+                  <p className="text-[10px] lg:text-[11px] font-bold text-[#364B5D] uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-1.5">
+                    <Package className="w-3.5 h-3.5 lg:w-3.5 lg:h-3.5 text-[#88C9C4]" /> Insumos incluidos en el kit:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 lg:gap-y-3 text-[#546A7E]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 lg:gap-y-2 text-[#546A7E]">
                     {[
                       '2x Batas quirúrgicas con puños',
                       '1x Compresa impermeable 1x1 mt',
@@ -498,9 +498,9 @@ const CargarProductos = () => {
                       '2x Barbijos con filtro bacteriano',
                       '2x Cubrecalzados elastizados',
                     ].map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-1.5 lg:gap-2.5">
-                        <Check className="w-3 h-3 lg:w-4 lg:h-4 text-[#0C3B45] shrink-0 stroke-2.5" />
-                        <span className="font-medium text-[11px] lg:text-[13.5px] leading-tight">{item}</span>
+                      <div key={idx} className="flex items-center gap-1.5 lg:gap-2">
+                        <Check className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-[#0C3B45] shrink-0 stroke-2.5" />
+                        <span className="font-medium text-[11px] lg:text-[12.5px] leading-tight">{item}</span>
                       </div>
                     ))}
                   </div>

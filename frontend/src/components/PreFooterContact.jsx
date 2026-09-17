@@ -49,8 +49,8 @@ const PreFooterContact = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-6 sm:p-8 md:p-10 text-center rounded-2xl sm:rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
-              <div className="text-5xl sm:text-6xl md:text-[6rem] font-bebas text-brand-2 mb-1 sm:mb-2 leading-none">10K+</div>
-              <p className="text-brand-1 text-xs sm:text-sm font-bold uppercase tracking-wider">Kits validados este año</p>
+              <div className="text-5xl sm:text-6xl md:text-[6rem] font-bebas text-brand-2 mb-1 sm:mb-2 leading-none">ISO</div>
+              <p className="text-brand-1 text-xs sm:text-sm font-bold uppercase tracking-wider">Calidad certificada</p>
             </div>
             <div className="bg-brand-1/5 border border-brand-1/10 backdrop-blur-md p-6 sm:p-8 md:p-10 text-center rounded-2xl sm:rounded-[2.5rem] hover:bg-brand-1/10 transition-colors">
               <div className="text-5xl sm:text-6xl md:text-[6rem] font-bebas text-brand-2 mb-1 sm:mb-2 leading-none">0%</div>
