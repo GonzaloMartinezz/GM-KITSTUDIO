@@ -73,14 +73,12 @@ const paymentOptions = [
     icon: Wallet,
     title: 'TRANSFERENCIA',
     desc: 'Alias / CBU inmediato con comprobante digital.',
-    discountBadge: '10% OFF EXTRA',
   },
   {
     id: 'tarjeta',
     icon: CreditCard,
     title: 'TARJETA',
     desc: 'Débito o crédito a través de link de pago seguro.',
-    surchargeBadge: '+15% recargo',
   },
 ];
 
@@ -130,7 +128,11 @@ const CargarProductos = () => {
 
   const canAdvance = () => {
     if (step === 4) return !!selectedShipping;
-    if (step === 5) return !!selectedPayment;
+    if (step === 5) {
+      if (!selectedPayment) return false;
+      if (selectedPayment === 'tarjeta') return false;
+      return true;
+    }
     return true;
   };
 
@@ -164,7 +166,9 @@ const CargarProductos = () => {
     const paymentMap = {
       efectivo: 'Efectivo al recibir',
       transferencia: 'Transferencia bancaria / CBU',
-      tarjeta: 'Tarjeta (Débito / Crédito)'
+      tarjeta: 'Tarjeta (Débito / Crédito)',
+      tarjeta_credito: 'Tarjeta (Crédito)',
+      tarjeta_debito: 'Tarjeta (Débito)'
     };
 
     const shippingLabel = shippingMap[selectedShipping] || 'A coordinar';
@@ -797,7 +801,7 @@ const CargarProductos = () => {
               {/* Mobile and Desktop responsive cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-4xl text-left">
                 {paymentOptions.map(opt => {
-                  const isSelected = selectedPayment === opt.id;
+                  const isSelected = selectedPayment === opt.id || (opt.id === 'tarjeta' && selectedPayment?.startsWith('tarjeta'));
                   const Icon = opt.icon;
                   return (
                     <div
@@ -842,6 +846,22 @@ const CargarProductos = () => {
                           <span className="inline-block text-[9px] font-medium text-[#546A7E] bg-[#F4F2EC] px-2 py-0.5 rounded-full">
                             {opt.badge}
                           </span>
+                        )}
+                        {opt.id === 'tarjeta' && (
+                          <div className="flex flex-col gap-2 mt-3 w-full">
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); setSelectedPayment('tarjeta_credito'); }}
+                              className={`w-full text-xs font-bold py-2.5 rounded-lg cursor-pointer transition-all border ${selectedPayment === 'tarjeta_credito' ? 'bg-[#88C9C4] text-[#0C3B45] border-[#88C9C4] shadow-sm' : 'text-[#364B5D] bg-[#F4F2EC] border-[#E1D9CC]/60 hover:bg-white hover:border-[#88C9C4]/40 hover:shadow-xs'}`}
+                            >
+                              CRÉDITO
+                            </button>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); setSelectedPayment('tarjeta_debito'); }}
+                              className={`w-full text-xs font-bold py-2.5 rounded-lg cursor-pointer transition-all border ${selectedPayment === 'tarjeta_debito' ? 'bg-[#88C9C4] text-[#0C3B45] border-[#88C9C4] shadow-sm' : 'text-[#364B5D] bg-[#F4F2EC] border-[#E1D9CC]/60 hover:bg-white hover:border-[#88C9C4]/40 hover:shadow-xs'}`}
+                            >
+                              DÉBITO
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
