@@ -27,14 +27,36 @@ const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Render (y la mayoría de PaaS) corren detrás de un proxy/load balancer.
+// Sin esto, express-rate-limit puede tirar error con X-Forwarded-For,
+// req.secure/cookies "secure" pueden fallar, y Express no detecta bien HTTPS.
+app.set('trust proxy', 1);
+
 /* ─── MIDDLEWARE GLOBAL ─────────────────────────── */
 
 // Seguridad HTTP headers
 app.use(helmet());
 
 // CORS configurado para el frontend con cookies
+// Orígenes permitidos: localhost (dev) + CLIENT_URL (prod, puede tener
+// varios separados por coma: "https://gm-kitstudio.vercel.app,https://otro.com")
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  ...(process.env.CLIENT_URL || '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean),
+];
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', process.env.CLIENT_URL],
+  origin(origin, callback) {
+    // Requests sin origin (curl, health checks, apps móviles) se permiten
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    console.warn(`⚠️  CORS bloqueó origin: ${origin}. Permitidos: ${allowedOrigins.join(', ')}`);
+    return callback(new Error('No permitido por CORS'));
+  },
   credentials: true,
 }));
 

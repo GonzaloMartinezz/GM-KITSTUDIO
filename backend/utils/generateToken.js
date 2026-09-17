@@ -28,17 +28,24 @@ const generateTokensAndSetCookies = (res, user, rememberMe = false) => {
     : 7 * 24 * 60 * 60 * 1000;  // 7 días
 
   // Set cookies
-  res.cookie('accessToken', accessToken, {
+  // En producción, frontend (Vercel) y backend (Render) están en dominios
+  // distintos → son "cross-site". Para que el navegador envíe cookies en
+  // requests cross-site es OBLIGATORIO sameSite: 'none' + secure: true.
+  // En local dev (mismo localhost), 'lax' + secure:false funciona bien.
+  const isProd = process.env.NODE_ENV === 'production';
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProd, // true en prod (HTTPS obligatorio para sameSite=none)
+    sameSite: isProd ? 'none' : 'lax',
+  };
+
+  res.cookie('accessToken', accessToken, {
+    ...cookieOptions,
     maxAge: 15 * 60 * 1000, // 15 minutos
   });
 
   res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    ...cookieOptions,
     maxAge: refreshMaxAge,
     path: '/api/auth', // Solo se envía a rutas de auth
   });
@@ -50,8 +57,14 @@ const generateTokensAndSetCookies = (res, user, rememberMe = false) => {
  * Limpia ambas cookies de autenticación.
  */
 const clearAuthCookies = (res) => {
-  res.clearCookie('accessToken');
-  res.clearCookie('refreshToken', { path: '/api/auth' });
+  const isProd = process.env.NODE_ENV === 'production';
+  const base = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+  };
+  res.clearCookie('accessToken', base);
+  res.clearCookie('refreshToken', { ...base, path: '/api/auth' });
 };
 
 module.exports = { generateTokensAndSetCookies, clearAuthCookies };
