@@ -66,9 +66,14 @@ export function ProductShowcase({ products = [], onProductSelect }) {
                   <Icon size={13} className="opacity-70 shrink-0" />
                 )}
 
-                <span className={`text-[11px] sm:text-sm md:text-[15px] font-medium tracking-wide whitespace-nowrap ${isActive ? 'font-bold' : ''}`}>
+                <span className={`text-[11px] sm:text-sm md:text-[14px] font-medium tracking-wide flex-1 text-left leading-tight ${isActive ? 'font-bold' : ''}`}>
                   {product.name.toUpperCase()}
                 </span>
+                {product.qty >= 2 && (
+                  <span className={`w-5 h-5 flex items-center justify-center text-[10px] font-bold rounded-full ml-2 shrink-0 ${isActive ? 'bg-[#364B5D] text-white shadow-xs' : 'bg-white/20 text-white'}`}>
+                    {product.qty}
+                  </span>
+                )}
               </button>
             );
           })}

@@ -15,14 +15,13 @@ const Products = () => {
     // Simulate fetching
     setTimeout(() => {
       setProducts([
-        { _id: '1', name: "Batas con Puños", description: "Batas quirúrgicas con puños elastizados (Cant. 2).", image: "/images/camisolinkits.jpg" },
-        { _id: '2', name: "Compresa 1x1 mt", description: "Compresa estéril impermeable de 1x1 mt (Cant. 1).", image: "/images/Campo Quirúrgico (100x100cm)kits.jpg" },
-        { _id: '3', name: "Compresa 50x50 cm", description: "Compresa estéril impermeable de 50x50 cm (Cant. 1).", image: "/images/Campo Quirúrgico (100x100cm)kits.jpg" },
-        { _id: '4', name: "Campo Fenestrado", description: "Campo fenestrado estéril para paciente (Cant. 1).", image: "/images/Capuchónkits.jpg" },
-        { _id: '5', name: "Cubre Suctores", description: "Fundas protectoras para suctores (Cant. 2).", image: "/images/cubremangueraskits.jpg" },
-        { _id: '6', name: "Gorros Clásicos", description: "Gorros clásicos descartables con ajuste elástico (Cant. 2).", image: "/images/cofiakits.png" },
-        { _id: '7', name: "Barbijos", description: "Barbijos descartables con filtro bacteriano (Cant. 2).", image: "/images/barbijoskits.png" },
-        { _id: '8', name: "Cubrecalzados Elastizados", description: "Cubrecalzados descartables elastizados (Cant. 2).", image: "/images/cubrecalzadoskit.jpg" }
+        { _id: '1', name: "Compresas Impermeables 1x1 mt y 50x50 cm", description: "Compresas estériles impermeables de 1x1 mt y 50x50 cm (Cant. 1 de c/u).", image: "/images/Campo Quirúrgico (100x100cm)kits.jpg", qty: 1 },
+        { _id: '2', name: "Cubre Suctores", description: "Fundas protectoras para suctores (Cant. 2).", image: "/images/cubremangueraskits.jpg", qty: 2 },
+        { _id: '3', name: "Batas con Puños", description: "Batas quirúrgicas con puños elastizados (Cant. 2).", image: "/images/camisolinkits.jpg", qty: 2 },
+        { _id: '4', name: "Gorros Clásicos", description: "Gorros clásicos descartables con ajuste elástico (Cant. 2).", image: "/images/cofiakits.png", qty: 2 },
+        { _id: '5', name: "Barbijos", description: "Barbijos descartables con filtro bacteriano (Cant. 2).", image: "/images/barbijoskits.png", qty: 2 },
+        { _id: '6', name: "Cubre Calzados Elastizados", description: "Cubrecalzados descartables elastizados (Cant. 2).", image: "/images/cubrecalzadoskit.jpg", qty: 2 },
+        { _id: '7', name: "Campo Fenestrado por Paciente", description: "Campo fenestrado estéril por paciente (Cant. 1).", image: "/images/Capuchónkits.jpg", qty: 1 }
       ]);
       setLoading(false);
     }, 800);
@@ -31,7 +30,7 @@ const Products = () => {
   return (
     <div className="bg-[#0C1517] min-h-screen text-brand-1 font-geist selection:bg-brand-3 selection:text-white">
       {/* Top Padding for Navbar */}
-      <div className="pt-24 sm:pt-28 md:pt-36 pb-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
+      <div className="pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 md:px-12 lg:px-24 max-w-[1800px] mx-auto">
 
         {/* HERO SECTION */}
         <section className="flex flex-col md:flex-row items-center justify-between gap-8 sm:gap-12 lg:gap-24 mb-16 sm:mb-24 md:mb-32">
@@ -43,7 +42,7 @@ const Products = () => {
               transition={{ duration: 1, ease: "easeOut" }}
               className="font-bebas text-5xl sm:text-7xl md:text-8xl tracking-wider text-white leading-[0.9]"
             >
-              RAÍCES DE<br />CALIDAD
+              RAÍCES DE<br /><span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-500 to-orange-500 underline decoration-orange-500 decoration-4 sm:decoration-8 underline-offset-4 sm:underline-offset-8">CALIDAD</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 30 }}
@@ -57,7 +56,7 @@ const Products = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-              onClick={() => document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => navigate('/cargarproductos')}
               className="mt-6 sm:mt-10 bg-[#42544F] hover:bg-[#526660] text-brand-1 px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium transition-colors flex items-center gap-2 shadow-lg text-sm sm:text-base cursor-pointer"
             >
               <ShoppingCart size={20} />
@@ -71,16 +70,16 @@ const Products = () => {
               initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
               animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative w-full h-76 xs:h-88 sm:h-96 md:h-112.5 lg:h-125 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-brand-5/20"
+              className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px] rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#0C1517] group"
             >
-              <video
-                src="/video-muestra.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal hover:scale-105 transition-all duration-1000 cursor-pointer"
-              />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] sm:w-[120%] lg:w-[110%] aspect-[9/16] pointer-events-none transition-all duration-1000">
+                <iframe
+                  src="https://www.youtube.com/embed/28gDBoRZEq4?autoplay=1&loop=1&playlist=28gDBoRZEq4&controls=0&mute=1&playsinline=1"
+                  title="GM KIT STUDIO Short"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  className="w-full h-full border-0"
+                />
+              </div>
               {/* Subtle overlay gradient to blend bottom edge into background */}
               <div className="absolute inset-0 bg-linear-to-t from-[#0C1517] via-transparent to-transparent opacity-90 pointer-events-none"></div>
             </motion.div>
@@ -94,7 +93,7 @@ const Products = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="font-bebas text-3xl sm:text-4xl md:text-5xl text-white mb-2 sm:mb-4 tracking-wide"
+            className="font-bebas text-3xl sm:text-4xl md:text-5xl text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-500 to-orange-500 mb-2 sm:mb-4 tracking-wide"
           >
             ¿QUÉ INCLUYE EL KIT?
           </motion.h2>
@@ -150,7 +149,7 @@ const Products = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
 
-            {/* 1. KIT DE MUESTRA */}
+            {/* 1. CALIDAD PREMIUM */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -164,30 +163,30 @@ const Products = () => {
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <span className="bg-linear-to-r from-orange-500 to-amber-500 text-white font-black text-xs px-3 py-1 rounded-full shadow-md shadow-orange-500/25 uppercase tracking-wide">
-                    $6.500 (Precio Costo)
+                    CERTIFICADA
                   </span>
                 </div>
                 <h3 className="font-bebas text-2xl sm:text-3xl text-white tracking-wide mb-1">
-                  KIT DE MUESTRA (TRIAL)
+                  CALIDAD PREMIUM
                 </h3>
                 <p className="text-xs text-orange-400 font-semibold mb-3">
-                  Para nuevos consultorios y profesionales
+                  Materiales de grado médico profesional
                 </p>
                 <p className="text-xs sm:text-sm text-brand-1/80 font-geist leading-relaxed mb-5">
-                  ¿Primera compra o dudas sobre la calidad? Llevate 1 solo kit a precio de costo para evaluar en tu quirófano la tela SMS 45g, el termosellado y la esterilidad ANMAT sin compromiso de volumen.
+                  Nuestros kits garantizan máxima protección en tu quirófano. Destacan por su excelente calidad en barbijos, batas con puños reforzados y compresas con unidad de apoyo al instrumental. Fabricados en tela SMS 45g tricapa y respaldados por una estricta <strong className="text-white font-semibold">esterilización por óxido de etileno</strong>.
                 </p>
                 <div className="space-y-2 border-t border-white/10 pt-4 mb-6 text-xs text-brand-1/90">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-orange-400 shrink-0 stroke-2.5" />
-                    <span>1 Kit completo a precio de costo</span>
-                  </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-orange-400 shrink-0 stroke-2.5" />
                     <span>Tela médica SMS 45g tricapa</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-orange-400 shrink-0 stroke-2.5" />
-                    <span>Sin compra mínima requerida</span>
+                    <span>Esterilización por óxido de etileno</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-orange-400 shrink-0 stroke-2.5" />
+                    <span>Cumplimiento normas ANMAT</span>
                   </div>
                 </div>
               </div>
@@ -195,7 +194,7 @@ const Products = () => {
                 onClick={() => navigate('/cargarproductos')}
                 className="w-full py-3 px-4 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 cursor-pointer active:scale-[0.98]"
               >
-                <span>Pedir Kit de Muestra</span>
+                <span>Armar mi pedido</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>

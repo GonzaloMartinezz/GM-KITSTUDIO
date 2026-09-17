@@ -26,14 +26,13 @@ import { useAuth } from '../context/AuthContext';
 
 /* ─── DATA ─────────────────────────────────────────── */
 const kitItems = [
-  { title: 'Batas con Puños', desc: 'Batas quirúrgicas con puños elastizados.', tag: 'CANTIDAD 2', qty: 2 },
-  { title: 'Compresa 1x1 mt', desc: 'Compresa impermeable estéril de 1×1 mt.', tag: 'Cant. 1', qty: 1 },
-  { title: 'Compresa 50x50 cm', desc: 'Compresa impermeable estéril de 50×50 cm.', tag: 'Cant. 1', qty: 1 },
-  { title: 'Campo Fenestrado Paciente', desc: 'Campo fenestrado estéril para paciente.', tag: 'Cant. 1', qty: 1 },
+  { title: 'Compresas Impermeables 1x1 mt y 50x50 cm', desc: 'Compresas impermeables estériles de 1x1 mt y 50x50 cm.', tag: '1 DE C/U', qty: 2 },
   { title: 'Cubre Suctores', desc: 'Fundas descartables protectoras para suctor.', tag: 'CANTIDAD 2', qty: 2 },
+  { title: 'Batas con Puños', desc: 'Batas quirúrgicas con puños elastizados.', tag: 'CANTIDAD 2', qty: 2 },
   { title: 'Gorros Clásicos', desc: 'Gorros quirúrgicos clásicos descartables con elástico.', tag: 'CANTIDAD 2', qty: 2 },
   { title: 'Barbijos', desc: 'Barbijos descartables con filtro bacteriano.', tag: 'CANTIDAD 2', qty: 2 },
   { title: 'Cubre Calzados Elastizados', desc: 'Protección descartable con ajuste anatómico.', tag: 'CANTIDAD 2', qty: 2 },
+  { title: 'Campo Fenestrado por Paciente', desc: 'Campo fenestrado estéril por paciente.', tag: 'CANTIDAD 1', qty: 1 },
 ];
 
 const shippingOptions = [
