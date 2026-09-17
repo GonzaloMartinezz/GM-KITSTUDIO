@@ -95,17 +95,19 @@ const RecentTransactionsTable = () => {
               <th className="py-3.5 pl-1 pr-3">ID</th>
               <th className="py-3.5 px-3">Cliente / Clínica</th>
               <th className="py-3.5 px-3">Producto</th>
+              <th className="py-3.5 px-3">Método de Pago</th>
               <th className="py-3.5 px-3">Estado</th>
               <th className="py-3.5 px-3 text-center">Cantidad</th>
               <th className="py-3.5 px-3 text-right">Precio Unit.</th>
               <th className="py-3.5 px-3 text-right">Total</th>
+              <th className="py-3.5 px-3">Fecha</th>
               <th className="py-3.5 pl-3 pr-1 text-center">Acciones</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#F1F5F9] text-xs">
             {filteredTransactions.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-12 text-center text-xs text-[#64748B]">
+                <td colSpan={10} className="py-12 text-center text-xs text-[#64748B]">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <div className="w-10 h-10 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#94A3B8]">
                       <Inbox size={20} />
@@ -150,6 +152,11 @@ const RecentTransactionsTable = () => {
                     {tx.product}
                   </td>
 
+                  {/* Metodo de Pago */}
+                  <td className="py-3.5 px-3 text-[#334155] font-medium whitespace-nowrap">
+                    {tx.paymentMethod}
+                  </td>
+
                   {/* Estado */}
                   <td className="py-3.5 px-3">
                     {getStatusBadge(tx.status)}
@@ -168,6 +175,11 @@ const RecentTransactionsTable = () => {
                   {/* Total */}
                   <td className="py-3.5 px-3 text-right font-extrabold text-[#0F172A]">
                     {tx.total}
+                  </td>
+
+                  {/* Fecha */}
+                  <td className="py-3.5 px-3 text-[#64748B] whitespace-nowrap">
+                    {tx.date}
                   </td>
 
                   {/* Acciones */}
