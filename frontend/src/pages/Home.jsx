@@ -155,7 +155,7 @@ const Home = () => {
               className="flex items-center justify-center gap-2 bg-[#0C3B45] hover:bg-[#124b57] text-[#88C9C4] px-5 sm:px-7 py-3 sm:py-4 rounded-xl sm:rounded-full font-bebas text-lg sm:text-xl tracking-wider shadow-lg hover:shadow-xl transition-all active:scale-[0.98] group cursor-pointer"
             >
               <Package className="w-4 h-4 text-[#88C9C4] group-hover:scale-110 transition-transform" />
-              <span>EXPLORAR KITS</span>
+              <span>¿QUÉ INCLUYE EL KIT?</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>

@@ -78,7 +78,7 @@ const CatalogSpecsSection = () => {
               to="/productos"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-5 text-brand-1 font-bebas text-base sm:text-lg tracking-wider hover:bg-[#0C3B45] hover:scale-105 transition-all shadow-md active:scale-95 cursor-pointer"
             >
-              <span>EXPLORAR KITS ($9.500)</span>
+              <span>¿QUÉ INCLUYE EL KIT? ($9.500)</span>
               <ArrowRight size={18} />
             </Link>
           </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star } from 'lucide-react';
+import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star, Volume2, VolumeX } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
 
 const Products = () => {
@@ -10,6 +10,7 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeStepCard, setActiveStepCard] = useState(0);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     // Simulate fetching
@@ -70,16 +71,28 @@ const Products = () => {
               initial={{ opacity: 0, filter: 'blur(10px)', scale: 0.95 }}
               animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="relative w-full h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px] rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#0C1517] group"
+              className="relative w-full h-80 sm:h-100 md:h-115 lg:h-130 rounded-3xl sm:rounded-4xl overflow-hidden shadow-2xl bg-[#0C1517] group"
             >
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] sm:w-[120%] lg:w-[110%] aspect-[9/16] pointer-events-none transition-all duration-1000">
                 <iframe
-                  src="https://www.youtube.com/embed/28gDBoRZEq4?autoplay=1&loop=1&playlist=28gDBoRZEq4&controls=0&mute=1&playsinline=1"
+                  src={`https://www.youtube.com/embed/28gDBoRZEq4?autoplay=1&loop=1&playlist=28gDBoRZEq4&controls=0&mute=${isMuted ? '1' : '0'}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1`}
                   title="GM KIT STUDIO Short"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   className="w-full h-full border-0"
                 />
               </div>
+
+              {/* Audio Toggle Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(!isMuted);
+                }}
+                className="absolute bottom-4 right-4 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 cursor-pointer shadow-lg hover:scale-105"
+                title={isMuted ? "Activar sonido" : "Silenciar"}
+              >
+                {isMuted ? <VolumeX className="w-4.5 h-4.5" /> : <Volume2 className="w-4.5 h-4.5" />}
+              </button>
               {/* Subtle overlay gradient to blend bottom edge into background */}
               <div className="absolute inset-0 bg-linear-to-t from-[#0C1517] via-transparent to-transparent opacity-90 pointer-events-none"></div>
             </motion.div>
@@ -338,14 +351,14 @@ const Products = () => {
                   transition={{ delay: idx * 0.1 }}
                   onClick={() => setActiveStepCard(prev => prev === idx ? null : idx)}
                   className={`rounded-2xl sm:rounded-[30px] p-6 sm:p-8 md:p-10 flex flex-col items-start relative group transition-all duration-300 shadow-xl cursor-pointer select-none active:scale-[0.98] ${isCardActive
-                      ? 'bg-brand-4 -translate-y-1 shadow-2xl ring-2 ring-[#88C9C4]/50'
-                      : 'bg-white hover:-translate-y-1 hover:bg-brand-4 active:bg-brand-4'
+                    ? 'bg-brand-4 -translate-y-1 shadow-2xl ring-2 ring-[#88C9C4]/50'
+                    : 'bg-white hover:-translate-y-1 hover:bg-brand-4 active:bg-brand-4'
                     }`}
                 >
                   <div
                     className={`absolute top-6 right-6 sm:top-8 sm:right-8 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors ${isCardActive
-                        ? 'bg-white text-brand-5 shadow-sm'
-                        : 'bg-[#F3F3F3] text-brand-3 group-hover:bg-white group-hover:text-brand-5'
+                      ? 'bg-white text-brand-5 shadow-sm'
+                      : 'bg-[#F3F3F3] text-brand-3 group-hover:bg-white group-hover:text-brand-5'
                       }`}
                   >
                     {step.icon}

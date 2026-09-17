@@ -73,12 +73,12 @@ const paymentOptions = [
     title: 'TRANSFERENCIA',
     desc: 'Alias / CBU inmediato con comprobante digital.',
   },
-  {
-    id: 'tarjeta',
-    icon: CreditCard,
-    title: 'TARJETA',
-    desc: 'Débito o crédito a través de link de pago seguro.',
-  },
+  // {
+  //   id: 'tarjeta',
+  //   icon: CreditCard,
+  //   title: 'TARJETA',
+  //   desc: 'Débito o crédito a través de link de pago seguro.',
+  // },
 ];
 
 const getPromo = (qty) => {
@@ -208,7 +208,7 @@ const CargarProductos = () => {
   const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
 
   return (
-    <div className="min-h-screen bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]">
+    <div className="min-h-screen bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between overflow-x-hidden selection:bg-[#88C9C4] selection:text-[#0C3B45]">
 
       {/* ── TOP NAV HEADER ── */}
       <header className="w-full px-3.5 sm:px-6 md:px-10 lg:px-14 pt-3.5 sm:pt-5 pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
@@ -351,7 +351,7 @@ const CargarProductos = () => {
       </header>
 
       {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className="flex-1 flex flex-col justify-start md:justify-center max-w-5xl mx-auto w-full px-3.5 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 z-10 relative pb-14 md:pb-12">
+      <main className="flex-1 flex flex-col justify-start md:justify-center max-w-7xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative pb-24 md:pb-28 lg:pb-32">
         <AnimatePresence mode="wait">
 
           {/* ════════════ PASO 1: Contenido del Kit ════════════ */}
@@ -374,57 +374,59 @@ const CargarProductos = () => {
                 Cada kit GM contiene los insumos de bioseguridad esenciales, envasados bajo normas de esterilidad y listos para su uso clínico.
               </p>
 
-              {/* 4-Column Grid for Desktop */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full text-left mt-4">
+              {/* Grid for Desktop / Compact Vertical List for Mobile */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full max-w-lg lg:max-w-none mx-auto text-left mt-4 pb-2 sm:pb-6">
                 {kitItems.map((item, i) => {
                   const isQty2 = item.qty === 2 || item.tag?.includes('2');
                   return (
-                    <div
+                    <motion.div
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       key={i}
-                      className={`rounded-2xl p-3 sm:p-4 flex flex-col justify-between gap-3 shadow-sm border transition-all overflow-hidden group min-h-35 ${item.isBadge
-                        ? 'bg-[#88C9C4]/15 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
+                      className={`rounded-xl sm:rounded-2xl p-2.5 sm:p-5 flex flex-row sm:flex-col items-center sm:items-stretch justify-between gap-2.5 sm:gap-4 shadow-sm border transition-colors overflow-hidden group relative ${item.isBadge
+                        ? 'bg-linear-to-br from-[#88C9C4]/20 to-[#88C9C4]/5 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
                         : isQty2
-                          ? 'bg-white border-orange-200/90 hover:border-orange-400 hover:shadow-md'
-                          : 'bg-white border-[#E1D9CC]/60 hover:border-[#88C9C4]/70'
+                          ? 'bg-white border-[#E1D9CC]/80 hover:border-[#88C9C4] hover:shadow-lg hover:shadow-[#88C9C4]/10'
+                          : 'bg-[#F9F8F6] border-[#E1D9CC]/60 hover:border-[#88C9C4]/70 hover:shadow-md'
                         }`}
                     >
-                      {/* Top: Icon & Text */}
-                      <div className="flex items-start gap-3 w-full">
-                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${item.isBadge
+                      {/* Left/Top: Icon & Text */}
+                      <div className="flex items-center sm:items-start gap-2.5 sm:gap-3.5 flex-1 min-w-0">
+                        <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${item.isBadge
                           ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
                           : isQty2
-                            ? 'bg-orange-50 text-orange-600 group-hover:bg-orange-100'
-                            : 'bg-[#F4F2EC] text-[#364B5D] group-hover:bg-[#88C9C4]/20'
+                            ? 'bg-[#F4F2EC] text-[#0C3B45] group-hover:bg-[#0C3B45] group-hover:text-white'
+                            : 'bg-white text-[#546A7E] group-hover:bg-[#88C9C4]/20 group-hover:text-[#0C3B45]'
                           }`}>
                           {item.isBadge ? (
-                            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-[#0C3B45]" />
+                            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
                           ) : (
                             <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bebas text-lg sm:text-xl text-[#364B5D] leading-tight mb-0.5">
+                          <p className="font-bebas text-[15px] sm:text-xl text-[#0C3B45] leading-none sm:leading-tight sm:mb-1 group-hover:text-[#124b57] transition-colors truncate sm:whitespace-normal">
                             {item.title}
                           </p>
-                          <p className="text-[10px] sm:text-xs text-[#8CA0B2] leading-snug line-clamp-3">
+                          <p className="hidden sm:block text-xs text-[#546A7E] leading-relaxed line-clamp-3">
                             {item.desc}
                           </p>
                         </div>
                       </div>
 
-                      {/* Bottom: Badge */}
-                      <div className="w-full flex justify-end mt-1">
+                      {/* Right/Bottom: Badge */}
+                      <div className="shrink-0 flex sm:w-full sm:justify-end">
                         {isQty2 ? (
-                          <span className="inline-flex items-center justify-center text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/25 ring-1 ring-orange-400 uppercase tracking-wide">
-                            CANTIDAD 2
+                          <span className="inline-flex items-center justify-center text-[9px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg bg-[#0C3B45] text-[#88C9C4] shadow-sm tracking-widest uppercase">
+                            CANT. 2
                           </span>
                         ) : (
-                          <span className="inline-flex items-center justify-center text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-lg text-[#546A7E] bg-[#F4F2EC] border border-[#E1D9CC]/80">
-                            Cant. 1
+                          <span className="inline-flex items-center justify-center text-[9px] sm:text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg text-[#546A7E] bg-white border border-[#E1D9CC] uppercase tracking-wider">
+                            CANT. 1
                           </span>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -452,40 +454,40 @@ const CargarProductos = () => {
               </p>
 
               {/* Compact & Refined Card for mobile & desktop */}
-              <div className="w-full max-w-xl md:max-w-2xl text-left bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
+              <div className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-8 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
 
                 {/* Card Top: Title & Price side-by-side */}
-                <div className="flex items-center justify-between gap-3 pb-3 mb-3 border-b border-[#F4F2EC]">
-                  <div>
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <div className="w-5 h-5 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bold shrink-0">
-                        <Check className="w-3 h-3 stroke-3" />
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 lg:gap-6 pb-3 lg:pb-5 mb-3 lg:mb-5 border-b border-[#F4F2EC] text-center sm:text-left">
+                  <div className="flex flex-col items-center sm:items-start">
+                    <div className="flex items-center justify-center sm:justify-start gap-1.5 lg:gap-2.5 mb-1 lg:mb-2">
+                      <div className="w-5 h-5 lg:w-8 lg:h-8 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bold shrink-0">
+                        <Check className="w-3 h-3 lg:w-4 lg:h-4 stroke-3" />
                       </div>
-                      <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] leading-none tracking-wide">
+                      <h3 className="font-bebas text-xl sm:text-2xl lg:text-4xl text-[#364B5D] leading-none tracking-wide">
                         KIT CIRUGÍA ODONTOLÓGICA
                       </h3>
                     </div>
-                    <span className="text-[9px] sm:text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#0C3B45] text-[#88C9C4] uppercase inline-block">
+                    <span className="text-[9px] sm:text-[10px] lg:text-xs font-bold tracking-wider px-2 py-0.5 lg:px-3 lg:py-1 rounded-full bg-[#0C3B45] text-[#88C9C4] uppercase inline-block">
                       100% ESTÉRIL • CERTIFICADO ANMAT
                     </span>
                   </div>
 
-                  <div className="text-right shrink-0 bg-[#88C9C4]/10 px-3 py-1.5 rounded-xl border border-[#88C9C4]/30">
-                    <div className="text-2xl sm:text-3xl font-bebas text-[#0C3B45] leading-none">
+                  <div className="text-center sm:text-right shrink-0 bg-[#88C9C4]/10 px-4 py-2 lg:px-6 lg:py-3.5 rounded-xl border border-[#88C9C4]/30 w-full sm:w-auto mt-1 sm:mt-0">
+                    <div className="text-2xl sm:text-3xl lg:text-5xl font-bebas text-[#0C3B45] leading-none">
                       $9.500
                     </div>
-                    <div className="text-[9px] text-[#546A7E] font-semibold">
+                    <div className="text-[9px] lg:text-xs text-[#546A7E] font-semibold lg:mt-1">
                       por kit (8 insumos)
                     </div>
                   </div>
                 </div>
 
                 {/* Insumos List in compact 2-column grid */}
-                <div className="bg-[#F8F9FA] rounded-xl p-3 mb-3 border border-[#EBE7DF]/80">
-                  <p className="text-[10px] font-bold text-[#364B5D] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Package className="w-3.5 h-3.5 text-[#88C9C4]" /> Insumos incluidos en el kit:
+                <div className="bg-[#F8F9FA] rounded-xl p-3 lg:p-5 mb-3 lg:mb-5 border border-[#EBE7DF]/80">
+                  <p className="text-[10px] lg:text-xs font-bold text-[#364B5D] uppercase tracking-wider mb-2 lg:mb-4 flex items-center gap-1.5">
+                    <Package className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#88C9C4]" /> Insumos incluidos en el kit:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-[#546A7E]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 lg:gap-y-3 text-[#546A7E]">
                     {[
                       '2x Batas quirúrgicas con puños',
                       '1x Compresa impermeable 1x1 mt',
@@ -496,20 +498,20 @@ const CargarProductos = () => {
                       '2x Barbijos con filtro bacteriano',
                       '2x Cubrecalzados elastizados',
                     ].map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-1.5">
-                        <Check className="w-3 h-3 text-[#0C3B45] shrink-0 stroke-2.5" />
-                        <span className="font-medium text-[11px] leading-tight">{item}</span>
+                      <div key={idx} className="flex items-center gap-1.5 lg:gap-2.5">
+                        <Check className="w-3 h-3 lg:w-4 lg:h-4 text-[#0C3B45] shrink-0 stroke-2.5" />
+                        <span className="font-medium text-[11px] lg:text-[13.5px] leading-tight">{item}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Micro-badges footer */}
-                <div className="flex flex-wrap items-center justify-between gap-1.5 text-[10px] text-[#546A7E]">
-                  <span className="px-2 py-0.5 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">SMS 45g Tricapa</span>
-                  <span className="px-2 py-0.5 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Óxido de Etileno</span>
-                  <span className="px-2 py-0.5 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Barrera &gt; 99%</span>
-                  <span className="px-2 py-0.5 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Libre de látex</span>
+                <div className="flex flex-wrap items-center justify-between gap-1.5 lg:gap-3 text-[10px] lg:text-xs text-[#546A7E]">
+                  <span className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">SMS 45g Tricapa</span>
+                  <span className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Óxido de Etileno</span>
+                  <span className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Barrera &gt; 99%</span>
+                  <span className="px-2 py-0.5 lg:px-3 lg:py-1 rounded-md bg-[#F4F2EC] font-medium border border-[#E1D9CC]/50">Libre de látex</span>
                 </div>
               </div>
             </motion.div>
@@ -572,23 +574,24 @@ const CargarProductos = () => {
                   </div>
 
                   {/* Quick Presets */}
-                  <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-3.5 w-full">
+                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3.5 w-full">
                     {[
-                      { q: 5, lbl: '5 kits' },
-                      { q: 10, lbl: '10 kits (Envío Gratis)' },
-                      { q: 20, lbl: '20 kits (Envío Gratis)' }
+                      { q: 5, lblDesktop: '5 kits', lblMobile: '5 kits' },
+                      { q: 10, lblDesktop: '10 kits (Envío Gratis)', lblMobile: '10 kits' },
+                      { q: 20, lblDesktop: '20+ kits (Envío Gratis)', lblMobile: '20+ kits' }
                     ].map(preset => (
                       <button
                         key={preset.q}
                         onClick={() => {
                           setQuantity(preset.q);
                         }}
-                        className={`flex-1 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${quantity === preset.q
-                          ? 'bg-[#364B5D] text-white shadow-xs scale-105'
+                        className={`w-full py-1.5 px-1 rounded-xl text-[11px] sm:text-xs font-semibold transition-all cursor-pointer leading-tight ${quantity === preset.q
+                          ? 'bg-[#364B5D] text-white shadow-xs scale-[1.02]'
                           : 'bg-white/80 text-[#546A7E] hover:bg-white border border-[#E1D9CC]/60'
                           }`}
                       >
-                        {preset.lbl}
+                        <span className="hidden sm:inline">{preset.lblDesktop}</span>
+                        <span className="inline sm:hidden">{preset.lblMobile}</span>
                       </button>
                     ))}
                   </div>
@@ -597,17 +600,18 @@ const CargarProductos = () => {
                   <div className="w-full">
                     <div className="flex items-center justify-between mb-1.5">
                       <p className="text-[10px] font-bold text-[#8CA0B2] uppercase tracking-wider text-left">
-                        Escala de Descuentos (Fase Inicial)
+                        Escala de Descuentos
                       </p>
                       <span className="text-[9px] font-semibold text-[#0C3B45] bg-[#88C9C4]/25 px-2 py-0.5 rounded-full">
                         Incentivo Real
                       </span>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 w-full">
+                    {/* flex-col on mobile, grid-cols-3 on sm and up */}
+                    <div className="flex flex-col sm:grid sm:grid-cols-3 gap-2 w-full">
                       {[
-                        { qty: 5, label: '5 kits', total: '$47.500', bonus: '' },
-                        { qty: 10, label: '10 kits', total: '$95.000', bonus: '+ Envío Gratis' },
-                        { qty: 20, label: '20+ kits', total: '$190.000', bonus: '+ Envío Gratis' }
+                        { qty: 5, label: '5 KITS', total: '$47.500', bonus: '' },
+                        { qty: 10, label: '10 KITS', total: '$95.000', bonus: '+ ENVÍO GRATIS' },
+                        { qty: 20, label: '20+ KITS', total: '$190.000', bonus: '+ ENVÍO GRATIS' }
                       ].map((pkg) => {
                         const isUnlocked = quantity >= pkg.qty;
                         return (
@@ -616,20 +620,22 @@ const CargarProductos = () => {
                             onClick={() => {
                               setQuantity(pkg.qty);
                             }}
-                            className={`cursor-pointer rounded-xl p-2 sm:p-2.5 text-center border transition-all group ${isUnlocked
+                            className={`cursor-pointer rounded-xl p-2.5 sm:p-2.5 text-left sm:text-center border transition-all flex sm:block items-center justify-between group ${isUnlocked
                               ? 'border-[#88C9C4] bg-[#88C9C4]/15 shadow-xs ring-1 ring-[#88C9C4]/30'
                               : 'border-[#E1D9CC]/60 bg-white/50 hover:bg-white/70'
                               }`}
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="font-bebas text-lg xs:text-xl text-[#0C3B45]">{pkg.label}</span>
-                              <span className="font-geist font-bold text-[#1e2f3e] whitespace-nowrap">{pkg.total}</span>
+                            <div className="flex sm:block items-center gap-2">
+                              <span className="font-bebas text-xl sm:text-lg md:text-xl text-[#0C3B45]">{pkg.label}</span>
+                              <div className="hidden sm:block mt-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                                <span className="text-[10px] md:text-xs text-[#546A7E] font-medium">{pkg.qty} x $9.500</span>
+                              </div>
                             </div>
 
-                            {/* Detalles */}
-                            <div className="mt-1 flex items-center justify-between opacity-80 group-hover:opacity-100 transition-opacity">
-                              <span className="text-xs text-[#546A7E] font-medium">{pkg.qty} x $9.500</span>
-                              {pkg.bonus && <span className="text-[10px] font-bold text-[#88C9C4] uppercase tracking-wider">{pkg.bonus}</span>}
+                            <div className="text-right sm:text-center flex flex-col items-end sm:items-center">
+                              <span className="font-geist font-bold text-base sm:text-sm md:text-base text-[#1e2f3e] leading-none">{pkg.total}</span>
+                              {pkg.bonus && <span className="text-[9px] md:text-[10px] font-bold text-[#88C9C4] uppercase tracking-wider mt-0.5">{pkg.bonus}</span>}
+                              <span className="sm:hidden text-[9px] text-[#546A7E] font-medium mt-0.5">{pkg.qty} x $9.500</span>
                             </div>
                           </div>
                         );
@@ -727,7 +733,7 @@ const CargarProductos = () => {
               )}
 
               {/* Responsive Cards for mobile and desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-4xl text-left">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-lg md:max-w-4xl mx-auto text-left">
                 {shippingOptions.map(opt => {
                   const isSelected = selectedShipping === opt.id;
                   const isFree = promo.freeShipping && (opt.id === 'domicilio' || opt.id === 'sucursal');
@@ -736,37 +742,37 @@ const CargarProductos = () => {
                     <div
                       key={opt.id}
                       onClick={() => setSelectedShipping(opt.id)}
-                      className={`relative cursor-pointer rounded-2xl p-4 sm:p-5 border-2 transition-all flex items-center md:block gap-3.5 select-none ${isSelected
-                        ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
-                        : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
+                      className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all flex flex-col items-center text-center gap-3 select-none ${isSelected
+                        ? 'border-[#88C9C4] bg-white shadow-lg ring-2 ring-[#88C9C4]/20 scale-[1.02]'
+                        : 'border-[#E1D9CC]/60 bg-white/80 hover:bg-white shadow-sm hover:border-[#88C9C4]/60 hover:scale-[1.01]'
                         }`}
                     >
-                      {/* Radio checkmark visible on BOTH mobile and desktop */}
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 md:absolute md:top-4 md:right-4 transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
+                      {/* Radio checkmark */}
+                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
                         }`}>
                         {isSelected && <Check className="w-3 h-3 stroke-3" />}
                       </div>
 
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 md:mb-3.5 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
                         }`}>
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
                       </div>
 
-                      <div className="flex-1 min-w-0 pr-0 md:pr-4">
-                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                          <h3 className="font-bebas text-lg sm:text-xl text-[#364B5D] tracking-wide leading-tight">
+                      <div className="flex-1 w-full flex flex-col items-center justify-center">
+                        <div className="flex flex-col items-center gap-1.5 mb-2">
+                          <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] tracking-wide leading-none mt-1">
                             {opt.title}
                           </h3>
                           {opt.badge && (
-                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0 ${isFree
-                              ? 'bg-emerald-600 text-white shadow-xs'
+                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${isFree
+                              ? 'bg-emerald-600 text-white shadow-sm'
                               : 'text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40'
                               }`}>
                               {isFree ? '¡BONIFICADO GRATIS!' : opt.badge}
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] sm:text-xs text-[#8CA0B2] leading-snug">
+                        <p className="text-[12px] sm:text-[13px] text-[#8CA0B2] leading-snug px-1">
                           {isFree ? 'Despacho bonificado sin cargo para tu consultorio.' : opt.desc}
                         </p>
                       </div>
@@ -798,7 +804,7 @@ const CargarProductos = () => {
               </p>
 
               {/* Mobile and Desktop responsive cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-4xl text-left">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 w-full max-w-lg md:max-w-4xl text-left mx-auto">
                 {paymentOptions.map(opt => {
                   const isSelected = selectedPayment === opt.id || (opt.id === 'tarjeta' && selectedPayment?.startsWith('tarjeta'));
                   const Icon = opt.icon;
@@ -806,46 +812,48 @@ const CargarProductos = () => {
                     <div
                       key={opt.id}
                       onClick={() => setSelectedPayment(opt.id)}
-                      className={`relative cursor-pointer rounded-2xl p-4 sm:p-5 border-2 transition-all flex items-center md:block gap-3.5 select-none ${isSelected
-                        ? 'border-[#88C9C4] bg-white shadow-md ring-2 ring-[#88C9C4]/20 scale-[1.01]'
-                        : 'border-white/60 bg-white/80 hover:bg-white shadow-xs hover:border-[#88C9C4]/40'
+                      className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all flex flex-col items-center text-center gap-3 select-none ${isSelected
+                        ? 'border-[#88C9C4] bg-white shadow-lg ring-2 ring-[#88C9C4]/20 scale-[1.02]'
+                        : 'border-[#E1D9CC]/60 bg-white/80 hover:bg-white shadow-sm hover:border-[#88C9C4]/60 hover:scale-[1.01]'
                         }`}
                     >
-                      {/* Radio checkmark visible on BOTH mobile and desktop */}
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 md:absolute md:top-4 md:right-4 transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
+                      {/* Radio checkmark */}
+                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
                         }`}>
                         {isSelected && <Check className="w-3 h-3 stroke-3" />}
                       </div>
 
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 md:mb-3.5 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
                         }`}>
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
                       </div>
 
-                      <div className="flex-1 min-w-0 pr-0 md:pr-4">
-                        <div className="flex items-center justify-between gap-1 mb-1">
-                          <h3 className="font-bebas text-lg sm:text-xl text-[#364B5D] tracking-wide leading-tight">
+                      <div className="flex-1 w-full flex flex-col items-center justify-center">
+                        <div className="flex flex-col items-center gap-1 mb-2">
+                          <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] tracking-wide leading-none mt-1">
                             {opt.title}
                           </h3>
                         </div>
-                        <p className="text-[11px] sm:text-xs text-[#8CA0B2] leading-snug mb-1.5">
+                        <p className="text-[12px] sm:text-[13px] text-[#8CA0B2] leading-snug mb-2.5 px-1">
                           {opt.desc}
                         </p>
-                        {opt.discountBadge && (
-                          <span className="inline-block text-[9px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
-                            {opt.discountBadge}
-                          </span>
-                        )}
-                        {opt.surchargeBadge && (
-                          <span className="inline-block text-[9px] font-medium text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-                            {opt.surchargeBadge}
-                          </span>
-                        )}
-                        {opt.badge && (
-                          <span className="inline-block text-[9px] font-medium text-[#546A7E] bg-[#F4F2EC] px-2 py-0.5 rounded-full">
-                            {opt.badge}
-                          </span>
-                        )}
+                        <div className="flex flex-wrap items-center justify-center gap-1.5">
+                          {opt.discountBadge && (
+                            <span className="inline-block text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                              {opt.discountBadge}
+                            </span>
+                          )}
+                          {opt.surchargeBadge && (
+                            <span className="inline-block text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">
+                              {opt.surchargeBadge}
+                            </span>
+                          )}
+                          {opt.badge && (
+                            <span className="inline-block text-[10px] font-bold text-[#0C3B45] bg-[#88C9C4]/25 px-2.5 py-0.5 rounded-full border border-[#88C9C4]/40">
+                              {opt.badge}
+                            </span>
+                          )}
+                        </div>
                         {opt.id === 'tarjeta' && (
                           <div className="flex flex-col gap-2 mt-3 w-full">
                             <button 
