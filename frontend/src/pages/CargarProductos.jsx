@@ -88,11 +88,11 @@ const getPromo = (qty) => {
   if (qty >= 10) {
     return {
       label: qty >= 20 ? '¡Pack Mayorista!' : '¡Pack Clínico Recomendado!',
-      sublabel: 'Envío 100% Bonificado Gratis',
+      sublabel: 'Kit Quirúrgico Descartable Completo.',
       discount: 0,
       unitPrice: 9500,
-      freeShipping: true,
-      tag: 'Envío Gratis'
+      freeShipping: false,
+      tag: 'Base'
     };
   }
   return {
@@ -686,8 +686,8 @@ const CargarProductos = () => {
                   <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3.5 w-full">
                     {[
                       { q: 5, lblDesktop: '5 kits', lblMobile: '5 kits' },
-                      { q: 10, lblDesktop: '10 kits (Envío Gratis)', lblMobile: '10 kits' },
-                      { q: 20, lblDesktop: '20+ kits (Envío Gratis)', lblMobile: '20+ kits' }
+                      { q: 10, lblDesktop: '10 kits', lblMobile: '10 kits' },
+                      { q: 20, lblDesktop: '20+ kits', lblMobile: '20+ kits' }
                     ].map(preset => (
                       <button
                         key={preset.q}
@@ -719,8 +719,8 @@ const CargarProductos = () => {
                     <div className="flex flex-col sm:grid sm:grid-cols-3 gap-2 w-full">
                       {[
                         { qty: 5, label: '5 KITS', total: '$47.500', bonus: '' },
-                        { qty: 10, label: '10 KITS', total: '$95.000', bonus: '+ ENVÍO GRATIS' },
-                        { qty: 20, label: '20+ KITS', total: '$190.000', bonus: '+ ENVÍO GRATIS' }
+                        { qty: 10, label: '10 KITS', total: '$95.000', bonus: '' },
+                        { qty: 20, label: '20+ KITS', total: '$190.000', bonus: '' }
                       ].map((pkg) => {
                         const isUnlocked = quantity >= pkg.qty;
                         return (
