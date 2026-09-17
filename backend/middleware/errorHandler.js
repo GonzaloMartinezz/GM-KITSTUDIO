@@ -7,6 +7,11 @@ const errorHandler = (err, req, res, next) => {
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message || 'Error interno del servidor';
 
+  // Loguear el error real en los logs del servidor (Render → pestaña Logs).
+  // Antes esto se perdía: el cliente solo veía "500 Internal Server Error"
+  // sin ningún rastro de la causa real en ningún lado.
+  console.error(`❌ [${req.method} ${req.originalUrl}]`, err);
+
   // Mongoose: ID inválido (CastError)
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     statusCode = 400;

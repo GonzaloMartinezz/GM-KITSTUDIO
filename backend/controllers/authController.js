@@ -126,6 +126,15 @@ const googleAuth = async (req, res, next) => {
       throw new Error('Token de Google no proporcionado.');
     }
 
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      // Sin esto, verifyIdToken no tiene audience contra qué validar y
+      // tira un error genérico. Lo hacemos explícito para no perder tiempo
+      // buscando la causa la próxima vez.
+      console.error('❌ GOOGLE_CLIENT_ID no está seteado en las variables de entorno del backend.');
+      res.status(500);
+      throw new Error('Login con Google no está configurado en el servidor (falta GOOGLE_CLIENT_ID).');
+    }
+
     // Verificar el token de Google
     const { OAuth2Client } = require('google-auth-library');
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
