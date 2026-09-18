@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { DollarSign, ShoppingCart, Users, UserPlus, TrendingUp, Edit3 } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
-import AdminCardEditModal from './modals/AdminCardEditModal';
+
 
 const StatCards = () => {
   const { stats, timeframe } = useAdminData();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStat, setSelectedStat] = useState(null);
-
   const getIcon = (id) => {
     switch (id) {
       case 'revenue':
@@ -22,11 +19,6 @@ const StatCards = () => {
     }
   };
 
-  const handleCardClick = (stat) => {
-    setSelectedStat(stat);
-    setIsModalOpen(true);
-  };
-
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 mb-6">
@@ -35,15 +27,8 @@ const StatCards = () => {
           return (
             <div
               key={stat.id}
-              onClick={() => handleCardClick(stat)}
-              className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between group cursor-pointer relative"
-              title="Toca para modificar esta métrica"
+              className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between group relative"
             >
-              {/* Quick edit hint badge */}
-              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-[#1E5A9C] text-white p-1 rounded-md shadow-xs">
-                <Edit3 size={11} />
-              </div>
-
               {/* Header row: Label + Sparkline */}
               <div className="flex items-start justify-between gap-3 mb-3 pr-4">
                 <span className="text-[11px] font-bold text-[#64748B] tracking-wider uppercase leading-tight font-geist">
@@ -91,13 +76,6 @@ const StatCards = () => {
         })}
       </div>
 
-      {/* Edit Modal */}
-      <AdminCardEditModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        modalType="stat"
-        initialData={selectedStat}
-      />
     </>
   );
 };

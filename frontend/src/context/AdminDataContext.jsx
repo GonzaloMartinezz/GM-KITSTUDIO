@@ -9,6 +9,7 @@ import {
   paymentMethodsAPI,
   reservationsAPI,
   manualOrdersAPI,
+  leadsAPI,
 } from '../lib/api';
 
 const AdminDataContext = createContext();
@@ -201,6 +202,8 @@ export const AdminDataProvider = ({ children }) => {
   const [supplierOrders, setSupplierOrders] = useState([]);
   const [kitProduct, setKitProduct] = useState(null);
   const [reservations, setReservations] = useState([]);
+  const [leads, setLeads] = useState([]);
+  const [buyers, setBuyers] = useState([]);
 
   /* ── Fetchers ── */
 
@@ -261,6 +264,20 @@ export const AdminDataProvider = ({ children }) => {
     setReservations(data || []);
   }, []);
 
+  const fetchLeads = useCallback(async () => {
+    const { data } = await leadsAPI.list();
+    setLeads(data || []);
+  }, []);
+
+  const fetchBuyers = useCallback(async () => {
+    try {
+      const { data } = await adminAPI.buyers();
+      setBuyers(data || []);
+    } catch (err) {
+      console.error("Error fetching buyers:", err);
+    }
+  }, []);
+
   const fetchAll = useCallback(async (tf) => {
     setLoading(true);
     setError('');
@@ -274,6 +291,8 @@ export const AdminDataProvider = ({ children }) => {
         fetchDispatches(),
         fetchKitProduct(),
         fetchReservations(),
+        fetchLeads(),
+        fetchBuyers(),
       ]);
     } catch (err) {
       setError(err.response?.data?.message || 'No se pudieron cargar los datos del panel.');
@@ -334,6 +353,7 @@ export const AdminDataProvider = ({ children }) => {
     await manualOrdersAPI.create({
       customerName: newTx.customer || 'Nuevo Cliente',
       customerClinic: newTx.clinic || '',
+      customerPhone: newTx.phone || '',
       quantity: qty,
       unitPrice,
       paymentMethod: PAYMENT_LABEL_TO_KEY[newTx.paymentMethod] || 'efectivo',
@@ -504,6 +524,20 @@ export const AdminDataProvider = ({ children }) => {
     await Promise.all([fetchSupplierOrders(), fetchKitProduct()]);
   };
 
+  /* ── Leads CRUD ── */
+  const addLead = async (newLead) => {
+    await leadsAPI.create(newLead);
+    await fetchLeads();
+  };
+  const updateLead = async (id, updatedFields) => {
+    await leadsAPI.update(id, updatedFields);
+    await fetchLeads();
+  };
+  const deleteLead = async (id) => {
+    await leadsAPI.remove(id);
+    await fetchLeads();
+  };
+
   const value = {
     loading,
     error,
@@ -543,6 +577,12 @@ export const AdminDataProvider = ({ children }) => {
     cancelReservation,
     adjustStock,
     receiveTransitBatch,
+    leads,
+    addLead,
+    updateLead,
+    deleteLead,
+    buyers,
+    refreshBuyers: fetchBuyers,
   };
 
   return <AdminDataContext.Provider value={value}>{children}</AdminDataContext.Provider>;

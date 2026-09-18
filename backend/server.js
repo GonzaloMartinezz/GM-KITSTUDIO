@@ -23,6 +23,7 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const supplierOrderRoutes = require('./routes/supplierOrderRoutes');
 const dispatchRoutes = require('./routes/dispatchRoutes');
 const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
+const leadRoutes = require('./routes/leadRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -89,6 +90,7 @@ app.use('/api/reservations', reservationRoutes);
 app.use('/api/supplier-orders', supplierOrderRoutes);
 app.use('/api/dispatches', dispatchRoutes);
 app.use('/api/payment-methods', paymentMethodRoutes);
+app.use('/api/leads', leadRoutes);
 
 /* ─── ERROR HANDLER ─────────────────────────────── */
 

@@ -106,10 +106,11 @@ const getMyOrders = async (req, res, next) => {
  */
 const getAllOrders = async (req, res, next) => {
   try {
-    const { status, page = 1, limit = 20 } = req.query;
+    const { status, customerName, page = 1, limit = 20 } = req.query;
 
     const filter = {};
     if (status) filter.status = status;
+    if (customerName) filter.customerName = new RegExp(customerName, 'i');
 
     const orders = await Order.find(filter)
       .populate('user', 'name email phone clinicName')

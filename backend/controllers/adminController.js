@@ -321,4 +321,80 @@ const getFinancialReport = async (req, res, next) => {
   }
 };
 
-module.exports = { getDashboardStats, getUsers, getUserById, getSalesTrend, getTransactions, getFinancialReport };
+/**
+ * @desc    Obtener la cartera de clientes (compradores reales basados en órdenes)
+ * @route   GET /api/admin/buyers
+ * @access  Admin
+ */
+const getBuyers = async (req, res, next) => {
+  try {
+    const buyers = await Order.aggregate([
+      // Ignorar órdenes sin customerName o canceladas
+      { $match: { customerName: { $ne: '' }, status: { $ne: 'cancelado' } } },
+      {
+        $group: {
+          _id: {
+            name: '$customerName',
+            phone: '$customerPhone'
+          },
+          totalSpent: { $sum: '$totalAmount' },
+          totalOrders: { $sum: 1 },
+          lastPurchaseDate: { $max: '$createdAt' },
+          firstPurchaseDate: { $min: '$createdAt' },
+          paymentMethods: { $addToSet: '$paymentMethod' },
+          shippingMethods: { $addToSet: '$shippingMethod' },
+          balance: {
+            $sum: {
+              $cond: [
+                { $in: ['$status', ['pendiente', 'confirmado', 'enviado', 'entregado']] },
+                '$totalAmount',
+                0
+              ]
+            }
+          },
+          totalKits: {
+            $sum: {
+              $reduce: {
+                input: '$items',
+                initialValue: 0,
+                in: { $add: ['$$value', '$$this.quantity'] },
+              },
+            },
+          },
+          clinic: { $first: '$customerClinic' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: '$_id.name',
+          phone: '$_id.phone',
+          clinic: '$clinic',
+          totalSpent: 1,
+          totalOrders: 1,
+          lastPurchaseDate: 1,
+          firstPurchaseDate: 1,
+          paymentMethods: 1,
+          shippingMethods: 1,
+          balance: 1,
+          totalKits: 1
+        }
+      },
+      { $sort: { lastPurchaseDate: -1 } }
+    ]);
+
+    res.json(buyers);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getDashboardStats,
+  getUsers,
+  getUserById,
+  getSalesTrend,
+  getTransactions,
+  getFinancialReport,
+  getBuyers
+};

@@ -94,6 +94,7 @@ export const adminAPI = {
   transactions: (params) => api.get('/admin/transactions', { params }),
   financialReport: () => api.get('/admin/financial-report'),
   users: (params) => api.get('/admin/users', { params }),
+  buyers: () => api.get('/admin/buyers'),
 };
 
 export const manualOrdersAPI = {
@@ -126,6 +127,13 @@ export const paymentMethodsAPI = {
   create: (data) => api.post('/payment-methods', data),
   update: (id, data) => api.put(`/payment-methods/${id}`, data),
   remove: (id) => api.delete(`/payment-methods/${id}`),
+};
+
+export const leadsAPI = {
+  list: () => api.get('/leads'),
+  create: (data) => api.post('/leads', data),
+  update: (id, data) => api.put(`/leads/${id}`, data),
+  remove: (id) => api.delete(`/leads/${id}`),
 };
 
 export default api;

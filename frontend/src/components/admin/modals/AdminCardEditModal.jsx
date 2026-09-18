@@ -528,33 +528,6 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-bold text-[#334155] mb-1">Porcentaje del Total (%)</label>
-                    <input
-                      type="number"
-                      required
-                      min="1"
-                      max="100"
-                      placeholder="62"
-                      value={paymentForm.percentage}
-                      onChange={(e) => setPaymentForm({ ...paymentForm, percentage: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#0F172A] font-bold focus:outline-none focus:border-[#1E5A9C] focus:bg-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-bold text-[#334155] mb-1">Monto Facturado ($ ARS)</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="$1.763.900"
-                      value={paymentForm.amount}
-                      onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
-                      className="w-full px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#0F172A] font-bold focus:outline-none focus:border-[#1E5A9C] focus:bg-white"
-                    />
-                  </div>
-                </div>
 
                 <div>
                   <label className="block font-bold text-[#334155] mb-1">Descripción / Detalle</label>

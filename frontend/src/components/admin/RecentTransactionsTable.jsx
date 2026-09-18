@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus, MoreHorizontal, Inbox } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAdminData } from '../../context/AdminDataContext';
 import NewTransactionModal from './modals/NewTransactionModal';
 
@@ -7,6 +8,16 @@ const RecentTransactionsTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { transactions = [], addTransaction } = useAdminData();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.newOrderCustomer) {
+      setIsModalOpen(true);
+      // Remove it from state so it doesn't open on reload
+      navigate('.', { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
 
   const filteredTransactions = (transactions || []).filter(
     (t) =>
@@ -207,6 +218,14 @@ const RecentTransactionsTable = () => {
         </span>
       </div>
 
+      <NewTransactionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={addTransaction}
+        defaultCustomer={location.state?.newOrderCustomer}
+        defaultClinic={location.state?.newOrderClinic}
+        defaultPhone={location.state?.newOrderPhone}
+      />
     </div>
   );
 };

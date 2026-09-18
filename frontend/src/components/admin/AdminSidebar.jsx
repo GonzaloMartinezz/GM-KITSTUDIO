@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck, ArrowLeft, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminSidebar = () => {
@@ -13,10 +13,11 @@ const AdminSidebar = () => {
 
   const menuItems = [
     { icon: Target, path: '/admin', label: '00_Control Central' },
-    { icon: Wallet, path: '/admin/finanzas', label: '01_Finanzas' },
-    { icon: Package, path: '/admin/inventario', label: '02_Inventario' },
-    { icon: Truck, path: '/admin/proveedores', label: '03_Proveedores' },
-    { icon: ShoppingCart, path: '/admin/ventas', label: '04_Ventas' },
+    { icon: ShoppingCart, path: '/admin/ventas', label: '01_Ventas' },
+    { icon: Users, path: '/admin/clientes', label: '02_Clientes' },
+    { icon: Wallet, path: '/admin/finanzas', label: '03_Finanzas' },
+    { icon: Truck, path: '/admin/proveedores', label: '04_Proveedores' },
+    { icon: Package, path: '/admin/inventario', label: '05_Inventario' },
   ];
 
   const handleLogout = async () => {
