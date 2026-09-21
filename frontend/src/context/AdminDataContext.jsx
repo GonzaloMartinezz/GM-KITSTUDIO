@@ -140,6 +140,15 @@ const buildStatCards = (timeframe, dash) => {
       sparkline: [0, 0, 0, 0, 0, 0, 0],
       trend: 'neutral',
     },
+    {
+      id: 'average_ticket',
+      title: 'TICKET PROMEDIO',
+      value: fmtMoney(dash?.orders ? dash.revenue / dash.orders : 0),
+      change: '—',
+      changeDesc: `por venta ${desc}`,
+      sparkline: [0, 0, 0, 0, 0, 0, 0],
+      trend: 'neutral',
+    },
   ];
 };
 
@@ -150,6 +159,7 @@ const orderToTransactionRow = (order) => {
     id: order._id,
     customer: order.user?.name || order.customerName || 'Cliente',
     clinic: order.user?.clinicName || order.customerClinic || '',
+    phone: order.user?.phone || order.customerPhone || '',
     product: firstItem.product?.name || firstItem.productName || 'Kit Odontológico Completo',
     paymentMethod: PAYMENT_METHOD_LABELS[order.paymentMethod] || order.paymentMethod,
     status: ORDER_STATUS_LABELS[order.status] || order.status,
@@ -188,6 +198,7 @@ const buildPaymentMethods = (configs, paymentDistribution) => {
 
 export const AdminDataProvider = ({ children }) => {
   const [timeframe, setTimeframeState] = useState('Mensual');
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -207,11 +218,17 @@ export const AdminDataProvider = ({ children }) => {
 
   /* ── Fetchers ── */
 
-  const fetchDashboardAndTrend = useCallback(async (tf) => {
-    const apiTf = TIMEFRAME_TO_API[tf] || 'monthly';
+  const fetchDashboardAndTrend = useCallback(async (tf, range = null) => {
+    const apiTf = tf === 'Personalizado' ? 'custom' : (TIMEFRAME_TO_API[tf] || 'monthly');
+    const params = { timeframe: apiTf };
+    if (apiTf === 'custom' && range?.start && range?.end) {
+      params.startDate = range.start;
+      params.endDate = range.end;
+    }
+    
     const [dashRes, trendRes] = await Promise.all([
-      adminAPI.dashboard({ timeframe: apiTf }),
-      adminAPI.salesTrend({ timeframe: apiTf }),
+      adminAPI.dashboard(params),
+      adminAPI.salesTrend(params),
     ]);
     setDashboard(dashRes.data);
     setStats((prev) => ({ ...prev, [tf]: buildStatCards(tf, dashRes.data) }));
@@ -299,17 +316,42 @@ export const AdminDataProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [fetchDashboardAndTrend, fetchPaymentMethods, fetchFinancialReport, fetchSupplier, fetchSupplierOrders, fetchDispatches, fetchKitProduct, fetchReservations]);
-
-  useEffect(() => {
-    fetchAll(timeframe);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    fetchDashboardAndTrend,
+    fetchPaymentMethods,
+    fetchFinancialReport,
+    fetchSupplier,
+    fetchSupplierOrders,
+    fetchDispatches,
+    fetchKitProduct,
+    fetchReservations,
+    fetchLeads,
+    fetchBuyers,
+    dateRange
+  ]);
 
   const setTimeframe = (tf) => {
-    setTimeframeState(tf);
-    fetchDashboardAndTrend(tf).then((dash) => fetchPaymentMethods(dash)).catch(() => {});
+    if (tf !== 'Personalizado') setTimeframeState(tf);
   };
+  
+  const setCustomDateRange = (start, end) => {
+    setTimeframeState('Personalizado');
+    setDateRange({ start, end });
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      if (timeframe === 'Personalizado') {
+        if (dateRange.start && dateRange.end) {
+          fetchDashboardAndTrend(timeframe, dateRange).then(fetchPaymentMethods).finally(() => setLoading(false));
+        }
+      } else {
+        fetchDashboardAndTrend(timeframe).then(fetchPaymentMethods).finally(() => setLoading(false));
+      }
+    }
+    return () => { mounted = false; };
+  }, [timeframe, dateRange, fetchDashboardAndTrend, fetchPaymentMethods]);
 
   /* ── Stats: derivados en vivo del backend, no editables a mano ── */
   const updateStat = () => {
@@ -359,7 +401,7 @@ export const AdminDataProvider = ({ children }) => {
       paymentMethod: PAYMENT_LABEL_TO_KEY[newTx.paymentMethod] || 'efectivo',
       status: ORDER_STATUS_LABEL_TO_KEY[newTx.status] || 'confirmado',
     });
-    await fetchDashboardAndTrend(timeframe);
+    await fetchDashboardAndTrend(timeframe, timeframe === 'Personalizado' ? dateRange : null);
   };
   const updateTransaction = async (id, updatedFields) => {
     const payload = {};
@@ -369,11 +411,11 @@ export const AdminDataProvider = ({ children }) => {
     if (updatedFields.status !== undefined) payload.status = ORDER_STATUS_LABEL_TO_KEY[updatedFields.status] || updatedFields.status;
     if (updatedFields.qty !== undefined) payload.quantity = updatedFields.qty;
     await ordersAPI.update(id, payload);
-    await fetchDashboardAndTrend(timeframe);
+    await fetchDashboardAndTrend(timeframe, timeframe === 'Personalizado' ? dateRange : null);
   };
   const deleteTransaction = async (id) => {
     await ordersAPI.remove(id);
-    await fetchDashboardAndTrend(timeframe);
+    await fetchDashboardAndTrend(timeframe, timeframe === 'Personalizado' ? dateRange : null);
   };
 
   /* ── Dispatches CRUD ── */
@@ -503,7 +545,7 @@ export const AdminDataProvider = ({ children }) => {
   };
   const fulfillReservation = async (id) => {
     await reservationsAPI.fulfill(id);
-    await Promise.all([fetchReservations(), fetchKitProduct(), fetchDashboardAndTrend(timeframe)]);
+    await Promise.all([fetchReservations(), fetchKitProduct(), fetchDashboardAndTrend(timeframe, timeframe === 'Personalizado' ? dateRange : null)]);
   };
   const cancelReservation = async (id) => {
     await reservationsAPI.cancel(id);
@@ -543,6 +585,9 @@ export const AdminDataProvider = ({ children }) => {
     error,
     timeframe,
     setTimeframe,
+    dateRange,
+    setCustomDateRange,
+    dashboard,
     stats: stats[timeframe] || stats.Mensual,
     allStats: stats,
     updateStat,

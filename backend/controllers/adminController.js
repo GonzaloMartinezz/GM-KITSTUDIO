@@ -10,23 +10,31 @@ const Transaction = require('../models/Transaction');
  */
 const getDashboardStats = async (req, res, next) => {
   try {
-    const { timeframe = 'monthly' } = req.query;
+    const { timeframe = 'monthly', startDate, endDate } = req.query;
 
     // Determinar rango de fechas según timeframe
     const now = new Date();
     let dateFrom;
+    let dateTo = now;
 
-    switch (timeframe) {
-      case 'weekly':
-        dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        break;
-      case 'yearly':
-        dateFrom = new Date(now.getFullYear(), 0, 1);
-        break;
-      case 'monthly':
-      default:
-        dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
-        break;
+    if (timeframe === 'custom' && startDate && endDate) {
+      dateFrom = new Date(startDate);
+      dateTo = new Date(endDate);
+      // Incluir el día completo de endDate
+      dateTo.setHours(23, 59, 59, 999);
+    } else {
+      switch (timeframe) {
+        case 'weekly':
+          dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'yearly':
+          dateFrom = new Date(now.getFullYear(), 0, 1);
+          break;
+        case 'monthly':
+        default:
+          dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+          break;
+      }
     }
 
     // Aggregation: ventas totales y kits vendidos
@@ -34,7 +42,7 @@ const getDashboardStats = async (req, res, next) => {
       {
         $match: {
           status: { $nin: ['cancelado'] },
-          createdAt: { $gte: dateFrom },
+          createdAt: { $gte: dateFrom, $lte: dateTo },
         },
       },
       {
@@ -188,32 +196,43 @@ const getUserById = async (req, res, next) => {
  */
 const getSalesTrend = async (req, res, next) => {
   try {
-    const { timeframe = 'monthly' } = req.query;
-
-    let groupBy, dateFrom;
+    const { timeframe = 'monthly', startDate, endDate } = req.query;
     const now = new Date();
+    let dateFrom;
+    let dateTo = now;
+    let groupByFormat;
 
-    switch (timeframe) {
-      case 'weekly':
-        dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        groupBy = { $dayOfWeek: '$createdAt' };
-        break;
-      case 'yearly':
-        dateFrom = new Date(now.getFullYear() - 3, 0, 1);
-        groupBy = { $year: '$createdAt' };
-        break;
-      case 'monthly':
-      default:
-        dateFrom = new Date(now.getFullYear(), 0, 1);
-        groupBy = { $month: '$createdAt' };
-        break;
+    if (timeframe === 'custom' && startDate && endDate) {
+      dateFrom = new Date(startDate);
+      dateTo = new Date(endDate);
+      dateTo.setHours(23, 59, 59, 999);
+      // Si la diferencia es menor a 31 días, agrupar por día, sino por mes
+      const diffTime = Math.abs(dateTo - dateFrom);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      groupByFormat = diffDays <= 31 ? '%Y-%m-%d' : '%Y-%m';
+    } else {
+      switch (timeframe) {
+        case 'weekly':
+          dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          groupByFormat = '%Y-%m-%d';
+          break;
+        case 'yearly':
+          dateFrom = new Date(now.getFullYear(), 0, 1);
+          groupByFormat = '%Y-%m';
+          break;
+        case 'monthly':
+        default:
+          dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+          groupByFormat = '%Y-%m-%d';
+          break;
+      }
     }
 
     const trend = await Order.aggregate([
-      { $match: { status: { $nin: ['cancelado'] }, createdAt: { $gte: dateFrom } } },
+      { $match: { status: { $nin: ['cancelado'] }, createdAt: { $gte: dateFrom, $lte: dateTo } } },
       {
         $group: {
-          _id: groupBy,
+          _id: { $dateToString: { format: groupByFormat, date: '$createdAt' } },
           revenue: { $sum: '$totalAmount' },
           orders: { $sum: 1 },
           kits: {

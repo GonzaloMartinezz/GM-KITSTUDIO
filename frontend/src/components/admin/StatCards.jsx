@@ -14,6 +14,9 @@ const StatCards = () => {
       case 'customers':
         return Users;
       case 'new_customers':
+        return UserPlus;
+      case 'average_ticket':
+        return TrendingUp;
       default:
         return UserPlus;
     }
@@ -21,7 +24,7 @@ const StatCards = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 md:gap-5 mb-6">
         {stats.map((stat) => {
           const Icon = getIcon(stat.id);
           return (

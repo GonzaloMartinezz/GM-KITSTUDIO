@@ -85,15 +85,28 @@ const orderSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Pre-save: generar orderNumber automático
-// OJO: con "async function" NO hay que declarar/llamar "next" — Mongoose no
-// pasa un callback real cuando la funcion es async (usa la promesa
-// devuelta como señal de fin), asi que "next()" tira "next is not a
-// function". Con async/await simplemente no se usa next en absoluto.
+// Pre-save: generar orderNumber automático único
 orderSchema.pre('save', async function () {
   if (!this.orderNumber) {
-    const count = await this.constructor.countDocuments();
-    this.orderNumber = `#GM-${String(count + 1).padStart(5, '0')}`;
+    const lastOrder = await this.constructor.findOne({
+      orderNumber: { $regex: /^#GM-\d+$/ }
+    }).sort({ orderNumber: -1 });
+
+    let nextNumber = 1;
+    if (lastOrder && lastOrder.orderNumber) {
+      const match = lastOrder.orderNumber.match(/^#GM-(\d+)$/);
+      if (match) {
+        nextNumber = parseInt(match[1], 10) + 1;
+      }
+    }
+
+    let candidate = `#GM-${String(nextNumber).padStart(5, '0')}`;
+    while (await this.constructor.exists({ orderNumber: candidate })) {
+      nextNumber++;
+      candidate = `#GM-${String(nextNumber).padStart(5, '0')}`;
+    }
+
+    this.orderNumber = candidate;
   }
 });
 

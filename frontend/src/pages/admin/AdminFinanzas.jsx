@@ -18,7 +18,6 @@ import {
   Edit3
 } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
-import AdminCardEditModal from '../../components/admin/modals/AdminCardEditModal';
 
 const AdminFinanzas = () => {
   const {
@@ -32,9 +31,6 @@ const AdminFinanzas = () => {
 
   const [activeTab, setActiveTab] = useState('Todos'); // 'Todos' | 'Completado' | 'Enviado' | 'En Preparación'
   const [searchQuery, setSearchQuery] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState('stat');
-  const [selectedItem, setSelectedItem] = useState(null);
 
   // Financial summary metrics based on actual transactions
   const totalRevenue = stats[0]?.value || '$0';
@@ -60,11 +56,7 @@ const AdminFinanzas = () => {
     return matchesTab && matchesSearch;
   });
 
-  const handleOpenEdit = (type, item = null) => {
-    setModalType(type);
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  };
+
 
   return (
     <div className="w-full h-full font-geist flex flex-col relative pb-12">
@@ -136,9 +128,7 @@ const AdminFinanzas = () => {
 
         {/* Card 2: Pedidos Pendientes */}
         <div
-          onClick={() => handleOpenEdit('stat', { id: 'pending', title: 'Pedidos Pendientes', value: pendingCount, change: '+3%', changeDesc: 'en preparación' })}
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
-          title="Toca para modificar"
+          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[#64748B]">Pedidos Pendientes</span>
@@ -159,9 +149,7 @@ const AdminFinanzas = () => {
 
         {/* Card 3: Pedidos en Entrega */}
         <div
-          onClick={() => handleOpenEdit('stat', { id: 'delivery', title: 'Pedidos en Despacho', value: inDeliveryCount, change: '+4%', changeDesc: 'en ruta Tucumán' })}
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
-          title="Toca para modificar"
+          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[#64748B]">En Envío / Distribución</span>
@@ -182,9 +170,7 @@ const AdminFinanzas = () => {
 
         {/* Card 4: Pedidos Completados */}
         <div
-          onClick={() => handleOpenEdit('stat', { id: 'completed', title: 'Pedidos Cobrados', value: completedCount, change: '+15%', changeDesc: 'entregados y cobrados' })}
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all cursor-pointer group"
-          title="Toca para modificar"
+          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold text-[#64748B]">Pedidos Cobrados</span>
@@ -215,12 +201,6 @@ const AdminFinanzas = () => {
               <h3 className="text-base font-bold text-[#0F172A]">Efectividad por Medios de Pago</h3>
               <p className="text-xs text-[#64748B]">Porcentaje de cobro sobre el Kit Odontológico Completo</p>
             </div>
-            <button
-              onClick={() => handleOpenEdit('payment', null)}
-              className="text-xs font-semibold text-[#1E5A9C] hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <Edit3 size={13} /> Editar
-            </button>
           </div>
 
           {/* Three Circular meters matching reference image 3 */}
@@ -228,8 +208,7 @@ const AdminFinanzas = () => {
             {paymentMethods.map((pm) => (
               <div
                 key={pm.id}
-                onClick={() => handleOpenEdit('payment', pm)}
-                className="flex flex-col items-center p-3 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+                className="flex flex-col items-center p-3 rounded-xl hover:bg-[#F8FAFC] transition-colors"
               >
                 {/* SVG circular meter */}
                 <div className="relative w-20 h-20 mb-2 flex items-center justify-center">
@@ -287,7 +266,7 @@ const AdminFinanzas = () => {
 
             <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
               <span className="text-xs font-semibold text-[#64748B]">Ticket Promedio</span>
-              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">$0</div>
+              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">{stats.find(s => s.id === 'average_ticket')?.value || '$0'}</div>
               <span className="text-[11px] font-medium text-[#64748B]">Kit Odontológico c/u</span>
             </div>
 
@@ -365,9 +344,7 @@ const AdminFinanzas = () => {
             filteredList.map((item) => (
               <div
                 key={item.id}
-                onClick={() => handleOpenEdit('transaction', item)}
-                className="py-3.5 px-2 flex items-center justify-between gap-4 hover:bg-[#F8FAFC] rounded-xl transition-colors cursor-pointer group"
-                title="Haz clic para modificar o eliminar este registro"
+                className="py-3.5 px-2 flex items-center justify-between gap-4 hover:bg-[#F8FAFC] rounded-xl transition-colors group"
               >
                 {/* Doctor / Clinic info */}
                 <div className="flex items-center gap-3 min-w-0">
@@ -401,16 +378,7 @@ const AdminFinanzas = () => {
                     <span className="text-[10px] font-normal text-[#64748B]">Cobrado</span>
                   </span>
 
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenEdit('transaction', item);
-                    }}
-                    className="p-1.5 text-[#94A3B8] hover:text-[#0F172A] hover:bg-white rounded-lg transition-all"
-                  >
-                    <MoreHorizontal size={16} />
-                  </button>
+
                 </div>
               </div>
             ))
@@ -419,13 +387,7 @@ const AdminFinanzas = () => {
 
       </div>
 
-      {/* Edit Modal */}
-      <AdminCardEditModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        modalType={modalType}
-        initialData={selectedItem}
-      />
+
     </div>
   );
 };

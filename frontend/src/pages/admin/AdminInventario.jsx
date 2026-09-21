@@ -28,13 +28,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminInventario = () => {
   const {
-    inventoryData,
     addReservation,
     fulfillReservation,
     cancelReservation,
     adjustStock,
     receiveTransitBatch,
-    supplierData
+    supplierData,
+    kitProduct,
+    supplierOrders,
+    reservations
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('reservados'); // 'reservados' | 'lotes' | 'componentes'
@@ -56,12 +58,12 @@ const AdminInventario = () => {
   // Form state for Adding Stock
   const [stockAddCount, setStockAddCount] = useState('');
 
-  const stockAvailable = inventoryData?.stockAvailable ?? 86;
-  const stockReserved = inventoryData?.stockReserved ?? 34;
-  const stockSoldMonth = inventoryData?.stockSoldMonth ?? 390;
-  const stockInTransit = inventoryData?.stockInTransit ?? 100;
-  const minThreshold = inventoryData?.minimumAlertThreshold ?? 30;
-  const kitPrice = inventoryData?.kitPrice ?? 9500;
+  const stockAvailable = kitProduct?.stock || 0;
+  const minThreshold = kitProduct?.minStock || 30;
+  const kitPrice = kitProduct?.price || 14500;
+  const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
+  const stockSoldMonth = 0; // TODO: Calculate from transactions
+  const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? o.quantity : 0), 0) || 0;
 
   const totalInWarehouse = stockAvailable + stockReserved;
   const totalInCircuit = stockAvailable + stockReserved + stockInTransit;
@@ -93,10 +95,9 @@ const AdminInventario = () => {
     setIsStockModalOpen(false);
   };
 
-  const filteredReservations = (inventoryData?.reservedList || []).filter((r) =>
-    r.doctor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.clinic.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.surgeryType.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredReservations = (reservations || []).filter((r) =>
+    r.doctor?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    r.clinic?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -186,7 +187,7 @@ const AdminInventario = () => {
               <Clock className="w-4 h-4 text-orange-500" /> Kits Reservados
             </span>
             <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-orange-500 text-white uppercase tracking-wide">
-              {inventoryData?.reservedList?.length || 0} Cirugías
+              {reservations?.length || 0} Cirugías
             </span>
           </div>
           <div>

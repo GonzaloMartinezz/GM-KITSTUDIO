@@ -62,7 +62,7 @@ const updateSupplier = async (req, res, next) => {
     const updated = await Supplier.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
     res.json(updated);
   } catch (error) {

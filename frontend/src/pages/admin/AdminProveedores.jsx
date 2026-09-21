@@ -57,6 +57,8 @@ const AdminProveedores = () => {
     pendingAmount: '',
   });
 
+  if (!supplierData) return <div className="p-8 text-center text-slate-500">Cargando datos del proveedor...</div>;
+
   const handleCopy = (text, fieldName) => {
     navigator.clipboard.writeText(text);
     setCopiedField(fieldName);
@@ -92,8 +94,8 @@ const AdminProveedores = () => {
   };
 
   const calculateGrossMargin = () => {
-    const cost = Number(supplierData.costPerKit) || 5000;
-    const sale = Number(supplierData.regularSalePrice) || 9500;
+    const cost = Number(supplierData?.costPerKit) || 5000;
+    const sale = Number(supplierData?.regularSalePrice) || 9500;
     const margin = sale - cost;
     const marginPct = ((margin / sale) * 100).toFixed(1);
     return { margin, marginPct };

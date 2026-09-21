@@ -2,27 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defaultClinic, defaultPhone }) => {
+const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defaultClinic, defaultPhone, editingOrder }) => {
   const [formData, setFormData] = useState({
-    customer: defaultCustomer || '',
-    clinic: defaultClinic || '',
-    phone: defaultPhone || '',
-    qty: 1,
-    numericTotal: 9500,
-    paymentMethod: 'Transferencia Bancaria',
-    status: 'En Preparación'
+    customer: editingOrder?.customer || defaultCustomer || '',
+    clinic: editingOrder?.clinic || defaultClinic || '',
+    phone: editingOrder?.phone || defaultPhone || '',
+    qty: editingOrder?.qty || 1,
+    numericTotal: editingOrder?.numericTotal || 9500,
+    paymentMethod: editingOrder?.paymentMethod || 'Transferencia Bancaria',
+    status: editingOrder?.status || 'En Preparación'
   });
 
   useEffect(() => {
     if (isOpen) {
       setFormData(prev => ({
         ...prev,
-        customer: defaultCustomer || '',
-        clinic: defaultClinic || '',
-        phone: defaultPhone || ''
+        customer: editingOrder?.customer || defaultCustomer || '',
+        clinic: editingOrder?.clinic || defaultClinic || '',
+        phone: editingOrder?.phone || defaultPhone || '',
+        qty: editingOrder?.qty || 1,
+        numericTotal: editingOrder?.numericTotal || 9500,
+        paymentMethod: editingOrder?.paymentMethod || 'Transferencia Bancaria',
+        status: editingOrder?.status || 'En Preparación'
       }));
     }
-  }, [isOpen, defaultCustomer, defaultClinic, defaultPhone]);
+  }, [isOpen, defaultCustomer, defaultClinic, defaultPhone, editingOrder]);
 
   if (!isOpen) return null;
 
@@ -56,7 +60,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defau
         >
           {/* Header */}
           <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center justify-between bg-[#F8FAFC]">
-            <h3 className="font-bold text-[#0F172A]">Nueva Transacción</h3>
+            <h3 className="font-bold text-[#0F172A]">{editingOrder ? 'Editar Transacción' : 'Nueva Transacción'}</h3>
             <button onClick={onClose} type="button" className="p-1 text-[#64748B] hover:text-[#0F172A] transition-colors rounded-lg hover:bg-white cursor-pointer">
               <X size={20} />
             </button>
@@ -168,7 +172,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defau
                 type="submit"
                 className="px-5 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white text-sm font-semibold rounded-xl shadow-xs transition-colors cursor-pointer"
               >
-                Guardar Transacción
+                {editingOrder ? 'Guardar Cambios' : 'Guardar Transacción'}
               </button>
             </div>
           </form>

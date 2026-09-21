@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MoreHorizontal, Inbox } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Inbox, Edit3, Trash2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAdminData } from '../../context/AdminDataContext';
 import NewTransactionModal from './modals/NewTransactionModal';
@@ -7,12 +7,13 @@ import NewTransactionModal from './modals/NewTransactionModal';
 const RecentTransactionsTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { transactions = [], addTransaction } = useAdminData();
+  const [editingOrder, setEditingOrder] = useState(null);
+  const { transactions = [], addTransaction, updateTransaction, deleteTransaction } = useAdminData();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (location.state?.newOrderCustomer) {
+    if (location.state?.openNewTransactionModal || location.state?.newOrderCustomer !== undefined) {
       setIsModalOpen(true);
       // Remove it from state so it doesn't open on reload
       navigate('.', { replace: true, state: {} });
@@ -25,6 +26,22 @@ const RecentTransactionsTable = () => {
       t.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.product?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDelete = async (id) => {
+    if (window.confirm('¿Seguro que deseas eliminar esta transacción?')) {
+      try {
+        await deleteTransaction(id);
+      } catch (error) {
+        console.error("Error deleting transaction", error);
+        alert("Error al eliminar la transacción");
+      }
+    }
+  };
+
+  const handleEdit = (tx) => {
+    setEditingOrder(tx);
+    setIsModalOpen(true);
+  };
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -88,7 +105,7 @@ const RecentTransactionsTable = () => {
           {/* Add Transaction Button */}
           <button
             type="button"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => { setEditingOrder(null); setIsModalOpen(true); }}
             className="flex items-center gap-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer whitespace-nowrap"
           >
             <Plus size={14} strokeWidth={2.5} />
@@ -195,13 +212,24 @@ const RecentTransactionsTable = () => {
 
                   {/* Acciones */}
                   <td className="py-3.5 pl-3 pr-1 text-center">
-                    <button
-                      type="button"
-                      title="Ver detalle"
-                      className="p-1.5 text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded-lg transition-all cursor-pointer"
-                    >
-                      <MoreHorizontal size={16} />
-                    </button>
+                    <div className="flex justify-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(tx)}
+                        title="Editar transacción"
+                        className="p-1.5 text-[#94A3B8] hover:text-[#1E5A9C] hover:bg-[#1E5A9C]/10 rounded-lg transition-all cursor-pointer"
+                      >
+                        <Edit3 size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(tx.id)}
+                        title="Eliminar transacción"
+                        className="p-1.5 text-[#94A3B8] hover:text-red-500 hover:bg-red-50 rounded-lg transition-all cursor-pointer"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -221,10 +249,17 @@ const RecentTransactionsTable = () => {
       <NewTransactionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSubmit={addTransaction}
+        onSubmit={(data) => {
+          if (editingOrder) {
+            updateTransaction(editingOrder.id, data);
+          } else {
+            addTransaction(data);
+          }
+        }}
         defaultCustomer={location.state?.newOrderCustomer}
         defaultClinic={location.state?.newOrderClinic}
         defaultPhone={location.state?.newOrderPhone}
+        editingOrder={editingOrder}
       />
     </div>
   );

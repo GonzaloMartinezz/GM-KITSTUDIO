@@ -35,7 +35,7 @@ const createDispatch = async (req, res, next) => {
  */
 const updateDispatch = async (req, res, next) => {
   try {
-    const dispatch = await Dispatch.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const dispatch = await Dispatch.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!dispatch) {
       res.status(404);
       throw new Error('Despacho no encontrado.');

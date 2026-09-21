@@ -104,7 +104,7 @@ const cancelReservation = async (req, res, next) => {
     const reservation = await Reservation.findByIdAndUpdate(
       req.params.id,
       { status: 'cancelado' },
-      { new: true }
+      { returnDocument: 'after' }
     );
     if (!reservation) {
       res.status(404);

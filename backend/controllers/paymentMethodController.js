@@ -35,7 +35,7 @@ const createPaymentMethod = async (req, res, next) => {
  */
 const updatePaymentMethod = async (req, res, next) => {
   try {
-    const method = await PaymentMethod.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const method = await PaymentMethod.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!method) {
       res.status(404);
       throw new Error('Método de pago no encontrado.');
@@ -53,7 +53,7 @@ const updatePaymentMethod = async (req, res, next) => {
  */
 const deletePaymentMethod = async (req, res, next) => {
   try {
-    const method = await PaymentMethod.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
+    const method = await PaymentMethod.findByIdAndUpdate(req.params.id, { isActive: false }, { returnDocument: 'after' });
     if (!method) {
       res.status(404);
       throw new Error('Método de pago no encontrado.');

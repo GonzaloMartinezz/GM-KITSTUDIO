@@ -8,7 +8,8 @@ const AdminLeads = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLead, setEditingLead] = useState(null);
   const [formData, setFormData] = useState({
-    name: '', clinic: '', phone: '', email: '', status: 'Contacto Inicial', probability: 'Media', nextFollowUp: '', notes: ''
+    name: '', clinic: '', phone: '', email: '', status: 'Contacto Inicial', probability: 'Media', nextFollowUp: '', notes: '',
+    didBuy: 'No', kitsBought: 0, paymentMethod: '', shippingMethod: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -18,7 +19,10 @@ const AdminLeads = () => {
       setFormData(lead);
     } else {
       setEditingLead(null);
-      setFormData({ name: '', clinic: '', phone: '', email: '', status: 'Contacto Inicial', probability: 'Media', nextFollowUp: '', notes: '' });
+      setFormData({ 
+        name: '', clinic: '', phone: '', email: '', status: 'Contacto Inicial', probability: 'Media', nextFollowUp: '', notes: '',
+        didBuy: 'No', kitsBought: 0, paymentMethod: '', shippingMethod: ''
+      });
     }
     setIsModalOpen(true);
   };
@@ -232,6 +236,37 @@ const AdminLeads = () => {
                   <label className="text-xs font-semibold text-[#64748B]">Próximo Seguimiento (Fecha)</label>
                   <input type="date" value={formData.nextFollowUp} onChange={e => setFormData({ ...formData, nextFollowUp: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" />
                 </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">¿Realizó Compra?</label>
+                  <select value={formData.didBuy} onChange={e => setFormData({ ...formData, didBuy: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C] bg-white">
+                    <option value="No">No</option>
+                    <option value="Sí">Sí</option>
+                  </select>
+                </div>
+                
+                {formData.didBuy === 'Sí' && (
+                  <>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-semibold text-[#64748B]">Kits Comprados</label>
+                      <input type="number" min="1" value={formData.kitsBought} onChange={e => setFormData({ ...formData, kitsBought: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" />
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-semibold text-[#64748B]">Método de Pago</label>
+                      <select value={formData.paymentMethod} onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C] bg-white">
+                        <option value="">Seleccionar...</option>
+                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        <option value="Mercado Pago / Tarjetas">Mercado Pago / Tarjetas</option>
+                        <option value="Efectivo / Contra Entrega">Efectivo / Contra Entrega</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5 sm:col-span-2">
+                      <label className="text-xs font-semibold text-[#64748B]">Información de Envío</label>
+                      <input type="text" value={formData.shippingMethod} onChange={e => setFormData({ ...formData, shippingMethod: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" placeholder="Ej: Envío a domicilio por OCA, Retira en sucursal..." />
+                    </div>
+                  </>
+                )}
+
                 <div className="flex flex-col gap-1.5 sm:col-span-2">
                   <label className="text-xs font-semibold text-[#64748B]">Notas / Intereses</label>
                   <textarea value={formData.notes} onChange={e => setFormData({ ...formData, notes: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C] min-h-20" placeholder="Interesado en..." />

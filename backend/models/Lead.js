@@ -16,7 +16,11 @@ const leadSchema = new mongoose.Schema({
     enum: ['Alta', 'Media', 'Baja']
   },
   nextFollowUp: { type: String, default: '' },
-  notes: { type: String, default: '' }
+  notes: { type: String, default: '' },
+  didBuy: { type: String, default: 'No', enum: ['Sí', 'No'] },
+  kitsBought: { type: Number, default: 0 },
+  paymentMethod: { type: String, default: '' },
+  shippingMethod: { type: String, default: '' }
 }, {
   timestamps: true
 });
