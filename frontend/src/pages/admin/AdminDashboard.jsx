@@ -6,7 +6,7 @@ import PaymentMethodsBreakdown from '../../components/admin/PaymentMethodsBreakd
 import RecentTransactionsTable from '../../components/admin/RecentTransactionsTable';
 import TopBuyers from '../../components/admin/TopBuyers';
 import CustomerProfileModal from '../../components/admin/modals/CustomerProfileModal';
-import { Calendar, ChevronDown, Sparkles, Truck, ShieldCheck, MessageCircle, ArrowRight, Search, Plus, UserPlus } from 'lucide-react';
+import { Calendar, ChevronDown, Sparkles, Truck, ShieldCheck, MessageCircle, ArrowRight, Search, Plus, UserPlus, Phone } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
 
 const AdminDashboard = () => {
@@ -177,6 +177,16 @@ const AdminDashboard = () => {
             <UserPlus size={18} />
             Nuevo Cliente
           </button>
+          {supplierData?.phone && (
+            <a
+              href={`tel:${supplierData.phone}`}
+              className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+              title={`Llamar a ${supplierData.company || 'Proveedor'}`}
+            >
+              <Phone size={18} className="text-[#1E5A9C]" />
+              Llamar Proveedor
+            </a>
+          )}
         </div>
       </div>
 

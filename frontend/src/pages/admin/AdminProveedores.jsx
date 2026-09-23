@@ -98,10 +98,10 @@ const AdminProveedores = () => {
     const sale = Number(supplierData?.regularSalePrice) || 9500;
     const margin = sale - cost;
     const marginPct = ((margin / sale) * 100).toFixed(1);
-    return { margin, marginPct };
+    return { margin, marginPct, cost, sale };
   };
 
-  const { margin, marginPct } = calculateGrossMargin();
+  const { margin, marginPct, cost, sale } = calculateGrossMargin();
 
   return (
     <div className="w-full h-full font-geist flex flex-col relative pb-16">
@@ -174,12 +174,12 @@ const AdminProveedores = () => {
           <div>
             <div className="flex items-baseline gap-2">
               <h2 className="text-3xl font-black text-[#0F172A]">
-                ${Number(supplierData.costPerKit).toLocaleString('es-AR')}
+                ${cost.toLocaleString('es-AR')}
               </h2>
               <span className="text-xs text-[#64748B] font-semibold">/ paquete completo</span>
             </div>
             <p className="text-xs text-[#64748B] mt-1.5">
-              Precio de venta al público: <strong className="text-[#0F172A]">${Number(supplierData.regularSalePrice).toLocaleString('es-AR')}</strong> • Ganancia bruta: <strong className="text-[#059669]">+${margin.toLocaleString('es-AR')}</strong> por kit
+              Precio de venta al público: <strong className="text-[#0F172A]">${sale.toLocaleString('es-AR')}</strong> • Ganancia bruta: <strong className="text-[#059669]">+${margin.toLocaleString('es-AR')}</strong> por kit
             </p>
           </div>
           <div className="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-[11px] text-[#64748B]">
@@ -374,7 +374,7 @@ const AdminProveedores = () => {
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#F1F5F9]">
               <div>
                 <h3 className="font-bold text-sm text-[#0F172A]">Desglose de Costo del Paquete</h3>
-                <p className="text-xs text-[#64748B]">Qué compone los ${Number(supplierData.costPerKit).toLocaleString('es-AR')} de costo de compra</p>
+                <p className="text-xs text-[#64748B]">Qué compone los ${cost.toLocaleString('es-AR')} de costo de compra</p>
               </div>
               <span className="text-xs font-black text-[#1E5A9C] bg-[#1E5A9C]/10 px-2 py-0.5 rounded-md">
                 8 Insumos
@@ -393,7 +393,7 @@ const AdminProveedores = () => {
               ))}
               <div className="pt-3 flex items-center justify-between text-xs font-bold text-[#0F172A]">
                 <span>Costo Total Paquete Cerrado:</span>
-                <span className="text-sm font-black text-[#0F172A]">${Number(supplierData.costPerKit).toLocaleString('es-AR')}</span>
+                <span className="text-sm font-black text-[#0F172A]">${cost.toLocaleString('es-AR')}</span>
               </div>
             </div>
           </div>

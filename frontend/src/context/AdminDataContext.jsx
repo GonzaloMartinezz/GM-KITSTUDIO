@@ -503,8 +503,15 @@ export const AdminDataProvider = ({ children }) => {
       .filter((o) => o.status === 'Recibido')
       .map((o) => ({
         id: o._id,
+        lotNumber: o.invoiceNumber && o.invoiceNumber !== 'A facturar' ? o.invoiceNumber : `LOTE-${String(o._id || '').slice(-6).toUpperCase()}`,
+        status: 'Recibido',
+        anmatStatus: 'Esterilizado (ETO)',
         date: o.receivedAt ? new Date(o.receivedAt).toLocaleDateString('es-AR') : '—',
         kits: o.kits,
+        kitsInitial: o.kits || 0,
+        kitsRemaining: o.kits || 0,
+        sterilityDate: o.receivedAt ? new Date(o.receivedAt).toLocaleDateString('es-AR') : '—',
+        expiryDate: o.receivedAt ? new Date(new Date(o.receivedAt).setFullYear(new Date(o.receivedAt).getFullYear() + 3)).toLocaleDateString('es-AR') : '—',
         costPerKit: o.costPerKit,
         total: o.total,
         invoiceNumber: o.invoiceNumber,

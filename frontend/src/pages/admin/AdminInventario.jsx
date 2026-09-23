@@ -36,7 +36,8 @@ const AdminInventario = () => {
     supplierData,
     kitProduct,
     supplierOrders,
-    reservations
+    reservations,
+    inventoryData
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('reservados'); // 'reservados' | 'lotes' | 'componentes'
@@ -488,7 +489,7 @@ const AdminInventario = () => {
                 Aquí se listarán los números de lote oficiales, estado de esterilización por Óxido de Etileno (ETO) y fecha de vencimiento otorgada por ANMAT al ingresar stock.
               </p>
               <button
-                onClick={() => setIsAddStockModalOpen(true)}
+                onClick={() => setIsStockModalOpen(true)}
                 className="flex items-center gap-1.5 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs"
               >
                 <Plus size={14} />
