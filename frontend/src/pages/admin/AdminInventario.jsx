@@ -64,36 +64,49 @@ const AdminInventario = () => {
   const kitPrice = kitProduct?.price || 14500;
   const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
   const stockSoldMonth = 0; // TODO: Calculate from transactions
-  const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? o.quantity : 0), 0) || 0;
+  const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
 
   const totalInWarehouse = stockAvailable + stockReserved;
   const totalInCircuit = stockAvailable + stockReserved + stockInTransit;
 
-  const handleCreateReservation = (e) => {
+  const [formError, setFormError] = useState('');
+
+  const handleCreateReservation = async (e) => {
     e.preventDefault();
+    setFormError('');
     const kits = Number(reserveForm.kits) || 1;
-    addReservation({
-      ...reserveForm,
-      kits,
-      total: kits * kitPrice,
-      status: 'Confirmado',
-    });
-    setIsReserveModalOpen(false);
-    setReserveForm({
-      doctor: '',
-      clinic: '',
-      kits: '',
-      surgeryDate: '18 Sep 2026 - 10:00 am',
-      surgeryType: 'Cirugía de Implantes Dentales',
-      paymentStatus: 'Seña 50% Pagada',
-      contact: '+54 9 381 ',
-    });
+    try {
+      await addReservation({
+        ...reserveForm,
+        kits,
+        total: kits * kitPrice,
+        status: 'Confirmado',
+      });
+      setIsReserveModalOpen(false);
+      setReserveForm({
+        doctor: '',
+        clinic: '',
+        kits: '',
+        surgeryDate: '18 Sep 2026 - 10:00 am',
+        surgeryType: 'Cirugía de Implantes Dentales',
+        paymentStatus: 'Seña 50% Pagada',
+        contact: '+54 9 381 ',
+      });
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo crear la reserva.');
+    }
   };
 
-  const handleAddStockSubmit = (e) => {
+  const handleAddStockSubmit = async (e) => {
     e.preventDefault();
-    adjustStock(Number(stockAddCount) || 10);
-    setIsStockModalOpen(false);
+    setFormError('');
+    try {
+      await adjustStock(Number(stockAddCount) || 10);
+      setIsStockModalOpen(false);
+      setStockAddCount('');
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo ingresar el stock.');
+    }
   };
 
   const filteredReservations = (reservations || []).filter((r) =>
@@ -103,6 +116,12 @@ const AdminInventario = () => {
 
   return (
     <div className="w-full h-full font-geist flex flex-col relative pb-16">
+
+      {formError && (
+        <div className="mb-4 px-3.5 py-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+          {formError}
+        </div>
+      )}
 
       {/* ── TOP BANNER & ACTIONS ── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
