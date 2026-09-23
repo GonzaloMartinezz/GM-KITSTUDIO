@@ -53,9 +53,10 @@ const AdminProveedores = () => {
     paymentDate: '50% Anticipo hoy • 50% contra entrega',
     dueDate: '20 Sep 2026',
     invoiceNumber: '',
-    status: 'Pendiente',
+    paymentStatus: 'Pendiente',
     pendingAmount: '',
   });
+  const [formError, setFormError] = useState('');
 
   if (!supplierData) return <div className="p-8 text-center text-slate-500">Cargando datos del proveedor...</div>;
 
@@ -65,32 +66,69 @@ const AdminProveedores = () => {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const handleSaveSupplier = (e) => {
+  const handleSaveSupplier = async (e) => {
     e.preventDefault();
-    updateSupplierData(editForm);
-    setIsEditModalOpen(false);
+    setFormError('');
+    try {
+      await updateSupplierData(editForm);
+      setIsEditModalOpen(false);
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo guardar los datos del proveedor.');
+    }
   };
 
-  const handleCreateOrder = (e) => {
+  const handleCreateOrder = async (e) => {
     e.preventDefault();
+    setFormError('');
     const total = Number(newOrderForm.kits) * Number(newOrderForm.costPerKit);
-    addSupplierOrder({
-      ...newOrderForm,
-      date: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }),
-      total,
-      pendingAmount: newOrderForm.status === 'Completado' ? 0 : Number(newOrderForm.pendingAmount || total),
-    });
-    setIsNewOrderModalOpen(false);
-    setNewOrderForm({
-      kits: '',
-      costPerKit: supplierData?.costPerKit || 5000,
-      paymentMethod: 'Transferencia Bancaria CBU',
-      paymentDate: '50% Anticipo hoy • 50% contra entrega',
-      dueDate: '20 Sep 2026',
-      invoiceNumber: '',
-      status: 'Pendiente',
-      pendingAmount: '',
-    });
+    try {
+      await addSupplierOrder({
+        ...newOrderForm,
+        date: new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }),
+        total,
+        pendingAmount: newOrderForm.paymentStatus === 'Completado' ? 0 : Number(newOrderForm.pendingAmount || total),
+      });
+      setIsNewOrderModalOpen(false);
+      setNewOrderForm({
+        kits: '',
+        costPerKit: supplierData?.costPerKit || 5000,
+        paymentMethod: 'Transferencia Bancaria CBU',
+        paymentDate: '50% Anticipo hoy • 50% contra entrega',
+        dueDate: '20 Sep 2026',
+        invoiceNumber: '',
+        paymentStatus: 'Pendiente',
+        pendingAmount: '',
+      });
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo registrar la orden de compra.');
+    }
+  };
+
+  const handleMarkReceived = async (orderId) => {
+    setFormError('');
+    try {
+      await updateSupplierOrder(orderId, { status: 'Recibido' });
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo marcar la orden como recibida.');
+    }
+  };
+
+  const handleMarkPaid = async (orderId) => {
+    setFormError('');
+    try {
+      await updateSupplierOrder(orderId, { paymentStatus: 'Completado', pendingAmount: 0, paymentDate: `100% Pagado (${new Date().toLocaleDateString('es-AR')})` });
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo marcar la orden como pagada.');
+    }
+  };
+
+  const handleDeleteSupplierOrder = async (orderId) => {
+    setFormError('');
+    try {
+      await deleteSupplierOrder(orderId);
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo eliminar la orden.');
+    }
   };
 
   const calculateGrossMargin = () => {
@@ -105,6 +143,12 @@ const AdminProveedores = () => {
 
   return (
     <div className="w-full h-full font-geist flex flex-col relative pb-16">
+
+      {formError && (
+        <div className="mb-4 px-3.5 py-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+          {formError}
+        </div>
+      )}
 
       {/* ── TOP BANNER & HEADER ── */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
@@ -478,14 +522,15 @@ const AdminProveedores = () => {
                     <th className="py-3 px-4">Kits / Costo Unit.</th>
                     <th className="py-3 px-4">Total Compra</th>
                     <th className="py-3 px-4">Cronograma de Pago</th>
-                    <th className="py-3 px-4 text-center">Estado</th>
+                    <th className="py-3 px-4 text-center">Pago</th>
+                    <th className="py-3 px-4 text-center">Logística</th>
                     <th className="py-3 px-4 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#F1F5F9]">
                   {supplierOrders.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 px-4 text-center">
+                      <td colSpan={7} className="py-12 px-4 text-center">
                         <div className="flex flex-col items-center justify-center max-w-sm mx-auto">
                           <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1E5A9C] flex items-center justify-center mb-3">
                             <Truck size={24} />
@@ -535,26 +580,47 @@ const AdminProveedores = () => {
                         </td>
 
                         <td className="py-3.5 px-4 text-center">
-                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full ${order.status === 'Completado'
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full ${order.paymentStatus === 'Completado'
                               ? 'bg-[#10B981]/15 text-[#059669]'
-                              : order.status === 'Parcial 50%'
+                              : order.paymentStatus === 'Parcial 50%'
                                 ? 'bg-orange-100 text-orange-700'
                                 : 'bg-amber-100 text-amber-700'
                             }`}>
-                            {order.status === 'Completado' ? (
+                            {order.paymentStatus === 'Completado' ? (
                               <CheckCircle2 size={12} />
                             ) : (
                               <Clock size={12} />
                             )}
+                            {order.paymentStatus || 'Pendiente'}
+                          </span>
+                        </td>
+
+                        <td className="py-3.5 px-4 text-center">
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full ${order.status === 'Recibido'
+                              ? 'bg-[#10B981]/15 text-[#059669]'
+                              : order.status === 'En Tránsito'
+                                ? 'bg-blue-100 text-[#1E5A9C]'
+                                : 'bg-slate-100 text-slate-600'
+                            }`}>
+                            {order.status === 'Recibido' ? <CheckCircle2 size={12} /> : <Truck size={12} />}
                             {order.status}
                           </span>
                         </td>
 
                         <td className="py-3.5 px-4 text-right">
-                          <div className="flex items-center justify-end gap-1.5">
-                            {order.status !== 'Completado' && (
+                          <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                            {order.status !== 'Recibido' && (
                               <button
-                                onClick={() => updateSupplierOrder(order.id, { status: 'Completado', pendingAmount: 0, paymentDate: `100% Pagado (${new Date().toLocaleDateString('es-AR')})` })}
+                                onClick={() => handleMarkReceived(order.id)}
+                                className="px-2 py-1 text-[11px] font-bold rounded-lg bg-[#1E5A9C]/10 hover:bg-[#1E5A9C]/20 text-[#1E5A9C] transition-colors"
+                                title="Marcar como Recibido (suma stock y registra el gasto)"
+                              >
+                                Marcar Recibido
+                              </button>
+                            )}
+                            {order.paymentStatus !== 'Completado' && (
+                              <button
+                                onClick={() => handleMarkPaid(order.id)}
                                 className="px-2 py-1 text-[11px] font-bold rounded-lg bg-[#10B981]/10 hover:bg-[#10B981]/20 text-[#059669] transition-colors"
                                 title="Marcar como 100% Pagado"
                               >
@@ -562,7 +628,7 @@ const AdminProveedores = () => {
                               </button>
                             )}
                             <button
-                              onClick={() => deleteSupplierOrder(order.id)}
+                              onClick={() => handleDeleteSupplierOrder(order.id)}
                               className="p-1.5 text-[#94A3B8] hover:text-red-600 rounded-lg transition-colors"
                               title="Eliminar Orden"
                             >
@@ -835,8 +901,8 @@ const AdminProveedores = () => {
                   <div>
                     <label className="block text-[#64748B] font-semibold mb-1">Estado del Pago</label>
                     <select
-                      value={newOrderForm.status}
-                      onChange={(e) => setNewOrderForm({ ...newOrderForm, status: e.target.value })}
+                      value={newOrderForm.paymentStatus}
+                      onChange={(e) => setNewOrderForm({ ...newOrderForm, paymentStatus: e.target.value })}
                       className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-xs font-semibold"
                     >
                       <option value="Pendiente">Pendiente</option>

@@ -27,6 +27,8 @@ const AdminFinanzas = () => {
     transactions,
     paymentMethods,
     salesTrend,
+    financialReports,
+    buyers,
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('Todos'); // 'Todos' | 'Completado' | 'Enviado' | 'En Preparación'
@@ -39,6 +41,16 @@ const AdminFinanzas = () => {
   const pendingCount = transactions.filter((t) => t.status === 'En Preparación').length;
   const inDeliveryCount = transactions.filter((t) => t.status === 'Enviado').length;
   const completedCount = transactions.filter((t) => t.status === 'Completado').length;
+
+  // Método de pago con más cobros reales (o null si todavía no hay operaciones)
+  const leadingPaymentMethod = (paymentMethods || [])
+    .filter((pm) => pm.numericAmount > 0)
+    .sort((a, b) => b.numericAmount - a.numericAmount)[0] || null;
+
+  // Retención de clínicas: % de compradores con más de una compra registrada
+  const retentionRate = (buyers && buyers.length > 0)
+    ? Math.round((buyers.filter((b) => (b.totalOrders || 0) > 1).length / buyers.length) * 100)
+    : 0;
 
   // Filtered transactions for the finance table
   const filteredList = transactions.filter((t) => {
@@ -141,8 +153,7 @@ const AdminFinanzas = () => {
               {pendingCount}
             </div>
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="font-bold text-[#F59E0B]">+3%</span>
-              <span className="text-[#64748B]">vs período anterior</span>
+              <span className="text-[#64748B]">Pedidos en preparación ahora</span>
             </div>
           </div>
         </div>
@@ -162,8 +173,7 @@ const AdminFinanzas = () => {
               {inDeliveryCount}
             </div>
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="font-bold text-[#8B5CF6]">+4%</span>
-              <span className="text-[#64748B]">vs período anterior</span>
+              <span className="text-[#64748B]">En camino a la clínica</span>
             </div>
           </div>
         </div>
@@ -183,8 +193,7 @@ const AdminFinanzas = () => {
               {completedCount}
             </div>
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="font-bold text-[#10B981]">+15%</span>
-              <span className="text-[#64748B]">vs período anterior</span>
+              <span className="text-[#64748B]">Entregados y cobrados</span>
             </div>
           </div>
         </div>
@@ -239,8 +248,8 @@ const AdminFinanzas = () => {
 
           <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] text-xs flex items-center justify-between">
             <span className="text-[#64748B]">Cobranza líder:</span>
-            <span className="font-bold text-[#64748B] bg-slate-100 px-2 py-0.5 rounded-full">
-              Sin operaciones (0%)
+            <span className="font-bold text-[#059669] bg-[#10B981]/10 px-2 py-0.5 rounded-full">
+              {leadingPaymentMethod ? `${leadingPaymentMethod.name} (${leadingPaymentMethod.percentage}%)` : 'Sin operaciones (0%)'}
             </span>
           </div>
         </div>
@@ -260,8 +269,8 @@ const AdminFinanzas = () => {
           <div className="grid grid-cols-2 gap-4 py-4">
             <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
               <span className="text-xs font-semibold text-[#64748B]">Margen Operativo</span>
-              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">0%</div>
-              <span className="text-[11px] font-medium text-[#64748B]">Sin ventas previas</span>
+              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">{financialReports?.operatingMargin || '0%'}</div>
+              <span className="text-[11px] font-medium text-[#64748B]">Ingresos - gastos del mes</span>
             </div>
 
             <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
@@ -272,8 +281,8 @@ const AdminFinanzas = () => {
 
             <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">
               <span className="text-xs font-semibold text-[#64748B]">Retención Clínicas</span>
-              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">0%</div>
-              <span className="text-[11px] font-medium text-[#64748B]">A iniciar registro</span>
+              <div className="text-2xl font-extrabold text-[#0F172A] mt-1">{retentionRate}%</div>
+              <span className="text-[11px] font-medium text-[#64748B]">{buyers?.length ? `${buyers.length} clínicas con compras` : 'A iniciar registro'}</span>
             </div>
 
             <div className="p-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl">

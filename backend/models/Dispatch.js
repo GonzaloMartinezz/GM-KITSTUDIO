@@ -33,7 +33,11 @@ const dispatchSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Programado', 'En Camino', 'Entregado', 'Cancelado'],
+    // Incluye tanto los valores históricos ('En Camino') como los que
+    // realmente ofrece el selector del panel ('En Preparación', 'En Ruta'):
+    // antes el modelo no los aceptaba y guardar un despacho con esos
+    // estados tiraba un error de validación.
+    enum: ['Programado', 'En Preparación', 'En Ruta', 'En Camino', 'Entregado', 'Cancelado'],
     default: 'Programado',
   },
   active: {

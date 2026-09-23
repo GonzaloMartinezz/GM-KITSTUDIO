@@ -29,6 +29,16 @@ const PAYMENT_METHOD_LABELS = {
 const PAYMENT_LABEL_TO_KEY = Object.fromEntries(
   Object.entries(PAYMENT_METHOD_LABELS).map(([k, v]) => [v, k])
 );
+// El modal de "Nueva Venta" ofrece etiquetas más cortas / distintas a las
+// de PAYMENT_METHOD_LABELS (p. ej. "Efectivo / Contra Entrega" en vez de
+// "...(Tucumán)"). Sin este alias, updateTransaction mandaba esa etiqueta
+// tal cual al backend, que no es un valor válido del enum de Order y
+// tiraba un error de validación al guardar.
+Object.assign(PAYMENT_LABEL_TO_KEY, {
+  'Efectivo / Contra Entrega': 'efectivo',
+  'Mercado Pago': 'mercadopago',
+  'Acordar con Vendedor': 'efectivo',
+});
 
 // La UI de ventas usa 3 estados visibles: En Preparación / Enviado / Completado
 const ORDER_STATUS_LABELS = {
@@ -424,7 +434,7 @@ export const AdminDataProvider = ({ children }) => {
       doctor: newDisp.doctor || 'Nuevo Profesional',
       clinic: newDisp.clinic || '',
       kits: Number(newDisp.kits) || 1,
-      total: (Number(newDisp.kits) || 1) * (kitProduct?.price || 14500),
+      total: (Number(newDisp.kits) || 1) * (kitProduct?.price || 8500),
       timeSlot: newDisp.timeSlot || '10:00 - 10:30 am',
       slotTime: newDisp.slotTime || '10:00',
       status: newDisp.status || 'Programado',
@@ -443,7 +453,11 @@ export const AdminDataProvider = ({ children }) => {
   /* ── Supplier ── */
   const updateSupplierData = async (updatedFields) => {
     if (!supplierData?._id) return;
-    await suppliersAPI.update(supplierData._id, updatedFields);
+    // Sacamos los campos que Mongo maneja solo (_id es inmutable: mandarlo de
+    // vuelta en el body del PUT tira un error de validación y el guardado
+    // queda roto silenciosamente).
+    const { _id, __v, createdAt, updatedAt, ...safeFields } = updatedFields;
+    await suppliersAPI.update(supplierData._id, safeFields);
     await fetchSupplier();
   };
 
@@ -456,7 +470,13 @@ export const AdminDataProvider = ({ children }) => {
       costPerKit: Number(newOrder.costPerKit) || supplierData?.costPerKit || 5000,
       paymentDate: newOrder.paymentDate || 'Pendiente de coordinación',
       paymentMethod: newOrder.paymentMethod || 'Transferencia Bancaria',
-      status: newOrder.status || 'Pendiente',
+      // "status" es el estado LOGÍSTICO (Pendiente/En Tránsito/Recibido): siempre
+      // arranca en Pendiente al crear la orden; se avanza aparte con "Marcar Recibido".
+      status: 'Pendiente',
+      // "paymentStatus" es el estado de PAGO (Pendiente/Parcial 50%/Completado),
+      // un campo totalmente distinto — antes se guardaba mal en "status" y rompía
+      // la validación del modelo apenas se elegía algo distinto de "Pendiente".
+      paymentStatus: newOrder.paymentStatus || 'Pendiente',
       invoiceNumber: newOrder.invoiceNumber || 'A facturar',
       dueDate: newOrder.dueDate || 'A coordinar',
       pendingAmount: Number(newOrder.pendingAmount) || 0,

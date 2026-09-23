@@ -39,6 +39,12 @@ const supplierOrderSchema = new mongoose.Schema({
     enum: ['Pendiente', 'En Tránsito', 'Recibido'],
     default: 'Pendiente',
   },
+  // Estado del pago al proveedor (distinto del estado logístico de arriba).
+  paymentStatus: {
+    type: String,
+    enum: ['Pendiente', 'Parcial 50%', 'Completado'],
+    default: 'Pendiente',
+  },
   invoiceNumber: {
     type: String,
     default: 'A facturar',

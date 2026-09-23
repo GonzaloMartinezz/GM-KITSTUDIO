@@ -309,6 +309,15 @@ const updateOrder = async (req, res, next) => {
     }
 
     await order.save();
+
+    // Si cambió el total (cantidad, precio o descuento), sincronizamos la
+    // transacción de ingreso asociada — si no, Finanzas quedaba mostrando
+    // el monto viejo aunque la venta ya se hubiera editado.
+    await Transaction.updateMany(
+      { order: order._id, type: 'income' },
+      { $set: { amount: order.totalAmount, description: `Venta ${order.orderNumber || order._id} (editada)` } }
+    );
+
     const populated = await Order.findById(order._id).populate('user', 'name email clinicName').populate('items.product', 'name price image');
     res.json(populated);
   } catch (error) {

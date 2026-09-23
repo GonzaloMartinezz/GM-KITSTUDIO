@@ -97,12 +97,16 @@ const getDashboardStats = async (req, res, next) => {
       },
     ]);
 
-    // Ventas recientes (últimas 10)
+    // Ventas recientes — el frontend usa esta lista para armar la tabla de
+    // Ventas y los totales de Finanzas, así que el límite tiene que cubrir
+    // el volumen real del negocio y no truncar (recortar en 10 hacía que los
+    // totales mostrados no coincidieran con la base de datos apenas hubiera
+    // más de 10 ventas cargadas).
     const recentOrders = await Order.find({ status: { $nin: ['cancelado'] } })
       .populate('user', 'name email clinicName')
       .populate('items.product', 'name')
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(500);
 
     res.json({
       revenue: salesStats?.totalRevenue || 0,
@@ -309,12 +313,21 @@ const getFinancialReport = async (req, res, next) => {
       { $group: { _id: null, total: { $sum: '$amount' } } },
     ]);
 
+    // Reembolsos / cancelaciones del mes (ventas que se dieron de baja: hay
+    // que restarlas del ingreso, si no una cancelación no bajaba nunca la
+    // facturación mostrada en Finanzas).
+    const [monthlyRefunds] = await Transaction.aggregate([
+      { $match: { type: 'refund', date: { $gte: startOfMonth } } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+
     // Órdenes por estado
     const ordersByStatus = await Order.aggregate([
       { $group: { _id: '$status', count: { $sum: 1 } } },
     ]);
 
-    const income = monthlyIncome?.total || 0;
+    const refunds = monthlyRefunds?.total || 0;
+    const income = (monthlyIncome?.total || 0) - refunds;
     const expenses = monthlyExpenses?.total || 0;
     const profit = income - expenses;
     const margin = income > 0 ? ((profit / income) * 100).toFixed(1) : 0;

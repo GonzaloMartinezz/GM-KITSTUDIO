@@ -1,4 +1,6 @@
 const Lead = require('../models/Lead');
+const Product = require('../models/Product');
+const Transaction = require('../models/Transaction');
 
 // @desc    Get all leads
 // @route   GET /api/leads
@@ -42,11 +44,16 @@ const createLead = async (req, res, next) => {
 // @access  Private/Admin
 const updateLead = async (req, res, next) => {
   try {
-    const { name, clinic, phone, email, status, probability, nextFollowUp, notes } = req.body;
+    const {
+      name, clinic, phone, email, status, probability, nextFollowUp, notes,
+      didBuy, kitsBought, paymentMethod, shippingMethod,
+    } = req.body;
 
     const lead = await Lead.findById(req.params.id);
 
     if (lead) {
+      const wasAlreadyBought = lead.didBuy === 'Sí';
+
       lead.name = name ?? lead.name;
       lead.clinic = clinic ?? lead.clinic;
       lead.phone = phone ?? lead.phone;
@@ -55,8 +62,28 @@ const updateLead = async (req, res, next) => {
       lead.probability = probability ?? lead.probability;
       lead.nextFollowUp = nextFollowUp ?? lead.nextFollowUp;
       lead.notes = notes ?? lead.notes;
+      lead.didBuy = didBuy ?? lead.didBuy;
+      lead.kitsBought = kitsBought ?? lead.kitsBought;
+      lead.paymentMethod = paymentMethod ?? lead.paymentMethod;
+      lead.shippingMethod = shippingMethod ?? lead.shippingMethod;
 
       const updatedLead = await lead.save();
+
+      // Si el lead recién se marca como "Sí compró" (y no lo estaba antes),
+      // registramos el ingreso — si no, esta venta nunca aparecía en
+      // Finanzas/Ventas aunque quedara anotada acá.
+      if (!wasAlreadyBought && updatedLead.didBuy === 'Sí' && Number(updatedLead.kitsBought) > 0) {
+        const kit = await Product.findOne({ category: 'Kits Quirúrgicos' });
+        const unitPrice = kit?.price || 8500;
+        const total = Number(updatedLead.kitsBought) * unitPrice;
+        await Transaction.create({
+          type: 'income',
+          amount: total,
+          description: `Venta convertida de lead - ${updatedLead.name} (${updatedLead.kitsBought} kits)`,
+          category: 'venta',
+        });
+      }
+
       res.json(updatedLead);
     } else {
       res.status(404);
