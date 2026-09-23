@@ -6,12 +6,12 @@ import PaymentMethodsBreakdown from '../../components/admin/PaymentMethodsBreakd
 import RecentTransactionsTable from '../../components/admin/RecentTransactionsTable';
 import TopBuyers from '../../components/admin/TopBuyers';
 import CustomerProfileModal from '../../components/admin/modals/CustomerProfileModal';
-import { Calendar, ChevronDown, Sparkles, Truck, ShieldCheck, MessageCircle, ArrowRight, Search, Plus, UserPlus, Phone } from 'lucide-react';
+import { Calendar, ChevronDown, Sparkles, Truck, ShieldCheck, MessageCircle, ArrowRight, Search, Plus, UserPlus, Phone, AlertTriangle } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
 
 const AdminDashboard = () => {
   const [userName, setUserName] = useState('Gonzalo');
-  const { timeframe, setTimeframe, supplierData, buyers, dateRange, setCustomDateRange } = useAdminData();
+  const { timeframe, setTimeframe, supplierData, buyers, dateRange, setCustomDateRange, dashboard } = useAdminData();
   const navigate = useNavigate();
 
   // Search state
@@ -57,6 +57,24 @@ const AdminDashboard = () => {
 
   return (
     <div className="w-full font-geist flex flex-col relative pb-12">
+
+      {/* Low Stock Alert Banner */}
+      {dashboard?.lowStockAlerts > 0 && (
+        <div className="mb-4 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm font-semibold">
+          <AlertTriangle size={16} className="shrink-0" />
+          <span>
+            {dashboard.lowStockAlerts === 1
+              ? `${dashboard.lowStockProducts?.[0]?.name || 'Un producto'} está por debajo del stock mínimo (${dashboard.lowStockProducts?.[0]?.stock ?? 0} de ${dashboard.lowStockProducts?.[0]?.minStock ?? 0}).`
+              : `${dashboard.lowStockAlerts} productos están por debajo del stock mínimo.`}
+          </span>
+          <button
+            onClick={() => navigate('/admin/inventario')}
+            className="ml-auto shrink-0 text-[11px] font-bold underline hover:no-underline"
+          >
+            Ver Inventario
+          </button>
+        </div>
+      )}
 
       {/* Welcome Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">

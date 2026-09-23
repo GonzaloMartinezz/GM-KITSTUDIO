@@ -36,9 +36,21 @@ const createReservation = async (req, res, next) => {
     let product = null;
     if (productId) {
       product = await Product.findById(productId);
-      if (product && product.stock < kits) {
-        res.status(400);
-        throw new Error(`Stock insuficiente. Disponible: ${product.stock}`);
+      if (product) {
+        // El stock del producto no se descuenta al reservar (recien se
+        // descuenta al despachar/cumplir), asi que hay que restar tambien
+        // lo que ya esta comprometido en otras reservas activas — si no,
+        // se podian aceptar mas reservas que kits realmente disponibles.
+        const alreadyReserved = await Reservation.aggregate([
+          { $match: { status: 'reservado', product: product._id } },
+          { $group: { _id: null, total: { $sum: '$kits' } } },
+        ]);
+        const reservedElsewhere = alreadyReserved[0]?.total || 0;
+        const trulyAvailable = product.stock - reservedElsewhere;
+        if (trulyAvailable < kits) {
+          res.status(400);
+          throw new Error(`Stock insuficiente. Disponible para reservar: ${Math.max(trulyAvailable, 0)} (${product.stock} en deposito, ${reservedElsewhere} ya reservados).`);
+        }
       }
     }
 

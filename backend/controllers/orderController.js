@@ -332,11 +332,25 @@ const updateOrder = async (req, res, next) => {
  */
 const deleteOrder = async (req, res, next) => {
   try {
-    const order = await Order.findByIdAndDelete(req.params.id);
+    const order = await Order.findById(req.params.id);
     if (!order) {
       res.status(404);
       throw new Error('Orden no encontrada.');
     }
+
+    // Si la orden todavia estaba "activa" (no cancelada previamente, que ya
+    // habia devuelto el stock), hay que reponer los kits antes de borrarla —
+    // si no, corregir una carga erronea borrandola dejaba el kit "perdido"
+    // para siempre (descontado del deposito pero sin ninguna venta real).
+    if (order.status !== 'cancelado') {
+      for (const item of order.items) {
+        if (item.product) {
+          await Product.findByIdAndUpdate(item.product, { $inc: { stock: item.quantity } });
+        }
+      }
+    }
+
+    await Order.findByIdAndDelete(order._id);
     await Transaction.deleteMany({ order: order._id });
     res.json({ message: 'Orden eliminada.' });
   } catch (error) {

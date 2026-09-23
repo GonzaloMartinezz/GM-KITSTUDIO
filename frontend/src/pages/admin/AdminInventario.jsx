@@ -21,7 +21,8 @@ import {
   Archive,
   RefreshCw,
   X,
-  Check
+  Check,
+  Edit3
 } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,13 +38,16 @@ const AdminInventario = () => {
     kitProduct,
     supplierOrders,
     reservations,
-    inventoryData
+    inventoryData,
+    updateInventoryData,
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('reservados'); // 'reservados' | 'lotes' | 'componentes'
   const [searchQuery, setSearchQuery] = useState('');
   const [isReserveModalOpen, setIsReserveModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
+  const [isEditKitModalOpen, setIsEditKitModalOpen] = useState(false);
+  const [editKitForm, setEditKitForm] = useState({ kitPrice: '', minimumAlertThreshold: '' });
 
   // Form state for New Reservation
   const [reserveForm, setReserveForm] = useState({
@@ -63,7 +67,7 @@ const AdminInventario = () => {
   const minThreshold = kitProduct?.minStock || 30;
   const kitPrice = kitProduct?.price || 14500;
   const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
-  const stockSoldMonth = 0; // TODO: Calculate from transactions
+  const stockSoldMonth = inventoryData?.stockSoldMonth || 0;
   const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
 
   const totalInWarehouse = stockAvailable + stockReserved;
@@ -106,6 +110,28 @@ const AdminInventario = () => {
       setStockAddCount('');
     } catch (err) {
       setFormError(err?.response?.data?.message || 'No se pudo ingresar el stock.');
+    }
+  };
+
+  const handleOpenEditKit = () => {
+    setEditKitForm({
+      kitPrice: kitPrice || '',
+      minimumAlertThreshold: minThreshold || '',
+    });
+    setIsEditKitModalOpen(true);
+  };
+
+  const handleSaveEditKit = async (e) => {
+    e.preventDefault();
+    setFormError('');
+    try {
+      await updateInventoryData({
+        kitPrice: Number(editKitForm.kitPrice) || kitPrice,
+        minimumAlertThreshold: Number(editKitForm.minimumAlertThreshold) || minThreshold,
+      });
+      setIsEditKitModalOpen(false);
+    } catch (err) {
+      setFormError(err?.response?.data?.message || 'No se pudo actualizar el precio/umbral del kit.');
     }
   };
 
@@ -156,6 +182,14 @@ const AdminInventario = () => {
           >
             <Clock size={16} />
             <span>Reservar Kits para Cirugía</span>
+          </button>
+
+          <button
+            onClick={handleOpenEditKit}
+            className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
+          >
+            <Edit3 size={16} className="text-[#1E5A9C]" />
+            <span>Editar Precio y Umbral</span>
           </button>
 
           <button
@@ -816,6 +850,74 @@ const AdminInventario = () => {
                     className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md"
                   >
                     Añadir al Depósito
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── MODAL: EDITAR PRECIO Y UMBRAL DEL KIT ── */}
+      <AnimatePresence>
+        {isEditKitModalOpen && (
+          <div className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs flex items-center justify-center p-4 z-100">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0]"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
+                <h3 className="text-base font-bold text-[#0F172A]">Editar Precio y Umbral del Kit</h3>
+                <button
+                  onClick={() => setIsEditKitModalOpen(false)}
+                  className="text-[#64748B] hover:text-[#0F172A] font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveEditKit} className="space-y-4 text-xs">
+                <div>
+                  <label className="block text-[#64748B] font-semibold mb-1">Precio de Venta del Kit ($)</label>
+                  <input
+                    type="number"
+                    value={editKitForm.kitPrice}
+                    onChange={(e) => setEditKitForm({ ...editKitForm, kitPrice: e.target.value === '' ? '' : Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="0"
+                    required
+                  />
+                  <span className="text-[10px] text-[#64748B]">Se usa para calcular ventas, reservas y despachos nuevos.</span>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-semibold mb-1">Umbral Mínimo de Stock (alerta)</label>
+                  <input
+                    type="number"
+                    value={editKitForm.minimumAlertThreshold}
+                    onChange={(e) => setEditKitForm({ ...editKitForm, minimumAlertThreshold: e.target.value === '' ? '' : Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="0"
+                    required
+                  />
+                  <span className="text-[10px] text-[#64748B]">Debajo de este número, el panel marca "Reponer stock".</span>
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#E2E8F0]">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditKitModalOpen(false)}
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B]"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md"
+                  >
+                    Guardar Cambios
                   </button>
                 </div>
               </form>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Plus, Users, Search, Edit3, Trash2, Mail, Phone, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Users, Search, Edit3, Trash2, Mail, Phone, Calendar, UserCheck } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
+import { adminAPI } from '../../lib/api';
 
 const AdminLeads = () => {
   const { leads, addLead, updateLead, deleteLead } = useAdminData();
@@ -12,6 +13,34 @@ const AdminLeads = () => {
     didBuy: 'No', kitsBought: 0, paymentMethod: '', shippingMethod: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Tab: prospectos (CRM de leads, arriba) vs clientes que ya se registraron
+  // en la tienda pública (cuenta real, aunque nunca hayan comprado o hablado
+  // con nosotros por WhatsApp).
+  const [activeTab, setActiveTab] = useState('prospectos');
+  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [usersError, setUsersError] = useState('');
+  const [usersLoaded, setUsersLoaded] = useState(false);
+
+  useEffect(() => {
+    if (activeTab !== 'registrados' || usersLoaded) return;
+    setLoadingUsers(true);
+    setUsersError('');
+    adminAPI.users({ limit: 200 })
+      .then(({ data }) => {
+        setRegisteredUsers(data?.users || []);
+        setUsersLoaded(true);
+      })
+      .catch((err) => setUsersError(err?.response?.data?.message || 'No se pudo cargar la lista de clientes registrados.'))
+      .finally(() => setLoadingUsers(false));
+  }, [activeTab, usersLoaded]);
+
+  const filteredUsers = registeredUsers.filter((u) =>
+    (u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (u.clinicName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (u.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleOpenModal = (lead = null) => {
     if (lead) {
@@ -92,6 +121,32 @@ const AdminLeads = () => {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3 mb-6">
+        <button
+          onClick={() => setActiveTab('prospectos')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === 'prospectos'
+            ? 'bg-[#1E5A9C] text-white shadow-xs'
+            : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+            }`}
+        >
+          <Users size={16} />
+          <span>Prospectos (CRM) ({leads.length})</span>
+        </button>
+        <button
+          onClick={() => setActiveTab('registrados')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === 'registrados'
+            ? 'bg-[#1E5A9C] text-white shadow-xs'
+            : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+            }`}
+        >
+          <UserCheck size={16} />
+          <span>Clientes Registrados{usersLoaded ? ` (${registeredUsers.length})` : ''}</span>
+        </button>
+      </div>
+
+      {activeTab === 'prospectos' && (
+      <>
       {/* Toolbar */}
       <div className="bg-white p-4 rounded-2xl border border-[#E2E8F0] shadow-xs mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
         <div className="relative w-full sm:w-96">
@@ -184,6 +239,80 @@ const AdminLeads = () => {
           </table>
         </div>
       </div>
+
+      </>
+      )}
+
+      {activeTab === 'registrados' && (
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-xs overflow-hidden">
+          <div className="p-4 border-b border-[#F1F5F9] flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <div className="relative w-full sm:w-96">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+              <input
+                type="text"
+                placeholder="Buscar por nombre, clínica o email..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-sm outline-none focus:border-[#1E5A9C] focus:ring-1 focus:ring-[#1E5A9C]/20 transition-all"
+              />
+            </div>
+            <div className="text-sm text-[#64748B] font-medium">
+              Total: <span className="text-[#0F172A]">{filteredUsers.length}</span> clientes con cuenta
+            </div>
+          </div>
+
+          {usersError && (
+            <div className="m-4 px-3.5 py-2.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+              {usersError}
+            </div>
+          )}
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead className="bg-[#F8FAFC] text-[#64748B] border-b border-[#E2E8F0]">
+                <tr>
+                  <th className="px-6 py-4 font-semibold">Nombre / Clínica</th>
+                  <th className="px-6 py-4 font-semibold">Contacto</th>
+                  <th className="px-6 py-4 font-semibold">Registrado</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E2E8F0]">
+                {loadingUsers ? (
+                  <tr>
+                    <td colSpan="3" className="px-6 py-12 text-center text-[#64748B]">Cargando clientes registrados...</td>
+                  </tr>
+                ) : filteredUsers.length > 0 ? (
+                  filteredUsers.map((u) => (
+                    <tr key={u._id} className="hover:bg-[#F8FAFC] transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-[#0F172A]">{u.name}</span>
+                          <span className="text-xs text-[#64748B]">{u.clinicName || 'Sin clínica registrada'}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1 text-xs text-[#64748B]">
+                          {u.email && <div className="flex items-center gap-1.5"><Mail size={12} /> {u.email}</div>}
+                          {u.phone && <div className="flex items-center gap-1.5"><Phone size={12} /> {u.phone}</div>}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-[#64748B]">
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-AR') : '—'}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="px-6 py-12 text-center text-[#64748B]">
+                      Todavía no hay clientes registrados en la tienda pública.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Modal Agregar/Editar */}
       {isModalOpen && (
