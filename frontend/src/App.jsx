@@ -29,6 +29,7 @@ const AdminInventario = lazy(() => import('./pages/admin/AdminInventario'));
 const AdminFinanzas = lazy(() => import('./pages/admin/AdminFinanzas'));
 const AdminProveedores = lazy(() => import('./pages/admin/AdminProveedores'));
 const AdminLeads = lazy(() => import('./pages/admin/AdminLeads'));
+const AdminConfiguracion = lazy(() => import('./pages/admin/AdminConfiguracion'));
 const CargarProductos = lazy(() => import('./pages/CargarProductos'));
 
 function App() {
@@ -73,6 +74,7 @@ function App() {
             <Route path="finanzas" element={<AdminFinanzas />} />
             <Route path="proveedores" element={<AdminProveedores />} />
             <Route path="clientes" element={<AdminLeads />} />
+            <Route path="configuracion" element={<AdminConfiguracion />} />
             {/* Future admin routes like /admin/employees can go here */}
           </Route>
 

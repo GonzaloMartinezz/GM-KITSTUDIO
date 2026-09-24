@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
+import { useSettings } from '../context/SettingsContext';
 
 const Products = () => {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeStepCard, setActiveStepCard] = useState(0);
+
+  const { settings } = useSettings();
 
   useEffect(() => {
     // Simulate fetching
@@ -215,26 +218,26 @@ const Products = () => {
                     <Truck className="w-6 h-6" />
                   </div>
                   <span className="bg-[#88C9C4] text-[#0C1517] font-black text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wide">
-                    Desde 10 Kits
+                    Desde {settings?.freeShippingMinKits || 30} Kits
                   </span>
                 </div>
                 <h3 className="font-bebas text-2xl sm:text-3xl text-white tracking-wide mb-1">
-                  ENVÍO BONIFICADO
+                  ENVÍO BONIFICADO!
                 </h3>
                 <p className="text-xs text-[#88C9C4] font-semibold mb-3">
                   Flete 100% bonificado a tu consultorio
                 </p>
                 <p className="text-xs sm:text-sm text-brand-1/80 font-geist leading-relaxed mb-5">
-                  A partir de 10 unidades, el envío corre completamente por nuestra cuenta. Recibí tus insumos directamente en tu consultorio sin costos ocultos, reteniendo la máxima ganancia.
+                  A partir de {settings?.freeShippingMinKits || 30} unidades, el envío corre completamente por nuestra cuenta. Recibí tus insumos directamente en tu consultorio sin costos ocultos, reteniendo la máxima ganancia.
                 </p>
                 <div className="space-y-2 border-t border-white/10 pt-4 mb-6 text-xs text-brand-1/90">
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Envío Gratis bonificado en 10+ kits</span>
+                    <span>Envío Gratis bonificado en {settings?.freeShippingMinKits || 30}+ kits</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Ahorro escalonado de hasta $25.500</span>
+                    <span>Ahorro de hasta ${((settings?.shippingDiscountAmount || 15000) / 1000).toFixed(0)}.000</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
@@ -246,7 +249,7 @@ const Products = () => {
                 onClick={() => navigate('/cargarproductos')}
                 className="w-full py-3 px-4 rounded-xl bg-[#42544F] hover:bg-[#526660] text-brand-1 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer active:scale-[0.98]"
               >
-                <span>Ver Escala de Descuentos</span>
+                <span>Armar mi pedido</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </motion.div>
@@ -323,11 +326,11 @@ const Products = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
               { num: "1", title: "Visualizar kits", desc: "Explora nuestro catálogo y conoce en detalle cada componente de nuestros kits.", icon: <Eye className="w-5 h-5" /> },
-              { num: "2", title: "Personalizar kits", desc: "Arma tu kit a medida según las necesidades específicas de tu cirugía.", icon: <Settings className="w-5 h-5" /> },
-              { num: "3", title: "Elegir cantidad", desc: "Elige cuántos necesitas. ¡Consultando cantidad, hacemos descuentos!", icon: <Package className="w-5 h-5" /> },
-              { num: "4", title: "Opción de envío", desc: "Selecciona la opción de envío que mejor se adapte a tu ubicación y urgencia.", icon: <Truck className="w-5 h-5" /> },
-              { num: "5", title: "Método de pago", desc: "Elige el método de pago más conveniente y seguro para ti.", icon: <CreditCard className="w-5 h-5" /> },
-              { num: "6", title: "Hacer el pedido", desc: "Envíanos un WhatsApp o Mail con tu pedido para confirmar y coordinar la entrega.", icon: <MessageCircle className="w-5 h-5" /> },
+              { num: "2", title: "Elegir cantidad", desc: "Arma tu kit a medida según las necesidades específicas de tu cirugía.", icon: <Settings className="w-5 h-5" /> },
+              { num: "3", title: "Opción de envío", desc: "Elige cuántos necesitas. ¡Consultando cantidad, hacemos descuentos!", icon: <Package className="w-5 h-5" /> },
+              { num: "4", title: "Método de pago", desc: "Selecciona la opción de envío que mejor se adapte a tu ubicación y urgencia.", icon: <Truck className="w-5 h-5" /> },
+              { num: "5", title: "Hacer el pedido", desc: "Elige el método de pago más conveniente y seguro para ti.", icon: <CreditCard className="w-5 h-5" /> },
+              { num: "6", title: "Coordinar entrega", desc: "Elige el método de pago más conveniente y seguro para ti.", icon: <CreditCard className="w-5 h-5" /> },
             ].map((step, idx) => {
               const isCardActive = activeStepCard === idx;
 

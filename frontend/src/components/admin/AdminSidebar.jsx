@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck, ArrowLeft, Users } from 'lucide-react';
+import { Target, Wallet, Package, Truck, ShoppingCart, LogOut, Menu, X, ChevronRight, ShieldCheck, ArrowLeft, Users, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminSidebar = () => {
@@ -18,6 +18,7 @@ const AdminSidebar = () => {
     { icon: Wallet, path: '/admin/finanzas', label: '03_Finanzas' },
     { icon: Truck, path: '/admin/proveedores', label: '04_Proveedores' },
     { icon: Package, path: '/admin/inventario', label: '05_Inventario' },
+    { icon: Settings, path: '/admin/configuracion', label: '06_Configuración' },
   ];
 
   const handleLogout = async () => {

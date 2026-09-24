@@ -136,4 +136,9 @@ export const leadsAPI = {
   remove: (id) => api.delete(`/leads/${id}`),
 };
 
+export const settingsAPI = {
+  get: () => api.get('/settings'),
+  update: (data) => api.put('/settings', data),
+};
+
 export default api;
