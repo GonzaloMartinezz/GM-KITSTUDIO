@@ -23,6 +23,13 @@ const AdminLeads = () => {
   const [usersError, setUsersError] = useState('');
   const [usersLoaded, setUsersLoaded] = useState(false);
 
+  // User Edit Modal State
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [userFormData, setUserFormData] = useState({
+    name: '', email: '', phone: '', clinicName: '', role: 'client', isActive: true
+  });
+
   useEffect(() => {
     if (activeTab !== 'registrados' || usersLoaded) return;
     setLoadingUsers(true);
@@ -82,6 +89,50 @@ const AdminLeads = () => {
         await deleteLead(id);
       } catch (error) {
         console.error("Error al eliminar cliente potencial:", error);
+        alert("Hubo un error al eliminar. Por favor, intenta de nuevo.");
+      }
+    }
+  };
+
+  const handleOpenUserModal = (user) => {
+    setEditingUser(user);
+    setUserFormData({
+      name: user.name || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      clinicName: user.clinicName || '',
+      role: user.role || 'client',
+      isActive: user.isActive !== false
+    });
+    setIsUserModalOpen(true);
+  };
+
+  const handleCloseUserModal = () => {
+    setIsUserModalOpen(false);
+    setEditingUser(null);
+  };
+
+  const handleUserSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingUser) {
+        await adminAPI.updateUser(editingUser._id, userFormData);
+        setRegisteredUsers(registeredUsers.map(u => u._id === editingUser._id ? { ...u, ...userFormData } : u));
+      }
+      handleCloseUserModal();
+    } catch (error) {
+      console.error("Error al guardar usuario:", error);
+      alert("Hubo un error al guardar. Por favor, intenta de nuevo.");
+    }
+  };
+
+  const handleUserDelete = async (id) => {
+    if (window.confirm('¿Seguro que deseas eliminar este cliente permanentemente? Esta acción no se puede deshacer.')) {
+      try {
+        await adminAPI.deleteUser(id);
+        setRegisteredUsers(registeredUsers.filter(u => u._id !== id));
+      } catch (error) {
+        console.error("Error al eliminar usuario:", error);
         alert("Hubo un error al eliminar. Por favor, intenta de nuevo.");
       }
     }
@@ -274,19 +325,24 @@ const AdminLeads = () => {
                   <th className="px-6 py-4 font-semibold">Nombre / Clínica</th>
                   <th className="px-6 py-4 font-semibold">Contacto</th>
                   <th className="px-6 py-4 font-semibold">Registrado</th>
+                  <th className="px-6 py-4 font-semibold text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E2E8F0]">
                 {loadingUsers ? (
                   <tr>
-                    <td colSpan="3" className="px-6 py-12 text-center text-[#64748B]">Cargando clientes registrados...</td>
+                    <td colSpan="4" className="px-6 py-12 text-center text-[#64748B]">Cargando clientes registrados...</td>
                   </tr>
                 ) : filteredUsers.length > 0 ? (
                   filteredUsers.map((u) => (
                     <tr key={u._id} className="hover:bg-[#F8FAFC] transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="font-bold text-[#0F172A]">{u.name}</span>
+                          <span className="font-bold text-[#0F172A]">
+                            {u.name}
+                            {u.role === 'admin' && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700">ADMIN</span>}
+                            {u.isActive === false && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">INACTIVO</span>}
+                          </span>
                           <span className="text-xs text-[#64748B]">{u.clinicName || 'Sin clínica registrada'}</span>
                         </div>
                       </td>
@@ -299,11 +355,21 @@ const AdminLeads = () => {
                       <td className="px-6 py-4 text-xs text-[#64748B]">
                         {u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-AR') : '—'}
                       </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button onClick={() => handleOpenUserModal(u)} className="p-1.5 text-[#64748B] hover:text-[#1E5A9C] hover:bg-[#1E5A9C]/10 rounded-lg transition-colors" title="Editar Cliente">
+                            <Edit3 size={16} />
+                          </button>
+                          <button onClick={() => handleUserDelete(u._id)} className="p-1.5 text-[#64748B] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Eliminar Cliente">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="px-6 py-12 text-center text-[#64748B]">
+                    <td colSpan="4" className="px-6 py-12 text-center text-[#64748B]">
                       Todavía no hay clientes registrados en la tienda pública.
                     </td>
                   </tr>
@@ -408,6 +474,64 @@ const AdminLeads = () => {
                 </button>
                 <button type="submit" className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#1E5A9C] hover:bg-[#16487D] transition-colors">
                   Guardar Cliente
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Editar Cliente Registrado */}
+      {isUserModalOpen && editingUser && (
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm z-100 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="p-5 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
+              <h2 className="text-lg font-bold text-[#0F172A]">
+                Editar Cliente Registrado
+              </h2>
+              <button onClick={handleCloseUserModal} className="text-[#64748B] hover:text-[#0F172A]">✕</button>
+            </div>
+
+            <form onSubmit={handleUserSubmit} className="p-5 overflow-y-auto flex-1 flex flex-col gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Nombre <span className="text-red-500">*</span></label>
+                  <input required type="text" value={userFormData.name} onChange={e => setUserFormData({ ...userFormData, name: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Clínica / Institución</label>
+                  <input type="text" value={userFormData.clinicName} onChange={e => setUserFormData({ ...userFormData, clinicName: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Teléfono / WhatsApp</label>
+                  <input type="text" value={userFormData.phone} onChange={e => setUserFormData({ ...userFormData, phone: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C]" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Email (Solo Lectura)</label>
+                  <input type="email" value={userFormData.email} readOnly className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none bg-gray-50 text-gray-500 cursor-not-allowed" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Rol del Usuario</label>
+                  <select value={userFormData.role} onChange={e => setUserFormData({ ...userFormData, role: e.target.value })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C] bg-white">
+                    <option value="client">Cliente</option>
+                    <option value="admin">Administrador</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#64748B]">Estado de Cuenta</label>
+                  <select value={userFormData.isActive ? "true" : "false"} onChange={e => setUserFormData({ ...userFormData, isActive: e.target.value === "true" })} className="border border-[#E2E8F0] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#1E5A9C] bg-white">
+                    <option value="true">Activo (Permitir Acceso)</option>
+                    <option value="false">Inactivo / Bloqueado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-end gap-3 pt-4 border-t border-[#E2E8F0]">
+                <button type="button" onClick={handleCloseUserModal} className="px-4 py-2 rounded-lg text-sm font-semibold text-[#64748B] hover:bg-[#F1F5F9] transition-colors">
+                  Cancelar
+                </button>
+                <button type="submit" className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#1E5A9C] hover:bg-[#16487D] transition-colors">
+                  Guardar Cambios
                 </button>
               </div>
             </form>

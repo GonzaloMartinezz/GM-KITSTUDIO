@@ -477,6 +477,56 @@ const getBuyers = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Actualizar un cliente registrado
+ * @route   PUT /api/admin/users/:id
+ * @access  Admin
+ */
+const updateUser = async (req, res, next) => {
+  try {
+    const { name, email, phone, clinicName, role, isActive } = req.body;
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('Usuario no encontrado.');
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.phone = phone !== undefined ? phone : user.phone;
+    user.clinicName = clinicName !== undefined ? clinicName : user.clinicName;
+    user.role = role || user.role;
+    if (isActive !== undefined) user.isActive = isActive;
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Eliminar un cliente registrado
+ * @route   DELETE /api/admin/users/:id
+ * @access  Admin
+ */
+const deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('Usuario no encontrado.');
+    }
+
+    await user.deleteOne();
+    res.json({ message: 'Usuario eliminado correctamente.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getUsers,
@@ -484,5 +534,7 @@ module.exports = {
   getSalesTrend,
   getTransactions,
   getFinancialReport,
-  getBuyers
+  getBuyers,
+  updateUser,
+  deleteUser
 };
