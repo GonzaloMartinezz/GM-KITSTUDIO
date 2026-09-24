@@ -71,7 +71,7 @@ const AdminFinanzas = () => {
 
 
   return (
-    <div className="w-full h-full font-geist flex flex-col relative pb-12">
+    <div className="w-full min-h-full font-geist flex flex-col relative pb-12">
 
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
