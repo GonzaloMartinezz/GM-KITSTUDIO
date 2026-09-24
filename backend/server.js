@@ -36,7 +36,9 @@ app.set('trust proxy', 1);
 /* ─── MIDDLEWARE GLOBAL ─────────────────────────── */
 
 // Seguridad HTTP headers
-app.use(helmet());
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" }
+}));
 
 // CORS configurado para el frontend con cookies
 // Orígenes permitidos: localhost (dev) + CLIENT_URL (prod, puede tener
