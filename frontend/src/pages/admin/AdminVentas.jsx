@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAdminData } from '../../context/AdminDataContext';
 import RecentTransactionsTable from '../../components/admin/RecentTransactionsTable';
-import SalesTrendChart from '../../components/admin/SalesTrendChart';
+import TopBuyers from '../../components/admin/TopBuyers';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,17 +35,12 @@ const AdminVentas = () => {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* Left Column: Line Curve */}
-        <div className="xl:col-span-8 flex flex-col gap-6">
-          <SalesTrendChart />
-        </div>
-
-        {/* Right Column: Informative Panel */}
-        <div className="xl:col-span-4 bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-xs flex flex-col justify-between">
+        {/* Left Column: Informative Panel */}
+        <div className="xl:col-span-8 bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-xs flex flex-col justify-between">
           <div>
             <h2 className="text-base font-bold text-[#0F172A] mb-2">Información sobre las Ventas</h2>
             <p className="text-sm text-[#64748B] leading-relaxed mb-4">
-              Este módulo muestra las transacciones reales guardadas en la base de datos.
+              Este módulo muestra las transacciones reales guardadas en la base de datos. Para ver la curva de tendencia de ventas por período, andá al Dashboard (Control Central).
             </p>
             <ul className="text-sm text-[#64748B] space-y-3">
               <li className="flex items-start gap-2">
@@ -54,14 +49,19 @@ const AdminVentas = () => {
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 bg-[#2644B2] rounded-full mt-1.5 shrink-0" />
-                El gráfico de tendencia de ventas (a la izquierda) lee las fechas exactas de creación de cada operación en el período.
+                Cambiar el estado de un pedido a "Completado" marcará el pago como efectivo.
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 bg-[#F59E0B] rounded-full mt-1.5 shrink-0" />
-                Cambiar el estado de un pedido a "Completado" marcará el pago como efectivo.
+                Podés editar o eliminar cualquier venta desde la tabla de abajo; los cambios impactan al instante en el inventario y en los reportes financieros.
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Right Column: Top Buyers ranking */}
+        <div className="xl:col-span-4">
+          <TopBuyers />
         </div>
       </div>
 

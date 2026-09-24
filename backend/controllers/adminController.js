@@ -198,61 +198,84 @@ const getUserById = async (req, res, next) => {
  * @route   GET /api/admin/sales-trend
  * @access  Admin
  */
+// Identidad de comprador: cuenta registrada (user) o venta manual (nombre+teléfono)
+const buyerKeyOf = (o) => (o.user ? `u:${String(o.user)}` : `n:${o.customerName || ''}|${o.customerPhone || ''}`);
+
 const getSalesTrend = async (req, res, next) => {
   try {
     const { timeframe = 'monthly', startDate, endDate } = req.query;
     const now = new Date();
     let dateFrom;
     let dateTo = now;
-    let groupByFormat;
+    let bucketOf; // (Date) => number - clave de período que coincide con lo que espera el frontend
 
-    if (timeframe === 'custom' && startDate && endDate) {
-      dateFrom = new Date(startDate);
-      dateTo = new Date(endDate);
-      dateTo.setHours(23, 59, 59, 999);
-      // Si la diferencia es menor a 31 días, agrupar por día, sino por mes
-      const diffTime = Math.abs(dateTo - dateFrom);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      groupByFormat = diffDays <= 31 ? '%Y-%m-%d' : '%Y-%m';
-    } else {
-      switch (timeframe) {
-        case 'weekly':
-          dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          groupByFormat = '%Y-%m-%d';
-          break;
-        case 'yearly':
+    switch (timeframe) {
+      case 'weekly':
+        dateFrom = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        // Mongo $dayOfWeek: 1=domingo..7=sábado. JS getDay(): 0=domingo..6=sábado.
+        bucketOf = (d) => d.getDay() + 1;
+        break;
+      case 'yearly':
+        dateFrom = new Date(now.getFullYear() - 3, 0, 1);
+        bucketOf = (d) => d.getFullYear();
+        break;
+      case 'custom':
+        if (startDate && endDate) {
+          dateFrom = new Date(startDate);
+          dateTo = new Date(endDate);
+          dateTo.setHours(23, 59, 59, 999);
+        } else {
           dateFrom = new Date(now.getFullYear(), 0, 1);
-          groupByFormat = '%Y-%m';
-          break;
-        case 'monthly':
-        default:
-          dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
-          groupByFormat = '%Y-%m-%d';
-          break;
+        }
+        bucketOf = (d) => d.getMonth() + 1;
+        break;
+      case 'monthly':
+      default:
+        // "Mensual" en el admin muestra el año completo desglosado por mes (ENE..DIC)
+        dateFrom = new Date(now.getFullYear(), 0, 1);
+        bucketOf = (d) => d.getMonth() + 1;
+        break;
+    }
+
+    // Primera compra histórica de cada cliente (para saber si una orden es "nueva" o "recurrente")
+    const allOrders = await Order.find({ status: { $ne: 'cancelado' } })
+      .select('createdAt user customerName customerPhone')
+      .sort({ createdAt: 1 })
+      .lean();
+
+    const firstOrderIdByBuyer = new Map();
+    for (const o of allOrders) {
+      const key = buyerKeyOf(o);
+      if (!firstOrderIdByBuyer.has(key)) {
+        firstOrderIdByBuyer.set(key, String(o._id));
       }
     }
 
-    const trend = await Order.aggregate([
-      { $match: { status: { $nin: ['cancelado'] }, createdAt: { $gte: dateFrom, $lte: dateTo } } },
-      {
-        $group: {
-          _id: { $dateToString: { format: groupByFormat, date: '$createdAt' } },
-          revenue: { $sum: '$totalAmount' },
-          orders: { $sum: 1 },
-          kits: {
-            $sum: {
-              $reduce: {
-                input: '$items',
-                initialValue: 0,
-                in: { $add: ['$$value', '$$this.quantity'] },
-              },
-            },
-          },
-        },
-      },
-      { $sort: { _id: 1 } },
-    ]);
+    const ordersInRange = await Order.find({
+      status: { $ne: 'cancelado' },
+      createdAt: { $gte: dateFrom, $lte: dateTo },
+    })
+      .select('createdAt totalAmount items user customerName customerPhone')
+      .lean();
 
+    const buckets = new Map();
+    for (const o of ordersInRange) {
+      const d = new Date(o.createdAt);
+      const key = bucketOf(d);
+      if (!buckets.has(key)) {
+        buckets.set(key, { revenue: 0, orders: 0, kits: 0, newClients: 0, existingClients: 0 });
+      }
+      const b = buckets.get(key);
+      b.revenue += o.totalAmount || 0;
+      b.orders += 1;
+      b.kits += (o.items || []).reduce((sum, it) => sum + (it.quantity || 0), 0);
+
+      const isFirstOrderEver = firstOrderIdByBuyer.get(buyerKeyOf(o)) === String(o._id);
+      if (isFirstOrderEver) b.newClients += 1;
+      else b.existingClients += 1;
+    }
+
+    const trend = Array.from(buckets.entries()).map(([_id, v]) => ({ _id, ...v }));
     res.json(trend);
   } catch (error) {
     next(error);
@@ -360,15 +383,48 @@ const getFinancialReport = async (req, res, next) => {
  */
 const getBuyers = async (req, res, next) => {
   try {
+    // Trae clientes con cuenta registrada (checkout real) Y ventas manuales cargadas
+    // por el admin (customerName), en vez de sólo estas últimas.
     const buyers = await Order.aggregate([
-      // Ignorar órdenes sin customerName o canceladas
-      { $match: { customerName: { $ne: '' }, status: { $ne: 'cancelado' } } },
+      {
+        $match: {
+          status: { $ne: 'cancelado' },
+          $or: [
+            { user: { $exists: true, $ne: null } },
+            { customerName: { $ne: '' } },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      { $unwind: { path: '$userInfo', preserveNullAndEmptyArrays: true } },
+      {
+        $addFields: {
+          buyerKey: {
+            $cond: [
+              { $ifNull: ['$user', false] },
+              { $concat: ['u:', { $toString: '$user' }] },
+              { $concat: ['n:', { $ifNull: ['$customerName', ''] }, '|', { $ifNull: ['$customerPhone', ''] }] },
+            ],
+          },
+          buyerName: { $ifNull: ['$userInfo.name', '$customerName'] },
+          buyerPhone: { $ifNull: ['$userInfo.phone', '$customerPhone'] },
+          buyerClinic: { $ifNull: ['$userInfo.clinicName', '$customerClinic'] },
+        },
+      },
       {
         $group: {
-          _id: {
-            name: '$customerName',
-            phone: '$customerPhone'
-          },
+          _id: '$buyerKey',
+          userId: { $first: '$user' },
+          name: { $first: '$buyerName' },
+          phone: { $first: '$buyerPhone' },
+          clinic: { $first: '$buyerClinic' },
           totalSpent: { $sum: '$totalAmount' },
           totalOrders: { $sum: 1 },
           lastPurchaseDate: { $max: '$createdAt' },
@@ -393,15 +449,15 @@ const getBuyers = async (req, res, next) => {
               },
             },
           },
-          clinic: { $first: '$customerClinic' }
         }
       },
       {
         $project: {
-          _id: 0,
-          name: '$_id.name',
-          phone: '$_id.phone',
-          clinic: '$clinic',
+          _id: 1,
+          userId: 1,
+          name: 1,
+          phone: 1,
+          clinic: 1,
           totalSpent: 1,
           totalOrders: 1,
           lastPurchaseDate: 1,
@@ -412,7 +468,7 @@ const getBuyers = async (req, res, next) => {
           totalKits: 1
         }
       },
-      { $sort: { lastPurchaseDate: -1 } }
+      { $sort: { totalSpent: -1 } }
     ]);
 
     res.json(buyers);

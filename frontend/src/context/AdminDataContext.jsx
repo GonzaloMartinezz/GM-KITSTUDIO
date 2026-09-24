@@ -69,8 +69,8 @@ const buildSalesTrend = (timeframe, rawTrend) => {
       const t = byId.get(dow);
       return {
         label: WEEKDAY_LABELS[dow - 1],
-        newClients: 0,
-        existingClients: t?.orders || 0,
+        newClients: t?.newClients || 0,
+        existingClients: t?.existingClients || 0,
         revenue: fmtMoney(t?.revenue || 0),
       };
     });
@@ -83,20 +83,20 @@ const buildSalesTrend = (timeframe, rawTrend) => {
       const t = byId.get(y);
       return {
         label: String(y),
-        newClients: 0,
-        existingClients: t?.orders || 0,
+        newClients: t?.newClients || 0,
+        existingClients: t?.existingClients || 0,
         revenue: fmtMoney(t?.revenue || 0),
       };
     });
   }
 
-  // Mensual
+  // Mensual (y Personalizado, como fallback)
   return MONTH_LABELS.map((label, idx) => {
     const t = byId.get(idx + 1);
     return {
       label,
-      newClients: 0,
-      existingClients: t?.orders || 0,
+      newClients: t?.newClients || 0,
+      existingClients: t?.existingClients || 0,
       revenue: fmtMoney(t?.revenue || 0),
     };
   });
