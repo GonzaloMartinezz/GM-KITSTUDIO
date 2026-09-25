@@ -168,7 +168,7 @@ const Home = () => {
             className="flex flex-wrap lg:flex-nowrap items-center gap-1.5 sm:gap-2 mb-4 text-[10px] lg:text-[9.5px] xl:text-[11px] text-[#364B5D] font-semibold"
           >
             <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs whitespace-nowrap">
-              <Truck className="w-3 h-3 text-emerald-600 shrink-0" /> Envío Gratis en 10+ kits
+              <Truck className="w-3 h-3 text-emerald-600 shrink-0" /> Entrega en Tucumán y NOA
             </span>
             <span className="inline-flex items-center gap-1 bg-white/80 px-2.5 py-1 rounded-full border border-[#E1D9CC] shadow-2xs whitespace-nowrap">
               <Sparkles className="w-3 h-3 text-[#0C3B45] shrink-0" /> Kit Trial a Precio Costo

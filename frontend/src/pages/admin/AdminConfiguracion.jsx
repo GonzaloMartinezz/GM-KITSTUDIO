@@ -5,8 +5,6 @@ import { useSettings } from '../../context/SettingsContext';
 const AdminConfiguracion = () => {
   const { settings, updateSettings, loading } = useSettings();
   const [formData, setFormData] = useState({
-    freeShippingMinKits: 30,
-    shippingDiscountAmount: 15000,
     whatsappNumber: '',
     contactEmail: '',
     instagramUrl: ''
@@ -17,8 +15,6 @@ const AdminConfiguracion = () => {
   useEffect(() => {
     if (settings) {
       setFormData({
-        freeShippingMinKits: settings.freeShippingMinKits || 30,
-        shippingDiscountAmount: settings.shippingDiscountAmount || 15000,
         whatsappNumber: settings.whatsappNumber || '',
         contactEmail: settings.contactEmail || '',
         instagramUrl: settings.instagramUrl || ''
@@ -30,7 +26,7 @@ const AdminConfiguracion = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name.includes('Amount') || name.includes('MinKits') ? Number(value) : value
+      [name]: value
     }));
   };
 
@@ -62,7 +58,7 @@ const AdminConfiguracion = () => {
             Configuración Global
           </h1>
           <p className="text-brand-1/70 text-sm mt-1">
-            Gestiona los textos públicos, costos de envío y datos de contacto que se muestran en la web.
+            Gestiona los datos de contacto que se muestran en la web.
           </p>
         </div>
       </header>
@@ -70,38 +66,8 @@ const AdminConfiguracion = () => {
       <div className="bg-[#16272B] border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden">
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h3 className="text-xl font-bebas text-white mb-4 border-b border-white/10 pb-2">Envío Bonificado</h3>
-              
-              <div>
-                <label className="block text-sm text-brand-1/70 font-semibold mb-2">Cantidad mínima de kits para envío gratis</label>
-                <input
-                  type="number"
-                  name="freeShippingMinKits"
-                  value={formData.freeShippingMinKits}
-                  onChange={handleChange}
-                  className="w-full bg-[#0C1517] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#88C9C4]"
-                  required
-                />
-                <p className="text-xs text-brand-1/50 mt-1">Reemplaza el texto "Desde X Kits" en la tarjeta de envíos.</p>
-              </div>
-              
-              <div>
-                <label className="block text-sm text-brand-1/70 font-semibold mb-2">Ahorro escalonado (Monto en $)</label>
-                <input
-                  type="number"
-                  name="shippingDiscountAmount"
-                  value={formData.shippingDiscountAmount}
-                  onChange={handleChange}
-                  className="w-full bg-[#0C1517] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#88C9C4]"
-                  required
-                />
-                <p className="text-xs text-brand-1/50 mt-1">Se muestra en "Ahorro escalonado de hasta $X.XXX"</p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-6">
+            <div className="space-y-4 max-w-md">
               <h3 className="text-xl font-bebas text-white mb-4 border-b border-white/10 pb-2">Datos de Contacto</h3>
               
               <div>

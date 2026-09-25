@@ -218,26 +218,26 @@ const Products = () => {
                     <Truck className="w-6 h-6" />
                   </div>
                   <span className="bg-[#88C9C4] text-[#0C1517] font-black text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wide">
-                    Desde {settings?.freeShippingMinKits || 30} Kits
+                    Tucumán y NOA
                   </span>
                 </div>
                 <h3 className="font-bebas text-2xl sm:text-3xl text-white tracking-wide mb-1">
-                  ENVÍO BONIFICADO!
+                  LOGÍSTICA DE ENTREGA
                 </h3>
                 <p className="text-xs text-[#88C9C4] font-semibold mb-3">
-                  Flete 100% bonificado a tu consultorio
+                  A domicilio o coordinado con vos
                 </p>
                 <p className="text-xs sm:text-sm text-brand-1/80 font-geist leading-relaxed mb-5">
-                  A partir de {settings?.freeShippingMinKits || 30} unidades, el envío corre completamente por nuestra cuenta. Recibí tus insumos directamente en tu consultorio sin costos ocultos, reteniendo la máxima ganancia.
+                  Elegí cómo recibir tus insumos: entrega directa en tu consultorio o coordinación de retiro en un punto de encuentro. Despachamos con embalaje estéril protegido.
                 </p>
                 <div className="space-y-2 border-t border-white/10 pt-4 mb-6 text-xs text-brand-1/90">
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Envío Gratis bonificado en {settings?.freeShippingMinKits || 30}+ kits</span>
+                    <span>Envío a domicilio en Tucumán capital y alrededores</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />
-                    <span>Ahorro de hasta ${((settings?.shippingDiscountAmount || 15000) / 1000).toFixed(0)}.000</span>
+                    <span>Coordinación de retiro en punto de encuentro</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-3.5 h-3.5 text-[#88C9C4] shrink-0 stroke-2.5" />

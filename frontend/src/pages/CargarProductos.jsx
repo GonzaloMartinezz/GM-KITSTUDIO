@@ -91,7 +91,6 @@ const getPromo = (qty) => {
       sublabel: 'Kit Quirúrgico Descartable Completo.',
       discount: 0,
       unitPrice: 9500,
-      freeShipping: false,
       tag: 'Base'
     };
   }
@@ -100,7 +99,6 @@ const getPromo = (qty) => {
     sublabel: 'Kit Quirúrgico Descartable Completo.',
     discount: 0,
     unitPrice: 9500,
-    freeShipping: false,
     tag: 'Base'
   };
 };
@@ -263,8 +261,8 @@ const CargarProductos = () => {
     }
 
     const shippingMap = {
-      domicilio: promo.freeShipping ? 'Envío a Domicilio (¡Bonificado Gratis!)' : 'Envío a Domicilio (Tucumán)',
-      sucursal: promo.freeShipping ? 'Retiro en Sucursal (¡Bonificado Gratis!)' : 'Retiro en Sucursal (Punto designado)',
+      domicilio: 'Envío a Domicilio (Tucumán)',
+      sucursal: 'Retiro en Sucursal (Punto designado)',
       acordar: 'Acordar con vendedor (En persona)'
     };
     const paymentMap = {
@@ -288,10 +286,6 @@ const CargarProductos = () => {
 
     msg += `📦 *Detalle del Pedido:*\n`;
     msg += `• ${quantity}x Kit Odontológico Completo\n`;
-
-    if (promo.freeShipping) {
-      msg += `🎁 *Beneficio aplicado:* Envío 100% Bonificado Gratis\n`;
-    }
 
     if (cartItems.length > 0) {
       msg += `\n🛒 *Insumos adicionales del carrito:*\n`;
@@ -756,12 +750,9 @@ const CargarProductos = () => {
                 {/* Right Column: Live Price & Summary Box */}
                 <div className="md:col-span-5 flex flex-col gap-2.5">
                   {/* Promo Banner */}
-                  <div className={`w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${promo.freeShipping
-                    ? 'bg-[#88C9C4]/25 text-[#0C3B45] border border-[#88C9C4]/50'
-                    : 'bg-[#EBE7DF] text-[#8CA0B2]'
-                    }`}>
+                  <div className="w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all bg-[#EBE7DF] text-[#8CA0B2]">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className={`w-2 h-2 rounded-full ${promo.freeShipping ? 'bg-[#0C3B45]' : 'bg-[#D9D1C7]'}`} />
+                      <span className="w-2 h-2 rounded-full bg-[#D9D1C7]" />
                       <span className="font-bold">{promo.label}</span>
                       <span>— {promo.sublabel}</span>
                     </div>
@@ -782,12 +773,6 @@ const CargarProductos = () => {
                         <span className="font-semibold text-[#0C3B45]">${Math.round(unitPrice).toLocaleString()}</span>
                       </div>
 
-                      {promo.freeShipping && (
-                        <div className="flex justify-between items-center text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md mt-2">
-                          <span>Envío a Domicilio</span>
-                          <span className="uppercase">¡100% Bonificado Gratis!</span>
-                        </div>
-                      )}
                     </div>
 
                     <div className="pt-2 border-t border-[#F4F2EC] flex items-center justify-between">
@@ -833,19 +818,10 @@ const CargarProductos = () => {
                 Seleccioná cómo deseas recibir tus insumos. Despachamos con embalaje estéril protegido.
               </p>
 
-              {/* Free Shipping Alert if 10+ kits */}
-              {promo.freeShipping && (
-                <div className="mb-4 px-4 py-2.5 bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs rounded-xl flex items-center gap-2 max-w-md shadow-xs">
-                  <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="font-bold">¡Tu compra de {quantity} kits incluye Envío 100% Bonificado Gratis!</span>
-                </div>
-              )}
-
               {/* Responsive Cards for mobile and desktop */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-lg md:max-w-4xl mx-auto text-left">
                 {shippingOptions.map(opt => {
                   const isSelected = selectedShipping === opt.id;
-                  const isFree = promo.freeShipping && (opt.id === 'domicilio' || opt.id === 'sucursal');
                   const Icon = opt.icon;
                   return (
                     <div
@@ -873,16 +849,13 @@ const CargarProductos = () => {
                             {opt.title}
                           </h3>
                           {opt.badge && (
-                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${isFree
-                              ? 'bg-emerald-600 text-white shadow-sm'
-                              : 'text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40'
-                              }`}>
-                              {isFree ? '¡BONIFICADO GRATIS!' : opt.badge}
+                            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40">
+                              {opt.badge}
                             </span>
                           )}
                         </div>
                         <p className="text-[12px] sm:text-[13px] text-[#8CA0B2] leading-snug px-1">
-                          {isFree ? 'Despacho bonificado sin cargo para tu consultorio.' : opt.desc}
+                          {opt.desc}
                         </p>
                       </div>
                     </div>

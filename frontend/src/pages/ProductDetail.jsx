@@ -121,7 +121,6 @@ const ProductDetail = () => {
             <div className="bg-brand-5/50 border border-brand-4 p-4 rounded-2xl mb-8 text-xs font-geist space-y-3">
               <div className="flex items-center justify-between font-bold text-brand-2 uppercase text-[11px] tracking-wider">
                 <span>Escala por Volumen (Fase Inicial)</span>
-                <span className="text-emerald-400 font-semibold">Envío Gratis en 10+ kits</span>
               </div>
               <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
                 <div className="bg-brand-4/30 p-2 rounded-xl border border-brand-3/20">
@@ -132,7 +131,6 @@ const ProductDetail = () => {
                 <div className="bg-brand-4/60 p-2 rounded-xl border border-brand-3/50 ring-1 ring-[#88C9C4]/30">
                   <p className="font-bebas text-lg text-[#88C9C4] leading-none mb-0.5">10% OFF</p>
                   <p className="text-brand-1/90 font-semibold">10 kits ($76.500)</p>
-                  <p className="text-emerald-300 font-bold mt-0.5">+ Envío Gratis</p>
                 </div>
                 <div className="bg-brand-4/30 p-2 rounded-xl border border-brand-3/20">
                   <p className="font-bebas text-lg text-brand-1 leading-none mb-0.5">15% OFF</p>

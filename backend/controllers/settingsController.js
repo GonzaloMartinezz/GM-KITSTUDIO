@@ -31,15 +31,11 @@ const updateSettings = async (req, res, next) => {
     }
 
     const {
-      freeShippingMinKits,
-      shippingDiscountAmount,
       whatsappNumber,
       contactEmail,
       instagramUrl,
     } = req.body;
 
-    if (freeShippingMinKits !== undefined) settings.freeShippingMinKits = freeShippingMinKits;
-    if (shippingDiscountAmount !== undefined) settings.shippingDiscountAmount = shippingDiscountAmount;
     if (whatsappNumber !== undefined) settings.whatsappNumber = whatsappNumber;
     if (contactEmail !== undefined) settings.contactEmail = contactEmail;
     if (instagramUrl !== undefined) settings.instagramUrl = instagramUrl;

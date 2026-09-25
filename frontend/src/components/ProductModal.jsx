@@ -45,7 +45,7 @@ const ProductModal = ({ isOpen, onClose }) => {
 
   const quantities = [
     { title: "1 a 9 Kits", desc: "$9.500 por kit completo." },
-    { title: "10 Kits o más", desc: "$9.500 por kit + Envío Gratis 100% Bonificado." },
+    { title: "10 Kits o más", desc: "$9.500 por kit completo." },
     { title: "Personalizado", desc: "Consultar volumen mayor." }
   ];
 
