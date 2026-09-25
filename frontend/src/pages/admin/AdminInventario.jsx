@@ -661,7 +661,7 @@ const AdminInventario = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-[#E2E8F0]"
+              className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-[#E2E8F0] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
                 <div>
@@ -801,7 +801,7 @@ const AdminInventario = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0]"
+              className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
                 <h3 className="text-base font-bold text-[#0F172A]">Ingresar Kits al Stock</h3>
@@ -866,7 +866,7 @@ const AdminInventario = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0]"
+              className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
                 <h3 className="text-base font-bold text-[#0F172A]">Editar Precio y Umbral del Kit</h3>

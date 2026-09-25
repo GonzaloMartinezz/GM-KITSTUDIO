@@ -56,10 +56,10 @@ const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defau
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden font-geist"
+          className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden font-geist max-h-[90vh] flex flex-col"
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center justify-between bg-[#F8FAFC]">
+          <div className="px-6 py-4 border-b border-[#F1F5F9] flex items-center justify-between bg-[#F8FAFC] shrink-0">
             <h3 className="font-bold text-[#0F172A]">{editingOrder ? 'Editar Transacción' : 'Nueva Transacción'}</h3>
             <button onClick={onClose} type="button" className="p-1 text-[#64748B] hover:text-[#0F172A] transition-colors rounded-lg hover:bg-white cursor-pointer">
               <X size={20} />
@@ -67,7 +67,7 @@ const NewTransactionModal = ({ isOpen, onClose, onSubmit, defaultCustomer, defau
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-[#64748B]">Cliente / Doctor</label>

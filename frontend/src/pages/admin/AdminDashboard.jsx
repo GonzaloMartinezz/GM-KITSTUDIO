@@ -180,7 +180,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
           <button
             onClick={() => navigate('.', { state: { openNewTransactionModal: true } })}
             className="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
