@@ -58,7 +58,6 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
   const [trendForm, setTrendForm] = useState({
     revenue: '',
     newClients: '',
-    existingClients: '',
   });
 
   const [dispForm, setDispForm] = useState({
@@ -145,7 +144,6 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
         setTrendForm({
           revenue: pt?.revenue || '',
           newClients: pt?.newClients ?? '',
-          existingClients: pt?.existingClients ?? '',
         });
       }
     }
@@ -709,7 +707,6 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
                       setTrendForm({
                         revenue: pt.revenue,
                         newClients: pt.newClients,
-                        existingClients: pt.existingClients,
                       });
                     }}
                     className={`px-3 py-1.5 rounded-lg font-semibold cursor-pointer shrink-0 ${
@@ -735,28 +732,15 @@ const AdminCardEditModal = ({ isOpen, onClose, modalType, initialData }) => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block font-bold text-[#334155] mb-1">Clientes Nuevos</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={trendForm.newClients}
-                  onChange={(e) => setTrendForm({ ...trendForm, newClients: e.target.value === '' ? '' : Number(e.target.value) })}
-                  className="w-full px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#0F172A] font-bold focus:outline-none focus:border-[#1E5A9C] focus:bg-white"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-[#334155] mb-1">Clientes Recurrentes</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={trendForm.existingClients}
-                  onChange={(e) => setTrendForm({ ...trendForm, existingClients: e.target.value === '' ? '' : Number(e.target.value) })}
-                  className="w-full px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#0F172A] font-bold focus:outline-none focus:border-[#1E5A9C] focus:bg-white"
-                />
-              </div>
+            <div>
+              <label className="block font-bold text-[#334155] mb-1">Clientes Nuevos</label>
+              <input
+                type="number"
+                min="0"
+                value={trendForm.newClients}
+                onChange={(e) => setTrendForm({ ...trendForm, newClients: e.target.value === '' ? '' : Number(e.target.value) })}
+                className="w-full px-3.5 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-[#0F172A] font-bold focus:outline-none focus:border-[#1E5A9C] focus:bg-white"
+              />
             </div>
 
             <div className="pt-4 border-t border-[#F1F5F9] flex items-center justify-end gap-2">

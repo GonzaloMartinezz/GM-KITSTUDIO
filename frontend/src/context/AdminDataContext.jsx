@@ -70,7 +70,7 @@ const buildSalesTrend = (timeframe, rawTrend) => {
       return {
         label: WEEKDAY_LABELS[dow - 1],
         newClients: t?.newClients || 0,
-        existingClients: t?.existingClients || 0,
+        revenueNum: t?.revenue || 0,
         revenue: fmtMoney(t?.revenue || 0),
       };
     });
@@ -84,19 +84,19 @@ const buildSalesTrend = (timeframe, rawTrend) => {
       return {
         label: String(y),
         newClients: t?.newClients || 0,
-        existingClients: t?.existingClients || 0,
+        revenueNum: t?.revenue || 0,
         revenue: fmtMoney(t?.revenue || 0),
       };
     });
   }
 
-  // Mensual (y Personalizado, como fallback)
+  // Mensual (y Personalizado, como fallback): un valor por mes del año actual.
   return MONTH_LABELS.map((label, idx) => {
     const t = byId.get(idx + 1);
     return {
       label,
       newClients: t?.newClients || 0,
-      existingClients: t?.existingClients || 0,
+      revenueNum: t?.revenue || 0,
       revenue: fmtMoney(t?.revenue || 0),
     };
   });
@@ -588,8 +588,16 @@ export const AdminDataProvider = ({ children }) => {
     if (updatedFields.stockAvailable !== undefined) payload.stock = updatedFields.stockAvailable;
     if (updatedFields.kitsPurchasedTotal !== undefined) payload.totalPurchased = updatedFields.kitsPurchasedTotal;
     if (Object.keys(payload).length > 0) {
-      await productsAPI.update(kitProduct._id, payload);
-      await fetchKitProduct();
+      // Usamos directamente el producto que devuelve el PUT en vez de volver
+      // a pedir la lista completa: evita que una lectura con un pelín de
+      // demora (replicación de Mongo/caché) pise el precio/stock recién
+      // guardados con un valor todavía viejo.
+      const { data: updated } = await productsAPI.update(kitProduct._id, payload);
+      if (updated && updated._id) {
+        setKitProduct(updated);
+      } else {
+        await fetchKitProduct();
+      }
     }
   };
 
