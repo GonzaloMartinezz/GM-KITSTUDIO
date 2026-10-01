@@ -102,13 +102,23 @@ const buildSalesTrend = (timeframe, rawTrend) => {
   });
 };
 
-const buildStatCards = (timeframe, dash) => {
+const buildStatCards = (timeframe, dash, kitProduct) => {
   const changeDescByTf = {
     Semanal: 'esta semana',
     Mensual: 'este mes',
     Anual: 'este año',
   };
   const desc = changeDescByTf[timeframe] || 'en el período';
+
+  // Ingreso Extra = ganancia neta real de lo vendido en el período
+  // (precio de venta del kit - costo por kit) x kits vendidos. Ej: Gonzalo
+  // invierte $1.320.000 en 200 kits (costo ~$6.600/kit) y los vende a
+  // $9.500 → gana ~$2.900 por kit vendido.
+  const unitCost = Number(kitProduct?.cost) || 0;
+  const unitPrice = Number(kitProduct?.price) || 0;
+  const unitProfit = Math.max(unitPrice - unitCost, 0);
+  const kitsSold = Number(dash?.kitsSold) || 0;
+  const extraIncome = unitProfit * kitsSold;
 
   return [
     {
@@ -141,21 +151,21 @@ const buildStatCards = (timeframe, dash) => {
       trend: 'neutral',
     },
     {
-      id: 'new_customers',
-      title: 'CANTIDAD DE NUEVOS CLIENTES',
-      value: String(dash?.newClientsInPeriod || 0),
-      unit: `Nuevos ${desc}`,
+      id: 'stock',
+      title: 'STOCK ACTUAL DE KITS',
+      value: String(kitProduct?.stock ?? 0),
+      unit: 'Kits disponibles',
       change: '—',
-      changeDesc: `nuevos ${desc}`,
+      changeDesc: 'listos para vender',
       sparkline: [0, 0, 0, 0, 0, 0, 0],
       trend: 'neutral',
     },
     {
-      id: 'average_ticket',
-      title: 'TICKET PROMEDIO',
-      value: fmtMoney(dash?.orders ? dash.revenue / dash.orders : 0),
+      id: 'extra_income',
+      title: 'INGRESO EXTRA',
+      value: fmtMoney(extraIncome),
       change: '—',
-      changeDesc: `por venta ${desc}`,
+      changeDesc: `ganancia neta ${desc}`,
       sparkline: [0, 0, 0, 0, 0, 0, 0],
       trend: 'neutral',
     },
@@ -241,7 +251,6 @@ export const AdminDataProvider = ({ children }) => {
       adminAPI.salesTrend(params),
     ]);
     setDashboard(dashRes.data);
-    setStats((prev) => ({ ...prev, [tf]: buildStatCards(tf, dashRes.data) }));
     setSalesTrend((prev) => ({ ...prev, [tf]: buildSalesTrend(tf, trendRes.data) }));
     setTransactions((dashRes.data.recentOrders || []).map(orderToTransactionRow));
     return dashRes.data;
@@ -299,7 +308,10 @@ export const AdminDataProvider = ({ children }) => {
   const fetchBuyers = useCallback(async () => {
     try {
       const { data } = await adminAPI.buyers();
-      setBuyers(data || []);
+      // El backend devuelve "clinic"; CustomerProfileModal y la búsqueda del
+      // dashboard esperan "clinicName" (mismo campo que usan los Leads) para
+      // poder tratar compradores y clientes propios de forma uniforme.
+      setBuyers((data || []).map((b) => ({ ...b, clinicName: b.clinic || b.clinicName || '' })));
     } catch (err) {
       console.error("Error fetching buyers:", err);
     }
@@ -362,6 +374,14 @@ export const AdminDataProvider = ({ children }) => {
     }
     return () => { mounted = false; };
   }, [timeframe, dateRange, fetchDashboardAndTrend, fetchPaymentMethods]);
+
+  // Las stat cards (incluida "Ingreso Extra", que depende del costo/precio
+  // del kit) se recalculan en vivo cada vez que cambian el dashboard, el
+  // producto kit o el período elegido.
+  useEffect(() => {
+    if (!dashboard) return;
+    setStats((prev) => ({ ...prev, [timeframe]: buildStatCards(timeframe, dashboard, kitProduct) }));
+  }, [dashboard, kitProduct, timeframe]);
 
   /* ── Stats: derivados en vivo del backend, no editables a mano ── */
   const updateStat = () => {
@@ -503,9 +523,12 @@ export const AdminDataProvider = ({ children }) => {
     stockAvailable: kitProduct?.stock ?? 0,
     stockReserved,
     stockSoldMonth: dashboard?.kitsSold ?? 0,
+    stockSoldTotal: dashboard?.totalKitsSold ?? dashboard?.kitsSold ?? 0,
     stockInTransit,
+    kitsPurchasedTotal: kitProduct?.totalPurchased ?? 0,
     minimumAlertThreshold: kitProduct?.minStock ?? 30,
     kitPrice: kitProduct?.price ?? 9500,
+    kitCost: kitProduct?.cost ?? 0,
     warehouseLocation: 'Depósito Central GM - San Miguel de Tucumán',
     reservedList: reservations.map((r) => ({
       id: r._id,
@@ -549,6 +572,9 @@ export const AdminDataProvider = ({ children }) => {
     const payload = {};
     if (updatedFields.minimumAlertThreshold !== undefined) payload.minStock = updatedFields.minimumAlertThreshold;
     if (updatedFields.kitPrice !== undefined) payload.price = updatedFields.kitPrice;
+    if (updatedFields.kitCost !== undefined) payload.cost = updatedFields.kitCost;
+    if (updatedFields.stockAvailable !== undefined) payload.stock = updatedFields.stockAvailable;
+    if (updatedFields.kitsPurchasedTotal !== undefined) payload.totalPurchased = updatedFields.kitsPurchasedTotal;
     if (Object.keys(payload).length > 0) {
       await productsAPI.update(kitProduct._id, payload);
       await fetchKitProduct();

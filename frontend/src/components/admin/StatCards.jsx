@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSign, ShoppingCart, Users, UserPlus, TrendingUp, Edit3 } from 'lucide-react';
+import { DollarSign, ShoppingCart, Users, Package, TrendingUp, Edit3 } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
 
 
@@ -13,12 +13,12 @@ const StatCards = () => {
         return ShoppingCart;
       case 'customers':
         return Users;
-      case 'new_customers':
-        return UserPlus;
-      case 'average_ticket':
+      case 'stock':
+        return Package;
+      case 'extra_income':
         return TrendingUp;
       default:
-        return UserPlus;
+        return TrendingUp;
     }
   };
 

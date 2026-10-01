@@ -67,7 +67,7 @@ const CustomerProfileModal = ({ isOpen, onClose, buyer }) => {
           <div className="px-6 py-5 border-b border-[#F1F5F9] bg-[#F8FAFC] flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-[#1E5A9C] text-white flex items-center justify-center font-bold text-xl">
-                {buyer.name.charAt(0).toUpperCase()}
+                {(buyer.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
                 <h2 className="text-lg font-bold text-[#0F172A]">{buyer.name}</h2>
@@ -92,15 +92,15 @@ const CustomerProfileModal = ({ isOpen, onClose, buyer }) => {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               <div className="p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
                 <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-1">Total Comprado</p>
-                <p className="text-lg font-bold text-[#1E5A9C]">{formatMoney(buyer.totalSpent)}</p>
+                <p className="text-lg font-bold text-[#1E5A9C]">{formatMoney(buyer.totalSpent || 0)}</p>
               </div>
               <div className="p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
                 <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-1">Kits Llevados</p>
-                <p className="text-lg font-bold text-[#0F172A]">{buyer.totalKits} kits</p>
+                <p className="text-lg font-bold text-[#0F172A]">{buyer.totalKits || 0} kits</p>
               </div>
               <div className="p-4 rounded-xl border border-[#E2E8F0] bg-[#FFFBEB]">
                 <p className="text-[10px] font-bold text-[#F59E0B] uppercase tracking-wider mb-1">Saldo Pendiente</p>
-                <p className="text-lg font-bold text-[#F59E0B]">{formatMoney(buyer.balance)}</p>
+                <p className="text-lg font-bold text-[#F59E0B]">{formatMoney(buyer.balance || 0)}</p>
               </div>
               <div className="p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
                 <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider mb-1">Última Compra</p>

@@ -38,6 +38,13 @@ const productSchema = new mongoose.Schema({
     default: 10,
     min: 0,
   },
+  // Total histórico de kits comprados/fabricados (carga manual de Gonzalo,
+  // independiente de las compras a proveedor registradas en SupplierOrder).
+  totalPurchased: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
   image: {
     type: String,
     default: '',

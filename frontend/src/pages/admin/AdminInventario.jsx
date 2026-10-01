@@ -47,7 +47,7 @@ const AdminInventario = () => {
   const [isReserveModalOpen, setIsReserveModalOpen] = useState(false);
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isEditKitModalOpen, setIsEditKitModalOpen] = useState(false);
-  const [editKitForm, setEditKitForm] = useState({ kitPrice: '', minimumAlertThreshold: '' });
+  const [editKitForm, setEditKitForm] = useState({ kitPrice: '', minimumAlertThreshold: '', kitCost: '', stockAvailable: '', kitsPurchasedTotal: '' });
 
   // Form state for New Reservation
   const [reserveForm, setReserveForm] = useState({
@@ -69,6 +69,7 @@ const AdminInventario = () => {
   const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
   const stockSoldMonth = inventoryData?.stockSoldMonth || 0;
   const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
+  const kitsPurchasedTotal = inventoryData?.kitsPurchasedTotal || 0;
 
   const totalInWarehouse = stockAvailable + stockReserved;
   const totalInCircuit = stockAvailable + stockReserved + stockInTransit;
@@ -117,6 +118,9 @@ const AdminInventario = () => {
     setEditKitForm({
       kitPrice: kitPrice || '',
       minimumAlertThreshold: minThreshold || '',
+      kitCost: inventoryData?.kitCost || '',
+      stockAvailable: stockAvailable || 0,
+      kitsPurchasedTotal: inventoryData?.kitsPurchasedTotal || 0,
     });
     setIsEditKitModalOpen(true);
   };
@@ -128,10 +132,13 @@ const AdminInventario = () => {
       await updateInventoryData({
         kitPrice: Number(editKitForm.kitPrice) || kitPrice,
         minimumAlertThreshold: Number(editKitForm.minimumAlertThreshold) || minThreshold,
+        kitCost: editKitForm.kitCost === '' ? undefined : Number(editKitForm.kitCost),
+        stockAvailable: editKitForm.stockAvailable === '' ? undefined : Number(editKitForm.stockAvailable),
+        kitsPurchasedTotal: editKitForm.kitsPurchasedTotal === '' ? undefined : Number(editKitForm.kitsPurchasedTotal),
       });
       setIsEditKitModalOpen(false);
     } catch (err) {
-      setFormError(err?.response?.data?.message || 'No se pudo actualizar el precio/umbral del kit.');
+      setFormError(err?.response?.data?.message || 'No se pudo actualizar el kit.');
     }
   };
 
@@ -189,7 +196,7 @@ const AdminInventario = () => {
             className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
           >
             <Edit3 size={16} className="text-[#1E5A9C]" />
-            <span>Editar Precio y Umbral</span>
+            <span>Editar Kit</span>
           </button>
 
           <button
@@ -261,14 +268,11 @@ const AdminInventario = () => {
           </div>
         </div>
 
-        {/* 3. KITS VENDIDOS (Histórico Mensual) */}
+        {/* 3. KITS VENDIDOS (Período actual) */}
         <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
           <div className="flex items-center justify-between gap-2 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-[#1E5A9C]" /> Kits Vendidos
-            </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#1E5A9C]/10 text-[#1E5A9C]">
-              En Septiembre
             </span>
           </div>
           <div>
@@ -276,42 +280,31 @@ const AdminInventario = () => {
               <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A]">
                 {stockSoldMonth}
               </h2>
-              <span className="text-xs text-[#64748B] font-semibold">/ 520 meta</span>
+              <span className="text-xs text-[#64748B] font-semibold">en el período elegido</span>
             </div>
             <p className="text-xs text-[#64748B] mt-1.5">
-              Facturado: <strong className="text-[#0F172A]">${(stockSoldMonth * kitPrice).toLocaleString('es-AR')}</strong> (0% de avance)
+              Ingresos por venta: <strong className="text-[#0F172A]">${(stockSoldMonth * kitPrice).toLocaleString('es-AR')}</strong>
             </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-[11px] text-[#64748B]">
-            <span>Rotación: <strong>0 kits/día</strong></span>
-            <span className="text-[#1E5A9C] font-bold">A iniciar</span>
           </div>
         </div>
 
-        {/* 4. EN TRÁNSITO / POR RECIBIR */}
+        {/* 4. KITS COMPRADOS (Total histórico, carga manual) */}
         <div className="bg-white rounded-2xl p-5 border border-[#CBD5E1] shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-blue-50/20">
           <div className="flex items-center justify-between gap-2 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Truck className="w-4 h-4 text-[#1E5A9C]" /> En Tránsito (Fábrica)
-            </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
-              Al día (0)
+              <Package className="w-4 h-4 text-[#1E5A9C]" /> Kits Comprados
             </span>
           </div>
           <div>
             <div className="flex items-baseline gap-2">
               <h2 className="text-3xl sm:text-4xl font-black text-[#1E5A9C]">
-                {stockInTransit}
+                {kitsPurchasedTotal}
               </h2>
-              <span className="text-xs text-[#64748B] font-semibold">kits en camino</span>
+              <span className="text-xs text-[#64748B] font-semibold">total histórico</span>
             </div>
             <p className="text-xs text-[#64748B] mt-1.5">
-              Sin despachos pendientes en tránsito
+              Editalo desde "Editar Kit" cuando compres o fabriques más.
             </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px]">
-            <span className="text-[#64748B]">Todos recibidos</span>
-            <span className="text-[#64748B]">Total: {totalInCircuit} kits</span>
           </div>
         </div>
 
@@ -869,7 +862,7 @@ const AdminInventario = () => {
               className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-[#E2E8F0] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
-                <h3 className="text-base font-bold text-[#0F172A]">Editar Precio y Umbral del Kit</h3>
+                <h3 className="text-base font-bold text-[#0F172A]">Editar Kit</h3>
                 <button
                   onClick={() => setIsEditKitModalOpen(false)}
                   className="text-[#64748B] hover:text-[#0F172A] font-bold"
@@ -903,6 +896,42 @@ const AdminInventario = () => {
                     required
                   />
                   <span className="text-[10px] text-[#64748B]">Debajo de este número, el panel marca "Reponer stock".</span>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-semibold mb-1">Costo por Kit ($)</label>
+                  <input
+                    type="number"
+                    value={editKitForm.kitCost}
+                    onChange={(e) => setEditKitForm({ ...editKitForm, kitCost: e.target.value === '' ? '' : Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="0"
+                  />
+                  <span className="text-[10px] text-[#64748B]">Lo que te cuesta a vos cada kit. Se usa para calcular el "Ingreso Extra" (ganancia real) en el panel.</span>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-semibold mb-1">Kits Disponibles (Stock actual)</label>
+                  <input
+                    type="number"
+                    value={editKitForm.stockAvailable}
+                    onChange={(e) => setEditKitForm({ ...editKitForm, stockAvailable: e.target.value === '' ? '' : Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="0"
+                  />
+                  <span className="text-[10px] text-[#64748B]">Corregí acá el stock si no coincide con lo que tenés físicamente.</span>
+                </div>
+
+                <div>
+                  <label className="block text-[#64748B] font-semibold mb-1">Kits Comprados (histórico total)</label>
+                  <input
+                    type="number"
+                    value={editKitForm.kitsPurchasedTotal}
+                    onChange={(e) => setEditKitForm({ ...editKitForm, kitsPurchasedTotal: e.target.value === '' ? '' : Number(e.target.value) })}
+                    className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
+                    min="0"
+                  />
+                  <span className="text-[10px] text-[#64748B]">Total de kits que compraste/fabricaste en total, desde siempre.</span>
                 </div>
 
                 <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#E2E8F0]">

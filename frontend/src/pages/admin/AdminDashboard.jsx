@@ -11,7 +11,7 @@ import { useAdminData } from '../../context/AdminDataContext';
 
 const AdminDashboard = () => {
   const [userName, setUserName] = useState('Gonzalo');
-  const { timeframe, setTimeframe, supplierData, buyers, dateRange, setCustomDateRange, dashboard } = useAdminData();
+  const { timeframe, setTimeframe, supplierData, buyers, leads, dateRange, setCustomDateRange, dashboard } = useAdminData();
   const navigate = useNavigate();
 
   // Search state
@@ -19,16 +19,44 @@ const AdminDashboard = () => {
   const [selectedBuyer, setSelectedBuyer] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  // Filter buyers for search dropdown
+  // Buscador unificado: compradores reales (con órdenes) + clientes propios
+  // (Leads cargados a mano, todavía sin comprar por la web). Antes esto
+  // rompía silenciosamente si algún registro no tenía "name" cargado.
+  const searchableClients = useMemo(() => {
+    const fromBuyers = (buyers || []).map((b) => ({
+      _id: b._id,
+      name: b.name || 'Sin nombre',
+      phone: b.phone || '',
+      clinicName: b.clinicName || b.clinic || '',
+      totalSpent: b.totalSpent || 0,
+      totalKits: b.totalKits || 0,
+      balance: b.balance || 0,
+      lastPurchaseDate: b.lastPurchaseDate || null,
+      isLead: false,
+    }));
+    const fromLeads = (leads || []).map((l) => ({
+      _id: l._id,
+      name: l.name || 'Sin nombre',
+      phone: l.phone || '',
+      clinicName: l.clinic || '',
+      totalSpent: 0,
+      totalKits: l.kitsBought || 0,
+      balance: 0,
+      lastPurchaseDate: null,
+      isLead: true,
+    }));
+    return [...fromBuyers, ...fromLeads];
+  }, [buyers, leads]);
+
   const filteredBuyers = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
-    return (buyers || []).filter(b => 
-      b.name.toLowerCase().includes(query) || 
+    return searchableClients.filter(b =>
+      b.name.toLowerCase().includes(query) ||
       (b.phone && b.phone.includes(query)) ||
       (b.clinicName && b.clinicName.toLowerCase().includes(query))
-    ).slice(0, 5); // top 5 results
-  }, [searchQuery, buyers]);
+    ).slice(0, 8); // top resultados
+  }, [searchQuery, searchableClients]);
 
   const handleSelectBuyer = (buyer) => {
     setSelectedBuyer(buyer);
@@ -159,10 +187,15 @@ const AdminDashboard = () => {
                       className="px-4 py-3 hover:bg-[#F8FAFC] cursor-pointer border-b border-[#F1F5F9] last:border-b-0 flex items-center gap-3 transition-colors"
                     >
                       <div className="w-8 h-8 rounded-full bg-[#1E5A9C]/10 text-[#1E5A9C] flex items-center justify-center font-bold text-xs shrink-0">
-                        {buyer.name.charAt(0).toUpperCase()}
+                        {(buyer.name || '?').charAt(0).toUpperCase()}
                       </div>
-                      <div>
-                        <div className="text-sm font-bold text-[#0F172A]">{buyer.name}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+                          {buyer.name}
+                          {buyer.isLead && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#F1F5F9] text-[#64748B]">MI CLIENTE</span>
+                          )}
+                        </div>
                         <div className="text-xs text-[#64748B]">
                           {buyer.phone || 'Sin teléfono'} {buyer.clinicName && `• ${buyer.clinicName}`}
                         </div>

@@ -78,17 +78,17 @@ const AdminLeads = () => {
       }
       handleCloseModal();
     } catch (error) {
-      console.error("Error al guardar cliente potencial:", error);
+      console.error("Error al guardar cliente:", error);
       alert("Hubo un error al guardar. Por favor, intenta de nuevo.");
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('¿Seguro que deseas eliminar este cliente potencial?')) {
+    if (window.confirm('¿Seguro que deseas eliminar este cliente?')) {
       try {
         await deleteLead(id);
       } catch (error) {
-        console.error("Error al eliminar cliente potencial:", error);
+        console.error("Error al eliminar cliente:", error);
         alert("Hubo un error al eliminar. Por favor, intenta de nuevo.");
       }
     }
@@ -150,14 +150,11 @@ const AdminLeads = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] tracking-tight">
-              Posibles Clientes
+              Clientes
             </h1>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E5A9C]/10 text-[#1E5A9C] border border-[#1E5A9C]/20 flex items-center gap-1">
-              <Users size={12} /> CRM
-            </span>
           </div>
           <p className="text-[#64748B] text-sm mt-1">
-            Gestioná y anotá posibles ventas, consultas y seguimiento de clientes.
+            Tus clientes cargados a mano y los que se registraron en la tienda online.
           </p>
         </div>
 
@@ -167,7 +164,7 @@ const AdminLeads = () => {
             className="flex items-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl font-semibold shadow-xs transition-all"
           >
             <Plus size={18} />
-            <span>Nuevo Lead</span>
+            <span>Nuevo Cliente</span>
           </button>
         </div>
       </div>
@@ -182,7 +179,7 @@ const AdminLeads = () => {
             }`}
         >
           <Users size={16} />
-          <span>Prospectos (CRM) ({leads.length})</span>
+          <span>Mis Clientes ({leads.length})</span>
         </button>
         <button
           onClick={() => setActiveTab('registrados')}
@@ -211,7 +208,7 @@ const AdminLeads = () => {
           />
         </div>
         <div className="text-sm text-[#64748B] font-medium">
-          Total: <span className="text-[#0F172A]">{filteredLeads.length}</span> prospectos
+          Total: <span className="text-[#0F172A]">{filteredLeads.length}</span> clientes
         </div>
       </div>
 
@@ -282,7 +279,7 @@ const AdminLeads = () => {
               ) : (
                 <tr>
                   <td colSpan="5" className="px-6 py-12 text-center text-[#64748B]">
-                    No se encontraron clientes potenciales.
+                    No se encontraron clientes.
                   </td>
                 </tr>
               )}
@@ -386,7 +383,7 @@ const AdminLeads = () => {
           <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
             <div className="p-5 border-b border-[#E2E8F0] flex justify-between items-center bg-[#F8FAFC]">
               <h2 className="text-lg font-bold text-[#0F172A]">
-                {editingLead ? 'Editar Posible Cliente' : 'Nuevo Posible Cliente'}
+                {editingLead ? 'Editar Cliente' : 'Nuevo Cliente'}
               </h2>
               <button onClick={handleCloseModal} className="text-[#64748B] hover:text-[#0F172A]">✕</button>
             </div>

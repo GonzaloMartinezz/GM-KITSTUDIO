@@ -141,6 +141,13 @@ const AdminProveedores = () => {
 
   const { margin, marginPct, cost, sale } = calculateGrossMargin();
 
+  const lastSupplierOrder = [...(supplierOrders || [])].sort(
+    (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+  )[0] || null;
+  const lastPaidAmount = lastSupplierOrder
+    ? Math.max((lastSupplierOrder.total || 0) - (lastSupplierOrder.pendingAmount || 0), 0)
+    : 0;
+
   return (
     <div className="w-full min-h-full font-geist flex flex-col relative pb-16">
 
@@ -171,16 +178,6 @@ const AdminProveedores = () => {
 
         {/* Top Actions */}
         <div className="flex flex-wrap items-center gap-2.5">
-          <a
-            href={`https://wa.me/${supplierData.whatsapp}?text=${encodeURIComponent('Hola ' + supplierData.contactName + ', te escribo desde GM Kit Studio sobre la orden de compra del Kit Odontológico.')}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#25D366]/20 transition-all cursor-pointer active:scale-[0.98]"
-          >
-            <MessageCircle size={16} />
-            <span>WhatsApp Proveedor</span>
-          </a>
-
           <button
             onClick={() => {
               setEditForm({ ...supplierData });
@@ -202,86 +199,55 @@ const AdminProveedores = () => {
         </div>
       </div>
 
-      {/* ── 3 KEY METRICS CARDS ── */}
+      {/* ── 3 KEY METRICS CARDS: ÚLTIMA COMPRA AL PROVEEDOR ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
 
-        {/* Metric 1: Costo del Paquete */}
+        {/* Metric 1: Fecha de la Última Compra */}
         <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
           <div className="flex items-center justify-between gap-2 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Package className="w-4 h-4 text-[#1E5A9C]" /> A Cuánto lo Compramos
-            </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#10B981]/10 text-[#059669]">
-              Margen +{marginPct}%
+              <Calendar className="w-4 h-4 text-[#1E5A9C]" /> Última Compra
             </span>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl font-black text-[#0F172A]">
-                ${cost.toLocaleString('es-AR')}
-              </h2>
-              <span className="text-xs text-[#64748B] font-semibold">/ paquete completo</span>
-            </div>
+            <h2 className="text-2xl font-black text-[#0F172A]">
+              {lastSupplierOrder ? new Date(lastSupplierOrder.createdAt).toLocaleDateString('es-AR') : 'Sin compras registradas'}
+            </h2>
             <p className="text-xs text-[#64748B] mt-1.5">
-              Precio de venta al público: <strong className="text-[#0F172A]">${sale.toLocaleString('es-AR')}</strong> • Ganancia bruta: <strong className="text-[#059669]">+${margin.toLocaleString('es-AR')}</strong> por kit
+              {lastSupplierOrder ? `Estado: ${lastSupplierOrder.status}` : 'Registrá tu primera compra con "Nueva Compra / Pago"'}
             </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-[11px] text-[#64748B]">
-            <span>Lote 100+ kits: <strong>$4.700 c/u</strong></span>
-            <span className="text-[#1E5A9C] font-bold">8 insumos estériles</span>
           </div>
         </div>
 
-        {/* Metric 2: Cuándo Pagamos el Paquete */}
-        <div className="bg-white rounded-2xl p-5 border border-orange-200 shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-orange-50/30">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#C2410C] flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-orange-500" /> Cuándo Pagamos el Paquete
-            </span>
-            <span className="text-[11px] font-black px-2 py-0.5 rounded-md bg-orange-500 text-white shadow-xs uppercase tracking-wide">
-              {supplierData.nextPaymentStatus || 'Programado'}
-            </span>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl font-black text-[#C2410C]">
-                ${Number(supplierData.nextPaymentAmount || 235000).toLocaleString('es-AR')}
-              </h2>
-              <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
-                {supplierData.nextPaymentDate || '20 Sep 2026'}
-              </span>
-            </div>
-            <p className="text-xs text-[#64748B] mt-1.5 line-clamp-2">
-              {supplierData.nextPaymentConcept || 'Saldo 50% contra entrega en Tucumán - Lote 100 Kits Odontológicos'}
-            </p>
-          </div>
-          <div className="mt-4 pt-3 border-t border-orange-100 flex items-center justify-between text-[11px]">
-            <span className="text-[#64748B]">Vía Transferencia Bancaria</span>
-            <span className="text-orange-600 font-bold">En fecha acordada</span>
-          </div>
-        </div>
-
-        {/* Metric 3: Condición Comercial */}
+        {/* Metric 2: Cantidad de Kits Recibidos en esa Compra */}
         <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
           <div className="flex items-center justify-between gap-2 mb-3">
             <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Truck className="w-4 h-4 text-[#1E5A9C]" /> Condición y Despacho
-            </span>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#1E5A9C]/10 text-[#1E5A9C]">
-              Factura A Oficial
+              <Package className="w-4 h-4 text-[#1E5A9C]" /> Kits Recibidos
             </span>
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#0F172A] leading-snug">
-              50% Anticipo • 50% Entrega
-            </h3>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              Despacho en <strong>48 a 72 hs hábiles</strong> desde acreditación de anticipo. Flete directo Tortuguitas &gt; Depósito Tucumán.
-            </p>
+            <h2 className="text-3xl font-black text-[#0F172A]">
+              {lastSupplierOrder?.kits || 0}
+            </h2>
+            <p className="text-xs text-[#64748B] mt-1.5">en ese pedido</p>
           </div>
-          <div className="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-[11px] text-[#64748B]">
-            <span>Reposición inmediata sin cargo</span>
-            <span className="text-[#059669] font-bold">100% Bioseguro</span>
+        </div>
+
+        {/* Metric 3: Monto Abonado en esa Compra */}
+        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
+              <DollarSign className="w-4 h-4 text-[#1E5A9C]" /> Monto Abonado
+            </span>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-[#0F172A]">
+              ${lastPaidAmount.toLocaleString('es-AR')}
+            </h2>
+            <p className="text-xs text-[#64748B] mt-1.5">
+              {lastSupplierOrder ? `de $${(lastSupplierOrder.total || 0).toLocaleString('es-AR')} totales` : 'último pedido registrado'}
+            </p>
           </div>
         </div>
 
