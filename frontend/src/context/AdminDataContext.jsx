@@ -361,6 +361,18 @@ export const AdminDataProvider = ({ children }) => {
     setDateRange({ start, end });
   };
 
+  // Carga inicial: kitProduct, leads, buyers, reservas, proveedor y sus
+  // órdenes NO se estaban pidiendo nunca al entrar al panel (sólo se
+  // refrescaban después de crear/editar algo desde cada sección). Por eso
+  // el buscador del dashboard no encontraba nada, "Mis Clientes" aparecía
+  // en 0 y el modal de Inventario mostraba todo vacío/en default hasta
+  // que se tocaba otra pantalla primero. fetchAll trae todo eso una vez
+  // al entrar al panel de administración.
+  useEffect(() => {
+    fetchAll(timeframe);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     if (mounted) {
