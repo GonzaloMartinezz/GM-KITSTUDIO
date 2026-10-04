@@ -104,7 +104,7 @@ const AdminSidebar = () => {
   return (
     <>
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between bg-white border-b border-[#EBEBEB] p-4 sticky top-0 z-50">
+      <div className="md:hidden flex items-center justify-between bg-white border-b border-[#EBEBEB] p-4 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-[#1E5A9C] rounded-lg flex items-center justify-center">
             <span className="font-bebas text-white">GM</span>
@@ -117,6 +117,32 @@ const AdminSidebar = () => {
       </div>
 
       <MobileDrawer />
+
+      {/* Mobile Bottom Nav */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#EBEBEB] z-40 flex items-center overflow-x-auto overflow-y-hidden px-2 pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.05)] hide-scrollbar h-16">
+        <div className="flex items-center h-full w-full justify-between gap-1 min-w-max px-2">
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            const shortLabel = item.label.split('_')[1] || item.label;
+            return (
+              <NavLink
+                key={index}
+                to={item.path}
+                className={`flex flex-col items-center justify-center w-[72px] h-full gap-1 transition-all ${
+                  isActive ? 'text-[#1E5A9C]' : 'text-[#8E8E93] hover:text-[#1E5A9C]'
+                }`}
+              >
+                <div className={`p-1.5 rounded-full transition-colors ${isActive ? 'bg-[#1E5A9C]/10' : ''}`}>
+                  <item.icon size={20} strokeWidth={isActive ? 3 : 2} />
+                </div>
+                <span className={`text-[9px] whitespace-nowrap text-center leading-none ${isActive ? 'font-bold' : 'font-medium'}`}>
+                  {shortLabel.replace('Configuración', 'Config.')}
+                </span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Desktop Sidebar */}
       <motion.div

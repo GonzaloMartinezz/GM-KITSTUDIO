@@ -54,7 +54,7 @@ const AdminInventario = () => {
     doctor: '',
     clinic: '',
     kits: '',
-    surgeryDate: '18 Sep 2026 - 10:00 am',
+    surgeryDate: `${new Date().getDate()} ${new Date().toLocaleString('es-AR', { month: 'short' }).charAt(0).toUpperCase() + new Date().toLocaleString('es-AR', { month: 'short' }).slice(1)} ${new Date().getFullYear()} - 10:00 am`,
     surgeryType: 'Cirugía de Implantes Dentales',
     paymentStatus: 'Seña 50% Pagada',
     contact: '+54 9 381 ',
@@ -63,16 +63,17 @@ const AdminInventario = () => {
   // Form state for Adding Stock
   const [stockAddCount, setStockAddCount] = useState('');
 
-  const stockAvailable = kitProduct?.stock || 0;
+  const stockFisico = kitProduct?.stock || 0;
+  const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
+  const stockAvailable = Math.max(0, stockFisico - stockReserved);
   const minThreshold = kitProduct?.minStock || 30;
   const kitPrice = kitProduct?.price || 14500;
-  const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
   const stockSoldMonth = inventoryData?.stockSoldMonth || 0;
   const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
   const kitsPurchasedTotal = inventoryData?.kitsPurchasedTotal || 0;
 
-  const totalInWarehouse = stockAvailable + stockReserved;
-  const totalInCircuit = stockAvailable + stockReserved + stockInTransit;
+  const totalInWarehouse = stockFisico;
+  const totalInCircuit = stockFisico + stockInTransit;
 
   const [formError, setFormError] = useState('');
 
@@ -92,7 +93,7 @@ const AdminInventario = () => {
         doctor: '',
         clinic: '',
         kits: '',
-        surgeryDate: '18 Sep 2026 - 10:00 am',
+        surgeryDate: `${new Date().getDate()} ${new Date().toLocaleString('es-AR', { month: 'short' }).charAt(0).toUpperCase() + new Date().toLocaleString('es-AR', { month: 'short' }).slice(1)} ${new Date().getFullYear()} - 10:00 am`,
         surgeryType: 'Cirugía de Implantes Dentales',
         paymentStatus: 'Seña 50% Pagada',
         contact: '+54 9 381 ',
@@ -119,7 +120,7 @@ const AdminInventario = () => {
       kitPrice: kitPrice || '',
       minimumAlertThreshold: minThreshold || '',
       kitCost: inventoryData?.kitCost || '',
-      stockAvailable: stockAvailable || 0,
+      stockAvailable: stockFisico || 0,
       kitsPurchasedTotal: inventoryData?.kitsPurchasedTotal || 0,
     });
     setIsEditKitModalOpen(true);

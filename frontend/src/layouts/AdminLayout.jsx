@@ -13,7 +13,7 @@ const AdminLayout = () => {
         <AdminSidebar />
 
         {/* Main Content Area */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative p-4 md:p-10 lg:p-12">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative p-4 pb-24 md:p-10 lg:p-12">
           {/* key=pathname: si cambiás de sección después de un error, el
               boundary se resetea solo en vez de quedar roto para siempre */}
           <AdminErrorBoundary key={location.pathname}>

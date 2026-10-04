@@ -106,7 +106,7 @@ const AdminFinanzas = () => {
 
           <div className="flex items-center gap-1.5 bg-white border border-[#E2E8F0] text-[#0F172A] px-3 py-2 rounded-xl text-xs font-semibold shadow-xs">
             <Calendar size={13} className="text-[#1E5A9C]" />
-            <span>Sep 2026</span>
+            <span>{new Date().toLocaleString('es-AR', { month: 'short' }).charAt(0).toUpperCase() + new Date().toLocaleString('es-AR', { month: 'short' }).slice(1)} {new Date().getFullYear()}</span>
           </div>
         </div>
       </div>

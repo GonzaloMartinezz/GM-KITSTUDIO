@@ -4,7 +4,6 @@ import StatCards from '../../components/admin/StatCards';
 import SalesTrendChart from '../../components/admin/SalesTrendChart';
 import PaymentMethodsBreakdown from '../../components/admin/PaymentMethodsBreakdown';
 import RecentTransactionsTable from '../../components/admin/RecentTransactionsTable';
-import TopBuyers from '../../components/admin/TopBuyers';
 import CustomerProfileModal from '../../components/admin/modals/CustomerProfileModal';
 import { Calendar, ChevronDown, Sparkles, Truck, ShieldCheck, MessageCircle, ArrowRight, Search, Plus, UserPlus, Phone, AlertTriangle } from 'lucide-react';
 import { useAdminData } from '../../context/AdminDataContext';
@@ -72,14 +71,20 @@ const AdminDashboard = () => {
   }, []);
 
   const getDateLabel = () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonthStr = today.toLocaleString('es-AR', { month: 'short' }); // ej 'oct'
+    const capitalizedMonth = currentMonthStr.charAt(0).toUpperCase() + currentMonthStr.slice(1);
+    
     switch (timeframe) {
       case 'Semanal':
-        return 'Semana actual (Sep 2026)';
+        return `Semana actual (${capitalizedMonth} ${currentYear})`;
       case 'Anual':
-        return 'Año Fiscal 2026';
+        return `Año Fiscal ${currentYear}`;
       case 'Mensual':
       default:
-        return '14 Sep 2026';
+        // Ej: 4 Oct 2026
+        return `${today.getDate()} ${capitalizedMonth} ${currentYear}`;
     }
   };
 
@@ -257,14 +262,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 3. Bottom Section: Últimas Transacciones y Mejores Clientes */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <div className="lg:col-span-2">
-          <RecentTransactionsTable />
-        </div>
-        <div className="lg:col-span-1">
-          <TopBuyers />
-        </div>
+      {/* 3. Bottom Section: Últimas Transacciones */}
+      <div className="mb-6">
+        <RecentTransactionsTable />
       </div>
 
       <CustomerProfileModal 

@@ -1,6 +1,7 @@
 const Reservation = require('../models/Reservation');
 const Product = require('../models/Product');
 const Transaction = require('../models/Transaction');
+const Order = require('../models/Order');
 
 /**
  * @desc    Listar reservas de kits (cirugías programadas)
@@ -93,7 +94,26 @@ const fulfillReservation = async (req, res, next) => {
     reservation.status = 'cumplido';
     await reservation.save();
 
+    // Crear la orden correspondiente para que impacte en el dashboard de ventas y métricas
+    const order = await Order.create({
+      customerName: reservation.doctor,
+      customerClinic: reservation.clinic,
+      customerPhone: reservation.contact || '',
+      createdByAdmin: true,
+      items: [{
+        product: reservation.product,
+        productName: 'Kit Quirúrgico',
+        quantity: reservation.kits,
+        priceAtPurchase: (reservation.total / reservation.kits) || 9500
+      }],
+      totalAmount: reservation.total,
+      paymentMethod: reservation.paymentStatus && reservation.paymentStatus.toLowerCase().includes('100%') ? 'efectivo' : 'efectivo',
+      status: 'entregado',
+      notes: `Generada automáticamente al despachar la reserva de ${reservation.doctor}`,
+    });
+
     await Transaction.create({
+      order: order._id,
       type: 'income',
       amount: reservation.total,
       description: `Reserva cumplida - ${reservation.doctor} (${reservation.kits} kits)`,
