@@ -311,10 +311,10 @@ const CargarProductos = () => {
   const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
 
   return (
-    <div className="min-h-screen bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between overflow-x-hidden selection:bg-[#88C9C4] selection:text-[#0C3B45]">
+    <div className={`${step === 1 ? 'h-[100dvh] overflow-hidden' : 'min-h-screen overflow-x-hidden'} bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]`}>
 
       {/* ── TOP NAV HEADER ── */}
-      <header className="w-full px-3.5 sm:px-6 md:px-10 lg:px-14 pt-3.5 sm:pt-5 pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
+      <header className="w-full shrink-0 px-3.5 sm:px-6 md:px-10 lg:px-14 pt-3.5 sm:pt-5 pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
         <div className="w-full max-w-425 mx-auto flex items-center justify-between gap-3 sm:gap-6">
 
           {/* Left: Salir button + GM KIT STUDIO Logo (Pinned to Left) */}
@@ -454,7 +454,7 @@ const CargarProductos = () => {
       </header>
 
       {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className="flex-1 flex flex-col justify-start md:justify-center max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative pb-24 md:pb-28 lg:pb-32">
+      <main className={`flex-1 flex flex-col ${step === 1 ? 'justify-center overflow-hidden' : 'justify-start md:justify-center pb-24 md:pb-28 lg:pb-32'} max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative`}>
         <AnimatePresence mode="wait">
 
           {/* ════════════ PASO 1: Contenido del Kit ════════════ */}
@@ -478,7 +478,7 @@ const CargarProductos = () => {
               </p>
 
               {/* Grid for Desktop / Compact Vertical List for Mobile */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 w-full max-w-lg lg:max-w-none mx-auto text-left mt-4 pb-2 sm:pb-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 w-full max-w-lg lg:max-w-none mx-auto text-left mt-2 sm:mt-4 pb-2">
                 {kitItems.map((item, i) => {
                   const isQty2 = item.qty === 2 || item.tag?.includes('2');
                   return (
@@ -486,7 +486,7 @@ const CargarProductos = () => {
                       whileHover={{ y: -4, scale: 1.01 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       key={i}
-                      className={`rounded-xl sm:rounded-2xl p-2.5 sm:p-5 flex flex-row sm:flex-col items-center sm:items-stretch justify-between gap-2.5 sm:gap-4 shadow-sm border transition-colors overflow-hidden group relative ${item.isBadge
+                      className={`rounded-xl p-2.5 sm:p-4 flex flex-col items-center sm:items-stretch justify-between gap-1.5 sm:gap-3 shadow-sm border transition-colors overflow-hidden group relative ${item.isBadge
                         ? 'bg-linear-to-br from-[#88C9C4]/20 to-[#88C9C4]/5 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
                         : isQty2
                           ? 'bg-white border-[#E1D9CC]/80 hover:border-[#88C9C4] hover:shadow-lg hover:shadow-[#88C9C4]/10'
@@ -494,8 +494,8 @@ const CargarProductos = () => {
                         }`}
                     >
                       {/* Left/Top: Icon & Text */}
-                      <div className="flex items-center sm:items-start gap-2.5 sm:gap-3.5 flex-1 min-w-0">
-                        <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${item.isBadge
+                      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 flex-1 min-w-0 text-center sm:text-left">
+                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${item.isBadge
                           ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
                           : isQty2
                             ? 'bg-[#F4F2EC] text-[#0C3B45] group-hover:bg-[#0C3B45] group-hover:text-white'
@@ -518,13 +518,13 @@ const CargarProductos = () => {
                       </div>
 
                       {/* Right/Bottom: Badge */}
-                      <div className="shrink-0 flex sm:w-full sm:justify-end">
+                      <div className="shrink-0 flex justify-center sm:w-full sm:justify-end mt-1 sm:mt-0">
                         {isQty2 ? (
-                          <span className="inline-flex items-center justify-center text-[9px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg bg-[#0C3B45] text-[#88C9C4] shadow-sm tracking-widest uppercase">
+                          <span className="inline-flex items-center justify-center text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#0C3B45] text-[#88C9C4] shadow-sm tracking-widest uppercase">
                             CANT. 2
                           </span>
                         ) : (
-                          <span className="inline-flex items-center justify-center text-[9px] sm:text-xs font-semibold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg text-[#546A7E] bg-white border border-[#E1D9CC] uppercase tracking-wider">
+                          <span className="inline-flex items-center justify-center text-[9px] sm:text-[10px] font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg text-[#546A7E] bg-white border border-[#E1D9CC] uppercase tracking-wider">
                             CANT. 1
                           </span>
                         )}
@@ -1147,7 +1147,7 @@ const CargarProductos = () => {
       </main>
 
       {/* ── STICKY BOTTOM ACTION BAR (OPTIMIZED FOR MOBILE & DESKTOP) ── */}
-      <footer className="fixed bottom-0 left-0 w-full z-40 bg-[#F4F2EC]/95 backdrop-blur-md border-t border-[#E1D9CC] px-3.5 sm:px-6 md:px-12 py-3 sm:py-3.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+      <footer className={`${step === 1 ? 'w-full shrink-0' : 'fixed bottom-0 left-0 w-full'} z-40 bg-[#F4F2EC]/95 backdrop-blur-md border-t border-[#E1D9CC] px-3.5 sm:px-6 md:px-12 py-3 sm:py-3.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]`}>
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
 
           {/* Back Button */}

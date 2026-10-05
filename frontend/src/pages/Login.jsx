@@ -90,10 +90,13 @@ const Login = () => {
       }
       
       try {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: (response) => handleGoogleCredential(response.credential),
-        });
+        if (!window._googleInitialized) {
+          window.google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: (response) => handleGoogleCredential(response.credential),
+          });
+          window._googleInitialized = true;
+        }
         
         if (googleBtnRef.current) {
           googleBtnRef.current.innerHTML = '';
