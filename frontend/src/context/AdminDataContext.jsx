@@ -320,24 +320,35 @@ export const AdminDataProvider = ({ children }) => {
   const fetchAll = useCallback(async (tf) => {
     setLoading(true);
     setError('');
-    try {
-      const dash = await fetchDashboardAndTrend(tf);
-      await Promise.all([
-        fetchPaymentMethods(dash),
-        fetchFinancialReport(),
-        fetchSupplier(),
-        fetchSupplierOrders(),
-        fetchDispatches(),
-        fetchKitProduct(),
-        fetchReservations(),
-        fetchLeads(),
-        fetchBuyers(),
-      ]);
-    } catch (err) {
-      setError(err.response?.data?.message || 'No se pudieron cargar los datos del panel.');
-    } finally {
-      setLoading(false);
+    // Reintenta un par de veces: el backend de Render puede tardar en
+    // "despertarse" si nadie lo usaba, y eso antes dejaba todo el panel
+    // (kit, leads, compradores, proveedor) en blanco para siempre sin avisar.
+    const attempts = 3;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        const dash = await fetchDashboardAndTrend(tf);
+        await Promise.all([
+          fetchPaymentMethods(dash),
+          fetchFinancialReport(),
+          fetchSupplier(),
+          fetchSupplierOrders(),
+          fetchDispatches(),
+          fetchKitProduct(),
+          fetchReservations(),
+          fetchLeads(),
+          fetchBuyers(),
+        ]);
+        setError('');
+        break;
+      } catch (err) {
+        if (i === attempts - 1) {
+          setError(err.response?.data?.message || 'No se pudieron cargar los datos del panel. Puede ser que el servidor se esté "despertando" — probá de nuevo en unos segundos.');
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 2500));
+        }
+      }
     }
+    setLoading(false);
   }, [
     fetchDashboardAndTrend,
     fetchPaymentMethods,
@@ -375,15 +386,42 @@ export const AdminDataProvider = ({ children }) => {
 
   useEffect(() => {
     let mounted = true;
-    if (mounted) {
-      if (timeframe === 'Personalizado') {
-        if (dateRange.start && dateRange.end) {
-          fetchDashboardAndTrend(timeframe, dateRange).then(fetchPaymentMethods).finally(() => setLoading(false));
+
+    const load = async () => {
+      const range = timeframe === 'Personalizado' ? dateRange : null;
+      if (timeframe === 'Personalizado' && !(dateRange.start && dateRange.end)) return;
+
+      setLoading(true);
+      // El backend de Render se "duerme" cuando nadie lo usa un rato y la
+      // primera request después de eso puede tardar 20-40s en responder o
+      // directamente cortarse (muy común en redes de celular/wifi
+      // inestable). Antes, si esta llamada fallaba, no se avisaba nada y
+      // el panel quedaba con todo en $0 para siempre. Ahora reintenta sola
+      // un par de veces antes de mostrar el error.
+      const attempts = 3;
+      for (let i = 0; i < attempts; i++) {
+        try {
+          const dash = await fetchDashboardAndTrend(timeframe, range);
+          await fetchPaymentMethods(dash);
+          if (mounted) setError('');
+          break;
+        } catch (err) {
+          if (i === attempts - 1) {
+            if (mounted) {
+              setError(
+                err?.response?.data?.message ||
+                'No se pudieron cargar los datos del panel. Puede ser que el servidor se esté "despertando" — probá de nuevo en unos segundos.'
+              );
+            }
+          } else {
+            await new Promise((resolve) => setTimeout(resolve, 2500));
+          }
         }
-      } else {
-        fetchDashboardAndTrend(timeframe).then(fetchPaymentMethods).finally(() => setLoading(false));
       }
-    }
+      if (mounted) setLoading(false);
+    };
+
+    load();
     return () => { mounted = false; };
   }, [timeframe, dateRange, fetchDashboardAndTrend, fetchPaymentMethods]);
 

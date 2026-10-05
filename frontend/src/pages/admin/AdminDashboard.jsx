@@ -10,7 +10,7 @@ import { useAdminData } from '../../context/AdminDataContext';
 
 const AdminDashboard = () => {
   const [userName, setUserName] = useState('Gonzalo');
-  const { timeframe, setTimeframe, supplierData, buyers, leads, dateRange, setCustomDateRange, dashboard } = useAdminData();
+  const { timeframe, setTimeframe, supplierData, buyers, leads, dateRange, setCustomDateRange, dashboard, loading, error, resetToDefaults } = useAdminData();
   const navigate = useNavigate();
 
   // Search state
@@ -90,6 +90,23 @@ const AdminDashboard = () => {
 
   return (
     <div className="w-full font-geist flex flex-col relative pb-12">
+
+      {/* Error al cargar datos: antes esto fallaba en silencio y el panel
+          quedaba con todo en $0/0 sin ninguna explicación, sobre todo en
+          redes de celular más lentas donde el backend tarda en responder. */}
+      {error && (
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-2.5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-semibold">
+          <AlertTriangle size={16} className="shrink-0" />
+          <span className="flex-1">{error}</span>
+          <button
+            onClick={resetToDefaults}
+            disabled={loading}
+            className="shrink-0 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg transition-colors"
+          >
+            {loading ? 'Reintentando...' : 'Reintentar'}
+          </button>
+        </div>
+      )}
 
       {/* Low Stock Alert Banner */}
       {dashboard?.lowStockAlerts > 0 && (
