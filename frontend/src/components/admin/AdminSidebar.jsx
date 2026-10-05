@@ -128,9 +128,8 @@ const AdminSidebar = () => {
               <NavLink
                 key={index}
                 to={item.path}
-                className={`flex flex-col items-center justify-center w-[72px] h-full gap-1 transition-all ${
-                  isActive ? 'text-[#1E5A9C]' : 'text-[#8E8E93] hover:text-[#1E5A9C]'
-                }`}
+                className={`flex flex-col items-center justify-center w-18 h-full gap-1 transition-all ${isActive ? 'text-[#1E5A9C]' : 'text-[#8E8E93] hover:text-[#1E5A9C]'
+                  }`}
               >
                 <div className={`p-1.5 rounded-full transition-colors ${isActive ? 'bg-[#1E5A9C]/10' : ''}`}>
                   <item.icon size={20} strokeWidth={isActive ? 3 : 2} />
@@ -201,11 +200,10 @@ const AdminSidebar = () => {
           {/* User Profile */}
           <div
             title={!isExpanded ? "Gonzalo Martínez - Administrador Único" : ""}
-            className={`w-full flex items-center transition-all ${
-              isExpanded
+            className={`w-full flex items-center transition-all ${isExpanded
                 ? 'p-2.5 rounded-xl bg-white border border-[#E5E7EB] shadow-xs gap-3'
                 : 'justify-center py-1'
-            }`}
+              }`}
           >
             <div className="relative shrink-0">
               <img
@@ -228,9 +226,8 @@ const AdminSidebar = () => {
           {/* Return to App Button */}
           <Link
             to="/"
-            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#1E5A9C] hover:bg-black/5 transition-all cursor-pointer ${
-              isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
-            }`}
+            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#1E5A9C] hover:bg-black/5 transition-all cursor-pointer ${isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
+              }`}
             title={!isExpanded ? "Volver a la App" : ""}
           >
             <ArrowLeft size={20} strokeWidth={2.5} className="shrink-0" />
@@ -240,9 +237,8 @@ const AdminSidebar = () => {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all cursor-pointer ${
-              isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
-            }`}
+            className={`h-11 rounded-xl flex items-center text-[#8E8E93] hover:text-[#FF3B30] hover:bg-[#FF3B30]/10 transition-all cursor-pointer ${isExpanded ? 'px-3 gap-3 w-full' : 'justify-center w-11 mx-auto'
+              }`}
           >
             <LogOut size={20} strokeWidth={2.5} className="shrink-0" />
             {isExpanded && <span className="font-medium whitespace-nowrap text-xs">Cerrar Sesión</span>}

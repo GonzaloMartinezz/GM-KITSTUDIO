@@ -8,7 +8,7 @@ const AdminLayout = () => {
   const location = useLocation();
   return (
     <AdminDataProvider>
-      <div className="h-screen h-dvh w-full bg-[#F8F9FB] font-geist flex flex-col md:flex-row overflow-hidden">
+      <div className="h-dvh w-full bg-[#F8F9FB] font-geist flex flex-col md:flex-row overflow-hidden">
         {/* Left Sidebar / Bottom Nav */}
         <AdminSidebar />
 
