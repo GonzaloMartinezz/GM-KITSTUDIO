@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// En producción usamos ruta relativa '/api' (mismo origen que el frontend en
+// Vercel). Un rewrite en vercel.json la proxea al backend de Render, lo que
+// hace que las cookies de auth sean "same-site" para el navegador y evita que
+// Safari/iOS (ITP) las bloquee como cookies cross-site de terceros — eso era
+// lo que rompía el login/datos en mobile mientras en desktop (Chrome) andaba.
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Instancia central de Axios — envía cookies HttpOnly (accessToken/refreshToken)
 export const api = axios.create({
