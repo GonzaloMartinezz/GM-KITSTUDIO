@@ -71,9 +71,20 @@ const AdminInventario = () => {
   const stockSoldMonth = inventoryData?.stockSoldMonth || 0;
   const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
   const kitsPurchasedTotal = inventoryData?.kitsPurchasedTotal || 0;
+  const kitCost = inventoryData?.kitCost || kitProduct?.cost || 0;
 
   const totalInWarehouse = stockFisico;
   const totalInCircuit = stockFisico + stockInTransit;
+
+  // ── RETORNO DE INVERSIÓN (ROI) ──
+  const totalInvested = kitsPurchasedTotal * kitCost;
+  const kitsSoldEstimate = Math.max(kitsPurchasedTotal - stockFisico, 0);
+  const revenueFromSold = kitsSoldEstimate * kitPrice;
+  const costOfSold = kitsSoldEstimate * kitCost;
+  const netProfit = revenueFromSold - costOfSold;
+  const roiPercent = costOfSold > 0 ? (netProfit / costOfSold) * 100 : 0;
+  const unitProfit = Math.max(kitPrice - kitCost, 0);
+  const unitMarginPercent = kitCost > 0 ? (unitProfit / kitCost) * 100 : 0;
 
   const [formError, setFormError] = useState('');
 
@@ -309,6 +320,51 @@ const AdminInventario = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* ── RETORNO DE INVERSIÓN (ROI) ── */}
+      <div className="bg-linear-to-br from-[#0F172A] to-[#1E3A5C] rounded-2xl p-5 sm:p-6 mb-8 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+          <div>
+            <h3 className="font-bold text-sm text-white flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-400" /> Retorno de Inversión (ROI)
+            </h3>
+            <p className="text-xs text-slate-300 mt-0.5">Precio de compra vs. precio de venta — tu ganancia real</p>
+          </div>
+          <span className={`text-[11px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wide ${roiPercent >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+            ROI: {roiPercent >= 0 ? '+' : ''}{roiPercent.toFixed(0)}%
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Costo por Kit</p>
+            <p className="text-xl font-black text-white">${kitCost.toLocaleString('es-AR')}</p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Precio de Venta</p>
+            <p className="text-xl font-black text-white">${kitPrice.toLocaleString('es-AR')}</p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Ganancia por Kit</p>
+            <p className="text-xl font-black text-emerald-400">${unitProfit.toLocaleString('es-AR')}</p>
+            <p className="text-[10px] text-slate-400">{unitMarginPercent.toFixed(0)}% de margen</p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Total Invertido</p>
+            <p className="text-xl font-black text-white">${totalInvested.toLocaleString('es-AR')}</p>
+            <p className="text-[10px] text-slate-400">{kitsPurchasedTotal} kits comprados</p>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Ganancia Neta Total</p>
+            <p className={`text-xl font-black ${netProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>${netProfit.toLocaleString('es-AR')}</p>
+            <p className="text-[10px] text-slate-400">~{kitsSoldEstimate} kits vendidos (histórico)</p>
+          </div>
+        </div>
+
+        <p className="text-[10px] text-slate-500 mt-4 pt-3 border-t border-white/10">
+          * "Kits vendidos (histórico)" es una estimación (kits comprados − stock físico actual). Cargá Costo por Kit y Kits Comprados desde "Editar Kit" para que el cálculo sea exacto.
+        </p>
       </div>
 
       {/* ── STOCK BREAKDOWN VISUAL BAR ── */}
