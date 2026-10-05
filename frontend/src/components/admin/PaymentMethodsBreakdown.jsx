@@ -32,7 +32,7 @@ const PaymentMethodsBreakdown = () => {
     <>
       <div
         onClick={() => handleOpenEdit(null)}
-        className="bg-white rounded-2xl p-5 md:p-6 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between font-geist relative group cursor-pointer"
+        className="bg-white rounded-2xl p-4 sm:p-5 md:p-6 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 hover:shadow-md transition-all duration-200 flex flex-col justify-between font-geist relative group cursor-pointer"
         title="Toca para modificar, agregar o eliminar métodos de pago"
       >
         {/* Floating Quick Edit Button */}

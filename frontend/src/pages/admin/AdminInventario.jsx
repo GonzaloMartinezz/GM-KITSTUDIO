@@ -194,10 +194,10 @@ const AdminInventario = () => {
         </div>
 
         {/* Top Actions */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2.5 w-full lg:w-auto mt-2 lg:mt-0">
           <button
             onClick={() => setIsReserveModalOpen(true)}
-            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-orange-500/25 transition-all cursor-pointer active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-orange-500/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
           >
             <Clock size={16} />
             <span>Reservar Kits para Cirugía</span>
@@ -205,7 +205,7 @@ const AdminInventario = () => {
 
           <button
             onClick={handleOpenEditKit}
-            className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
           >
             <Edit3 size={16} className="text-[#1E5A9C]" />
             <span>Editar Kit</span>
@@ -213,7 +213,7 @@ const AdminInventario = () => {
 
           <button
             onClick={() => setIsStockModalOpen(true)}
-            className="flex items-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
           >
             <Plus size={16} />
             <span>Ingresar Stock (+Kits)</span>
@@ -222,100 +222,100 @@ const AdminInventario = () => {
       </div>
 
       {/* ── 4 KEY METRIC CARDS ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mb-6 sm:mb-8">
 
         {/* 1. STOCK DISPONIBLE (Por Vender) */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <PackageCheck className="w-4 h-4 text-[#059669]" /> Stock Disponible
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <PackageCheck className="w-3 h-3 sm:w-4 sm:h-4 text-[#059669] shrink-0" /> Stock
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#10B981]/15 text-[#059669]">
-              {stockAvailable > 0 ? 'Listo para Entrega' : 'Agotado (0)'}
+            <span className="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md bg-[#10B981]/15 text-[#059669] truncate">
+              {stockAvailable > 0 ? 'Libre' : '0'}
             </span>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A]">
+            <div className="flex items-baseline gap-1.5 sm:gap-2">
+              <h2 className="text-2xl sm:text-4xl font-black text-[#0F172A] truncate">
                 {stockAvailable}
               </h2>
-              <span className="text-xs text-[#64748B] font-semibold">kits libres</span>
+              <span className="text-[10px] sm:text-xs text-[#64748B] font-semibold">kits</span>
             </div>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              Valorizable en <strong className="text-[#059669]">${(stockAvailable * kitPrice).toLocaleString('es-AR')}</strong> (PVP regular)
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">
+              Valor: <strong className="text-[#059669]">${(stockAvailable * kitPrice).toLocaleString('es-AR')}</strong>
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-[#F1F5F9] flex items-center justify-between text-[11px] text-[#64748B]">
-            <span>Umbral mínimo: {minThreshold} kits</span>
+          <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-[#F1F5F9] flex flex-col sm:flex-row sm:items-center justify-between text-[9px] sm:text-[11px] text-[#64748B] gap-1">
+            <span>Umbral: {minThreshold}</span>
             <span className={stockAvailable >= minThreshold ? "text-[#059669] font-bold" : "text-amber-600 font-bold"}>
-              {stockAvailable >= minThreshold ? "Sin quiebre" : "Reponer stock"}
+              {stockAvailable >= minThreshold ? "Seguro" : "Reponer"}
             </span>
           </div>
         </div>
 
         {/* 2. KITS RESERVADOS (Cirugías Programadas) */}
-        <div className="bg-white rounded-2xl p-5 border border-orange-200 shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-orange-50/25">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#C2410C] flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-orange-500" /> Kits Reservados
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-orange-200 shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-orange-50/25">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#C2410C] flex items-center gap-1 sm:gap-1.5 truncate">
+              <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500 shrink-0" /> Reservados
             </span>
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-orange-500 text-white uppercase tracking-wide">
-              {reservations?.length || 0} Cirugías
+            <span className="text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2 py-0.5 rounded-md bg-orange-500 text-white uppercase tracking-wide truncate">
+              {reservations?.length || 0} Cir.
             </span>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl sm:text-4xl font-black text-[#C2410C]">
+            <div className="flex items-baseline gap-1.5 sm:gap-2">
+              <h2 className="text-2xl sm:text-4xl font-black text-[#C2410C] truncate">
                 {stockReserved}
               </h2>
-              <span className="text-xs text-[#C2410C] font-semibold">comprometidos</span>
+              <span className="text-[10px] sm:text-xs text-[#C2410C] font-semibold">kits</span>
             </div>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              Facturación asignada: <strong className="text-[#C2410C]">${(stockReserved * kitPrice).toLocaleString('es-AR')}</strong>
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">
+              Asignado: <strong className="text-[#C2410C]">${(stockReserved * kitPrice).toLocaleString('es-AR')}</strong>
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-orange-100 flex items-center justify-between text-[11px]">
-            <span className="text-[#64748B]">En custodia para turnos</span>
-            <span className="text-orange-600 font-bold">Esta semana</span>
+          <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-orange-100 flex flex-col sm:flex-row sm:items-center justify-between text-[9px] sm:text-[11px] gap-1">
+            <span className="text-[#64748B] truncate">En custodia</span>
+            <span className="text-orange-600 font-bold truncate">Turnos</span>
           </div>
         </div>
 
         {/* 3. KITS VENDIDOS (Período actual) */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-[#1E5A9C]" /> Kits Vendidos
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-[#1E5A9C] shrink-0" /> Vendidos
             </span>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A]">
+            <div className="flex items-baseline gap-1.5 sm:gap-2">
+              <h2 className="text-2xl sm:text-4xl font-black text-[#0F172A] truncate">
                 {stockSoldMonth}
               </h2>
-              <span className="text-xs text-[#64748B] font-semibold">en el período elegido</span>
+              <span className="text-[10px] sm:text-xs text-[#64748B] font-semibold">este mes</span>
             </div>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              Ingresos por venta: <strong className="text-[#0F172A]">${(stockSoldMonth * kitPrice).toLocaleString('es-AR')}</strong>
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">
+              Ingresos: <strong className="text-[#0F172A]">${(stockSoldMonth * kitPrice).toLocaleString('es-AR')}</strong>
             </p>
           </div>
         </div>
 
         {/* 4. KITS COMPRADOS (Total histórico, carga manual) */}
-        <div className="bg-white rounded-2xl p-5 border border-[#CBD5E1] shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-blue-50/20">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Package className="w-4 h-4 text-[#1E5A9C]" /> Kits Comprados
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#CBD5E1] shadow-xs flex flex-col justify-between relative overflow-hidden bg-linear-to-br from-white to-blue-50/20">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <Package className="w-3 h-3 sm:w-4 sm:h-4 text-[#1E5A9C] shrink-0" /> Comprados
             </span>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-3xl sm:text-4xl font-black text-[#1E5A9C]">
+            <div className="flex items-baseline gap-1.5 sm:gap-2">
+              <h2 className="text-2xl sm:text-4xl font-black text-[#1E5A9C] truncate">
                 {kitsPurchasedTotal}
               </h2>
-              <span className="text-xs text-[#64748B] font-semibold">total histórico</span>
+              <span className="text-[10px] sm:text-xs text-[#64748B] font-semibold">histórico</span>
             </div>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              Editalo desde "Editar Kit" cuando compres o fabriques más.
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 leading-tight line-clamp-2">
+              Editalo desde "Editar Kit" al comprar más.
             </p>
           </div>
         </div>

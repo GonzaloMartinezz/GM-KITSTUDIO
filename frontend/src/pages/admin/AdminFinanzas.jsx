@@ -90,7 +90,7 @@ const AdminFinanzas = () => {
         </div>
 
         {/* Timeframe Selector */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto mt-2 sm:mt-0">
           <div className="relative inline-block">
             <select
               value={timeframe}
@@ -112,88 +112,88 @@ const AdminFinanzas = () => {
       </div>
 
       {/* 4 Financial KPI Cards (matching reference image 2) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 mb-6">
         
         {/* Card 1: Facturado / Earned (Dark sleek card from reference) */}
         <div
           onClick={() => handleOpenEdit('stat', stats[0])}
-          className="bg-[#0F172A] text-white rounded-2xl p-5 shadow-lg flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform"
+          className="bg-[#0F172A] text-white rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col justify-between relative overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform"
           title="Toca para modificar"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-medium text-slate-300">Total Facturado</span>
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
-              <DollarSign size={16} />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-medium text-slate-300">Total Facturado</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+              <DollarSign size={14} className="sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-3xl font-extrabold tracking-tight">{totalRevenue}</span>
+            <div className="flex items-baseline gap-2 mb-1 sm:mb-2">
+              <span className="text-xl sm:text-3xl font-extrabold tracking-tight truncate">{totalRevenue}</span>
             </div>
             {/* Sparkline curve visual */}
-            <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
-              <ArrowUpRight size={14} />
-              <span>{totalChange} vs período anterior</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-1.5 text-[9px] sm:text-xs text-emerald-400 font-semibold">
+              <ArrowUpRight size={12} className="sm:w-3.5 sm:h-3.5" />
+              <span className="truncate">{totalChange} vs mes ant.</span>
             </div>
           </div>
         </div>
 
         {/* Card 2: Pedidos Pendientes */}
         <div
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#64748B]">Pedidos Pendientes</span>
-            <div className="w-8 h-8 rounded-lg bg-[#FFFBEB] text-[#F59E0B] flex items-center justify-center">
-              <Clock size={16} />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#64748B]">Pendientes</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FFFBEB] text-[#F59E0B] flex items-center justify-center">
+              <Clock size={14} className="sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-[#0F172A] tracking-tight mb-2">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mb-1 sm:mb-2 truncate">
               {pendingCount}
             </div>
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-[#64748B]">Pedidos en preparación ahora</span>
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-xs">
+              <span className="text-[#64748B] truncate">En preparación</span>
             </div>
           </div>
         </div>
 
         {/* Card 3: Pedidos en Entrega */}
         <div
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#64748B]">En Envío / Distribución</span>
-            <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#8B5CF6] flex items-center justify-center">
-              <Truck size={16} />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#64748B]">En Envío</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#F5F3FF] text-[#8B5CF6] flex items-center justify-center">
+              <Truck size={14} className="sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-[#0F172A] tracking-tight mb-2">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mb-1 sm:mb-2 truncate">
               {inDeliveryCount}
             </div>
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-[#64748B]">En camino a la clínica</span>
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-xs">
+              <span className="text-[#64748B] truncate">En camino</span>
             </div>
           </div>
         </div>
 
         {/* Card 4: Pedidos Completados */}
         <div
-          className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
+          className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] flex flex-col justify-between hover:shadow-md transition-all group"
         >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-[#64748B]">Pedidos Cobrados</span>
-            <div className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#10B981] flex items-center justify-center">
-              <CheckCircle2 size={16} />
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-semibold text-[#64748B]">Cobrados</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#ECFDF5] text-[#10B981] flex items-center justify-center">
+              <CheckCircle2 size={14} className="sm:w-4 sm:h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl font-extrabold text-[#0F172A] tracking-tight mb-2">
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight mb-1 sm:mb-2 truncate">
               {completedCount}
             </div>
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-[#64748B]">Entregados y cobrados</span>
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-xs">
+              <span className="text-[#64748B] truncate">Entregados y cobrados</span>
             </div>
           </div>
         </div>

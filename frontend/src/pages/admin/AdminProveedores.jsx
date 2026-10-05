@@ -177,13 +177,13 @@ const AdminProveedores = () => {
         </div>
 
         {/* Top Actions */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2.5 w-full lg:w-auto mt-2 lg:mt-0">
           <button
             onClick={() => {
               setEditForm({ ...supplierData });
               setIsEditModalOpen(true);
             }}
-            className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#1E5A9C] border border-[#CBD5E1] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer"
+            className="flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#1E5A9C] border border-[#CBD5E1] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-all cursor-pointer w-full sm:w-auto"
           >
             <Edit3 size={15} />
             <span>Editar Datos</span>
@@ -191,7 +191,7 @@ const AdminProveedores = () => {
 
           <button
             onClick={() => setIsNewOrderModalOpen(true)}
-            className="flex items-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
           >
             <Plus size={16} />
             <span>Nueva Compra / Pago</span>
@@ -200,52 +200,52 @@ const AdminProveedores = () => {
       </div>
 
       {/* ── 3 KEY METRICS CARDS: ÚLTIMA COMPRA AL PROVEEDOR ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-8">
 
         {/* Metric 1: Fecha de la Última Compra */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#1E5A9C]" /> Última Compra
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-[#1E5A9C] shrink-0" /> Última Compra
             </span>
           </div>
           <div>
-            <h2 className="text-2xl font-black text-[#0F172A]">
-              {lastSupplierOrder ? new Date(lastSupplierOrder.createdAt).toLocaleDateString('es-AR') : 'Sin compras registradas'}
+            <h2 className="text-xl sm:text-2xl font-black text-[#0F172A] truncate">
+              {lastSupplierOrder ? new Date(lastSupplierOrder.createdAt).toLocaleDateString('es-AR') : 'Sin compras'}
             </h2>
-            <p className="text-xs text-[#64748B] mt-1.5">
-              {lastSupplierOrder ? `Estado: ${lastSupplierOrder.status}` : 'Registrá tu primera compra con "Nueva Compra / Pago"'}
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">
+              {lastSupplierOrder ? `Estado: ${lastSupplierOrder.status}` : 'Registra tu compra'}
             </p>
           </div>
         </div>
 
         {/* Metric 2: Cantidad de Kits Recibidos en esa Compra */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <Package className="w-4 h-4 text-[#1E5A9C]" /> Kits Recibidos
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <Package className="w-3 h-3 sm:w-4 sm:h-4 text-[#1E5A9C] shrink-0" /> Kits Recibidos
             </span>
           </div>
           <div>
-            <h2 className="text-3xl font-black text-[#0F172A]">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] truncate">
               {lastSupplierOrder?.kits || 0}
             </h2>
-            <p className="text-xs text-[#64748B] mt-1.5">en ese pedido</p>
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">en ese pedido</p>
           </div>
         </div>
 
         {/* Metric 3: Monto Abonado en esa Compra */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1.5">
-              <DollarSign className="w-4 h-4 text-[#1E5A9C]" /> Monto Abonado
+        <div className="col-span-2 md:col-span-1 bg-white rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] shadow-xs flex flex-col justify-between relative overflow-hidden">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 mb-2 sm:mb-3">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#64748B] flex items-center gap-1 sm:gap-1.5 truncate">
+              <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#1E5A9C] shrink-0" /> Monto Abonado
             </span>
           </div>
           <div>
-            <h2 className="text-3xl font-black text-[#0F172A]">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] truncate">
               ${lastPaidAmount.toLocaleString('es-AR')}
             </h2>
-            <p className="text-xs text-[#64748B] mt-1.5">
+            <p className="text-[9px] sm:text-xs text-[#64748B] mt-1 sm:mt-1.5 truncate">
               {lastSupplierOrder ? `de $${(lastSupplierOrder.total || 0).toLocaleString('es-AR')} totales` : 'último pedido registrado'}
             </p>
           </div>

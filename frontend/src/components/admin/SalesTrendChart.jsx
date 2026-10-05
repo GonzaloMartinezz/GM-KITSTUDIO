@@ -52,7 +52,7 @@ const SalesTrendChart = () => {
 
   return (
     <>
-      <div className="bg-white rounded-2xl p-5 md:p-6 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 transition-all duration-200 flex flex-col justify-between relative overflow-hidden font-geist group">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 md:p-6 border border-[#E5E7EB] shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:border-[#1E5A9C]/40 transition-all duration-200 flex flex-col justify-between relative overflow-hidden font-geist group">
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#F1F5F9]">

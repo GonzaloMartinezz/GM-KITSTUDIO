@@ -158,10 +158,10 @@ const AdminLeads = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto mt-2 md:mt-0">
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl font-semibold shadow-xs transition-all"
+            className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl font-semibold shadow-xs transition-all w-full md:w-auto"
           >
             <Plus size={18} />
             <span>Nuevo Cliente</span>
@@ -170,7 +170,7 @@ const AdminLeads = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3 mb-6">
+      <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-3 mb-6 overflow-x-auto whitespace-nowrap">
         <button
           onClick={() => setActiveTab('prospectos')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${activeTab === 'prospectos'

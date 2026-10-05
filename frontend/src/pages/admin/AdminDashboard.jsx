@@ -235,17 +235,17 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
+        <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-2 sm:gap-3 shrink-0">
           <button
             onClick={() => navigate('.', { state: { openNewTransactionModal: true } })}
-            className="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+            className="flex items-center justify-center md:justify-start gap-1.5 sm:gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer w-full md:w-auto"
           >
             <Plus size={18} strokeWidth={2.5} />
             Nueva Venta
           </button>
           <button
             onClick={() => navigate('/admin/clientes')}
-            className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+            className="flex items-center justify-center md:justify-start gap-1.5 sm:gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer w-full md:w-auto"
           >
             <UserPlus size={18} />
             Nuevo Cliente
@@ -253,7 +253,7 @@ const AdminDashboard = () => {
           {supplierData?.phone && (
             <a
               href={`tel:${supplierData.phone}`}
-              className="flex items-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-3 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+              className="col-span-2 md:col-span-1 flex items-center justify-center md:justify-start gap-1.5 sm:gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer w-full md:w-auto"
               title={`Llamar a ${supplierData.company || 'Proveedor'}`}
             >
               <Phone size={18} className="text-[#1E5A9C]" />
@@ -267,7 +267,7 @@ const AdminDashboard = () => {
       <StatCards />
 
       {/* 2. Middle Grid: Sales Trend + Payment Methods (Kit Odontológico Completo) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6 mt-4 sm:mt-6">
         {/* Trend de Ventas (60% width on desktop) */}
         <div className="lg:col-span-7 flex flex-col">
           <SalesTrendChart />
