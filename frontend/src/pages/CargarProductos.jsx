@@ -311,7 +311,7 @@ const CargarProductos = () => {
   const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
 
   return (
-    <div className="h-[100dvh] overflow-hidden bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]">
+    <div className="h-[100dvh] overflow-hidden sm:h-auto sm:min-h-screen sm:overflow-x-hidden sm:overflow-y-visible bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]">
 
       {/* ── TOP NAV HEADER ── */}
       <header className="w-full shrink-0 px-3.5 sm:px-6 md:px-10 lg:px-14 pt-2 sm:pt-5 pb-1.5 sm:pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
@@ -454,7 +454,7 @@ const CargarProductos = () => {
       </header>
 
       {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-start md:justify-center pb-16 sm:pb-24 md:pb-28 lg:pb-32 max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative">
+      <main className="flex-1 min-h-0 overflow-y-auto sm:min-h-0 sm:overflow-visible flex flex-col justify-center pb-16 sm:pb-24 md:pb-28 lg:pb-32 max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative">
         <AnimatePresence mode="wait">
 
           {/* ════════════ PASO 1: Contenido del Kit ════════════ */}
