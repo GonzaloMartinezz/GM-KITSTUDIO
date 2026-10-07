@@ -311,10 +311,10 @@ const CargarProductos = () => {
   const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
 
   return (
-    <div className={`${step === 1 ? 'h-[100dvh] overflow-hidden' : 'min-h-screen overflow-x-hidden'} bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]`}>
+    <div className="h-[100dvh] overflow-hidden bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]">
 
       {/* ── TOP NAV HEADER ── */}
-      <header className="w-full shrink-0 px-3.5 sm:px-6 md:px-10 lg:px-14 pt-3.5 sm:pt-5 pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
+      <header className="w-full shrink-0 px-3.5 sm:px-6 md:px-10 lg:px-14 pt-2 sm:pt-5 pb-1.5 sm:pb-2.5 z-30 relative bg-[#F4F2EC]/95 backdrop-blur-md border-b border-[#E1D9CC]/50">
         <div className="w-full max-w-425 mx-auto flex items-center justify-between gap-3 sm:gap-6">
 
           {/* Left: Salir button + GM KIT STUDIO Logo (Pinned to Left) */}
@@ -430,8 +430,8 @@ const CargarProductos = () => {
         </div>
 
         {/* ── PROGRESS BAR & STEP TITLE ── */}
-        <div className="w-full max-w-425 mx-auto pt-2.5 pb-0.5">
-          <div className="flex items-center justify-between text-xs mb-1.5">
+        <div className="w-full max-w-425 mx-auto pt-1.5 sm:pt-2.5 pb-0.5">
+          <div className="flex items-center justify-between text-xs mb-1 sm:mb-1.5">
             <span className="text-[11px] sm:text-xs font-bold text-[#364B5D] uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-5 h-5 rounded-full bg-[#364B5D] text-white flex items-center justify-center text-[10px] font-bold">
                 {step}
@@ -454,7 +454,7 @@ const CargarProductos = () => {
       </header>
 
       {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className={`flex-1 flex flex-col ${step === 1 ? 'justify-center overflow-hidden' : 'justify-start md:justify-center pb-24 md:pb-28 lg:pb-32'} max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative`}>
+      <main className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-start md:justify-center pb-16 sm:pb-24 md:pb-28 lg:pb-32 max-w-6xl mx-auto w-full px-3.5 sm:px-6 md:px-8 lg:px-12 py-2 sm:py-2.5 md:py-3 z-10 relative">
         <AnimatePresence mode="wait">
 
           {/* ════════════ PASO 1: Contenido del Kit ════════════ */}
@@ -467,18 +467,18 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#88C9C4]" /> 8 Insumos Médicos Certificados
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 ¿QUÉ INCLUYE EL KIT?
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
                 Cada kit GM contiene los insumos de bioseguridad esenciales, envasados bajo normas de esterilidad y listos para su uso clínico.
               </p>
 
-              {/* Grid for Desktop / Compact Vertical List for Mobile */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 w-full max-w-lg lg:max-w-none mx-auto text-left mt-2 sm:mt-4 pb-2">
+              {/* Grid for Desktop / Compact Horizontal List for Mobile */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-3 w-full max-w-lg lg:max-w-none mx-auto text-left mt-1.5 sm:mt-4 pb-0 sm:pb-2">
                 {kitItems.map((item, i) => {
                   const isQty2 = item.qty === 2 || item.tag?.includes('2');
                   return (
@@ -486,7 +486,7 @@ const CargarProductos = () => {
                       whileHover={{ y: -4, scale: 1.01 }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       key={i}
-                      className={`rounded-xl p-2.5 sm:p-4 flex flex-col items-center sm:items-stretch justify-between gap-1.5 sm:gap-3 shadow-sm border transition-colors overflow-hidden group relative ${item.isBadge
+                      className={`rounded-xl p-2 sm:p-4 flex flex-row sm:flex-col items-center sm:items-stretch justify-between gap-2 sm:gap-3 shadow-sm border transition-colors overflow-hidden group relative ${item.isBadge
                         ? 'bg-linear-to-br from-[#88C9C4]/20 to-[#88C9C4]/5 border-[#88C9C4]/60 ring-1 ring-[#88C9C4]/30'
                         : isQty2
                           ? 'bg-white border-[#E1D9CC]/80 hover:border-[#88C9C4] hover:shadow-lg hover:shadow-[#88C9C4]/10'
@@ -494,21 +494,21 @@ const CargarProductos = () => {
                         }`}
                     >
                       {/* Left/Top: Icon & Text */}
-                      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 flex-1 min-w-0 text-center sm:text-left">
-                        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${item.isBadge
+                      <div className="flex flex-row sm:flex-row items-center sm:items-start gap-2 sm:gap-3 flex-1 min-w-0 text-left">
+                        <div className={`w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 ${item.isBadge
                           ? 'bg-[#88C9C4]/30 text-[#0C3B45]'
                           : isQty2
                             ? 'bg-[#F4F2EC] text-[#0C3B45] group-hover:bg-[#0C3B45] group-hover:text-white'
                             : 'bg-white text-[#546A7E] group-hover:bg-[#88C9C4]/20 group-hover:text-[#0C3B45]'
                           }`}>
                           {item.isBadge ? (
-                            <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6" />
+                            <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
                           ) : (
-                            <Package className="w-5 h-5 sm:w-6 sm:h-6" />
+                            <Package className="w-4 h-4 sm:w-6 sm:h-6" />
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="font-bebas text-[15px] sm:text-xl text-[#0C3B45] leading-none sm:leading-tight sm:mb-1 group-hover:text-[#124b57] transition-colors truncate sm:whitespace-normal">
+                          <p className="font-bebas text-[13px] sm:text-xl text-[#0C3B45] leading-none sm:leading-tight sm:mb-1 group-hover:text-[#124b57] transition-colors truncate sm:whitespace-normal">
                             {item.title}
                           </p>
                           <p className="hidden sm:block text-xs text-[#546A7E] leading-relaxed line-clamp-3">
@@ -518,7 +518,7 @@ const CargarProductos = () => {
                       </div>
 
                       {/* Right/Bottom: Badge */}
-                      <div className="shrink-0 flex justify-center sm:w-full sm:justify-end mt-1 sm:mt-0">
+                      <div className="shrink-0 flex justify-end sm:w-full sm:justify-end mt-0 sm:mt-0">
                         {isQty2 ? (
                           <span className="inline-flex items-center justify-center text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg bg-[#0C3B45] text-[#88C9C4] shadow-sm tracking-widest uppercase">
                             CANT. 2
@@ -546,21 +546,21 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1.5 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/70 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60 shadow-2xs">
+              <span className="inline-flex items-center gap-1.5 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/70 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60 shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#88C9C4]" /> Kit Quirúrgico Único
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 KIT ODONTOLÓGICO COMPLETO
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-md mb-3.5 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-md mb-3.5 leading-relaxed px-2">
                 Un solo kit integral con los 8 insumos estériles indispensables. <span className="font-bold text-[#0C3B45]">No se comercializan insumos sueltos.</span>
               </p>
 
               {/* Compact & Refined Card for mobile & desktop */}
-              <div className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
+              <div className="w-full max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-3 sm:p-5 lg:p-6 border border-[#88C9C4]/60 shadow-lg ring-1 ring-[#88C9C4]/20 relative">
 
                 {/* Card Top: Title & Price side-by-side */}
-                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-3 lg:gap-5 pb-3 lg:pb-4 mb-3 lg:mb-4 border-b border-[#F4F2EC] text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-3 lg:gap-5 pb-2 sm:pb-3 lg:pb-4 mb-2 sm:mb-3 lg:mb-4 border-b border-[#F4F2EC] text-center sm:text-left">
                   <div className="flex flex-col items-center sm:items-start">
                     <div className="flex items-center justify-center sm:justify-start gap-1.5 lg:gap-2 mb-1 lg:mb-1.5">
                       <div className="w-5 h-5 lg:w-7 lg:h-7 rounded-full bg-[#88C9C4] text-[#0C3B45] flex items-center justify-center font-bold shrink-0">
@@ -586,11 +586,11 @@ const CargarProductos = () => {
                 </div>
 
                 {/* Insumos List in compact 2-column grid */}
-                <div className="bg-[#F8F9FA] rounded-xl p-3 lg:p-4 mb-3 lg:mb-4 border border-[#EBE7DF]/80">
-                  <p className="text-[10px] lg:text-[11px] font-bold text-[#364B5D] uppercase tracking-wider mb-2 lg:mb-3 flex items-center gap-1.5">
+                <div className="bg-[#F8F9FA] rounded-xl p-2.5 sm:p-3 lg:p-4 mb-2 sm:mb-3 lg:mb-4 border border-[#EBE7DF]/80">
+                  <p className="text-[10px] lg:text-[11px] font-bold text-[#364B5D] uppercase tracking-wider mb-1.5 sm:mb-2 lg:mb-3 flex items-center gap-1.5">
                     <Package className="w-3.5 h-3.5 lg:w-3.5 lg:h-3.5 text-[#88C9C4]" /> Insumos incluidos en el kit:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 lg:gap-y-2 text-[#546A7E]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 lg:gap-y-2 text-[#546A7E]">
                     {[
                       '2x Batas quirúrgicas con puños',
                       '1x Compresa impermeable 1x1 mt',
@@ -630,35 +630,35 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <Package className="w-3.5 h-3.5 text-[#88C9C4]" /> Volumen y Descuentos
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 CANTIDAD DE KITS
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-3.5 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-3.5 leading-relaxed px-2">
                 A mayor volumen, mayor porcentaje de descuento directo en tu compra.
               </p>
 
               {/* 2-Column Desktop Grid / Mobile Stack */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-5 w-full max-w-4xl text-left items-start">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-5 w-full max-w-4xl text-left items-start">
 
                 {/* Left Column: Interactive Selector */}
-                <div className="md:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-[#E1D9CC]/80 shadow-xs flex flex-col items-center text-center">
+                <div className="md:col-span-7 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-5 border border-[#E1D9CC]/80 shadow-xs flex flex-col items-center text-center">
 
                   {/* Quantity Counter Control */}
-                  <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3">
+                  <div className="flex items-center justify-center gap-4 sm:gap-6 mb-2 sm:mb-3">
                     <button
                       onClick={() => {
                         setQuantity(q => Math.max(1, q - 1));
                       }}
-                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
+                      className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
                       aria-label="Restar kit"
                     >
                       <Minus className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
-                    <div className="w-24 sm:w-28 text-center select-none">
-                      <span className="font-bebas text-5xl sm:text-6xl text-[#1e2f3e] leading-none block">
+                    <div className="w-20 sm:w-28 text-center select-none">
+                      <span className="font-bebas text-4xl sm:text-6xl text-[#1e2f3e] leading-none block">
                         {quantity}
                       </span>
                       <span className="text-[10px] sm:text-xs font-bold uppercase text-[#8CA0B2] tracking-wider block -mt-1">
@@ -669,15 +669,16 @@ const CargarProductos = () => {
                       onClick={() => {
                         setQuantity(q => q + 1);
                       }}
-                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
+                      className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white shadow-xs border border-[#E1D9CC]/60 flex items-center justify-center text-[#364B5D] hover:bg-[#EBE7DF] active:scale-95 transition-all cursor-pointer"
                       aria-label="Sumar kit"
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </div>
 
-                  {/* Quick Presets */}
-                  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3.5 w-full">
+                  {/* Quick Presets — hidden on mobile: redundant with the discount
+                      tiles below, which are already tap-to-select */}
+                  <div className="hidden sm:grid grid-cols-3 gap-1.5 sm:gap-2 mb-3.5 w-full">
                     {[
                       { q: 5, lblDesktop: '5 kits', lblMobile: '5 kits' },
                       { q: 10, lblDesktop: '10 kits', lblMobile: '10 kits' },
@@ -701,16 +702,16 @@ const CargarProductos = () => {
 
                   {/* Discount Tiers (Escala Recomendada Fase Inicial) */}
                   <div className="w-full">
-                    <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center justify-between mb-1 sm:mb-1.5">
                       <p className="text-[10px] font-bold text-[#8CA0B2] uppercase tracking-wider text-left">
                         Escala de Descuentos
                       </p>
-                      <span className="text-[9px] font-semibold text-[#0C3B45] bg-[#88C9C4]/25 px-2 py-0.5 rounded-full">
+                      <span className="hidden sm:inline text-[9px] font-semibold text-[#0C3B45] bg-[#88C9C4]/25 px-2 py-0.5 rounded-full">
                         Incentivo Real
                       </span>
                     </div>
                     {/* flex-col on mobile, grid-cols-3 on sm and up */}
-                    <div className="flex flex-col sm:grid sm:grid-cols-3 gap-2 w-full">
+                    <div className="flex flex-col sm:grid sm:grid-cols-3 gap-1.5 sm:gap-2 w-full">
                       {[
                         { qty: 5, label: '5 KITS', total: '$47.500', bonus: '' },
                         { qty: 10, label: '10 KITS', total: '$95.000', bonus: '' },
@@ -723,20 +724,20 @@ const CargarProductos = () => {
                             onClick={() => {
                               setQuantity(pkg.qty);
                             }}
-                            className={`cursor-pointer rounded-xl p-2.5 sm:p-2.5 text-left sm:text-center border transition-all flex sm:block items-center justify-between group ${isUnlocked
+                            className={`cursor-pointer rounded-xl p-2 sm:p-2.5 text-left sm:text-center border transition-all flex sm:block items-center justify-between group ${isUnlocked
                               ? 'border-[#88C9C4] bg-[#88C9C4]/15 shadow-xs ring-1 ring-[#88C9C4]/30'
                               : 'border-[#E1D9CC]/60 bg-white/50 hover:bg-white/70'
                               }`}
                           >
                             <div className="flex sm:block items-center gap-2">
-                              <span className="font-bebas text-xl sm:text-lg md:text-xl text-[#0C3B45]">{pkg.label}</span>
+                              <span className="font-bebas text-lg sm:text-lg md:text-xl text-[#0C3B45]">{pkg.label}</span>
                               <div className="hidden sm:block mt-1 opacity-80 group-hover:opacity-100 transition-opacity">
                                 <span className="text-[10px] md:text-xs text-[#546A7E] font-medium">{pkg.qty} x $9.500</span>
                               </div>
                             </div>
 
                             <div className="text-right sm:text-center flex flex-col items-end sm:items-center">
-                              <span className="font-geist font-bold text-base sm:text-sm md:text-base text-[#1e2f3e] leading-none">{pkg.total}</span>
+                              <span className="font-geist font-bold text-sm sm:text-sm md:text-base text-[#1e2f3e] leading-none">{pkg.total}</span>
                               {pkg.bonus && <span className="text-[9px] md:text-[10px] font-bold text-[#88C9C4] uppercase tracking-wider mt-0.5">{pkg.bonus}</span>}
                               <span className="sm:hidden text-[9px] text-[#546A7E] font-medium mt-0.5">{pkg.qty} x $9.500</span>
                             </div>
@@ -748,9 +749,9 @@ const CargarProductos = () => {
                 </div>
 
                 {/* Right Column: Live Price & Summary Box */}
-                <div className="md:col-span-5 flex flex-col gap-2.5">
-                  {/* Promo Banner */}
-                  <div className="w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all bg-[#EBE7DF] text-[#8CA0B2]">
+                <div className="md:col-span-5 flex flex-col gap-2 sm:gap-2.5">
+                  {/* Promo Banner — hidden on mobile, duplicates the selected discount tile */}
+                  <div className="hidden sm:block w-full px-3.5 py-2 rounded-xl text-xs font-medium transition-all bg-[#EBE7DF] text-[#8CA0B2]">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="w-2 h-2 rounded-full bg-[#D9D1C7]" />
                       <span className="font-bold">{promo.label}</span>
@@ -759,15 +760,15 @@ const CargarProductos = () => {
                   </div>
 
                   {/* Total Summary Preview Box */}
-                  <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-[#88C9C4]/50 shadow-sm text-left">
-                    <div className="flex items-center justify-between pb-2 border-b border-[#F4F2EC] mb-2.5">
-                      <span className="font-bebas text-lg text-[#364B5D]">Resumen de Inversión</span>
+                  <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-4 border border-[#88C9C4]/50 shadow-sm text-left">
+                    <div className="flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#F4F2EC] mb-2 sm:mb-2.5">
+                      <span className="font-bebas text-base sm:text-lg text-[#364B5D]">Resumen de Inversión</span>
                       <span className="text-[10px] font-bold text-[#0C3B45] bg-[#88C9C4]/20 px-2 py-0.5 rounded-full">
                         {`${quantity} ${quantity === 1 ? 'kit' : 'kits'}`}
                       </span>
                     </div>
 
-                    <div className="space-y-1.5 mb-2.5 text-xs">
+                    <div className="space-y-1.5 mb-2 sm:mb-2.5 text-xs">
                       <div className="flex justify-between items-center text-[#546A7E]">
                         <span>Precio por kit</span>
                         <span className="font-semibold text-[#0C3B45]">${Math.round(unitPrice).toLocaleString()}</span>
@@ -775,19 +776,19 @@ const CargarProductos = () => {
 
                     </div>
 
-                    <div className="pt-2 border-t border-[#F4F2EC] flex items-center justify-between">
+                    <div className="pt-1.5 sm:pt-2 border-t border-[#F4F2EC] flex items-center justify-between">
                       <div>
                         <span className="text-[10px] text-[#8CA0B2] uppercase font-bold block">Total Estimado</span>
                         <span className="text-[9px] text-[#8CA0B2]">Directo de fábrica</span>
                       </div>
-                      <span className="font-bebas text-3xl sm:text-4xl text-[#0C3B45] leading-none">
+                      <span className="font-bebas text-2xl sm:text-4xl text-[#0C3B45] leading-none">
                         ${Math.round(total).toLocaleString()}
                       </span>
                     </div>
                   </div>
 
-                  {/* Clinical Assurance Pills */}
-                  <div className="flex items-center justify-between gap-1 text-[10px] text-[#546A7E] px-1">
+                  {/* Clinical Assurance Pills — hidden on mobile (decorative trust badges) */}
+                  <div className="hidden sm:flex items-center justify-between gap-1 text-[10px] text-[#546A7E] px-1">
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Despacho seguro</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Reposición sin cargo</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Factura A/B</span>
@@ -808,18 +809,18 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <Truck className="w-3.5 h-3.5 text-[#88C9C4]" /> Logística y Despacho
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 OPCIONES DE ENVÍO
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
                 Seleccioná cómo deseas recibir tus insumos. Despachamos con embalaje estéril protegido.
               </p>
 
-              {/* Responsive Cards for mobile and desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 w-full max-w-lg md:max-w-4xl mx-auto text-left">
+              {/* Compact horizontal rows on mobile / responsive cards on desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-4 w-full max-w-lg md:max-w-4xl mx-auto text-left">
                 {shippingOptions.map(opt => {
                   const isSelected = selectedShipping === opt.id;
                   const Icon = opt.icon;
@@ -827,34 +828,34 @@ const CargarProductos = () => {
                     <div
                       key={opt.id}
                       onClick={() => setSelectedShipping(opt.id)}
-                      className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all flex flex-col items-center text-center gap-3 select-none ${isSelected
+                      className={`relative cursor-pointer rounded-2xl p-3 sm:p-6 border-2 transition-all flex flex-row sm:flex-col items-center text-left sm:text-center gap-3 select-none ${isSelected
                         ? 'border-[#88C9C4] bg-white shadow-lg ring-2 ring-[#88C9C4]/20 scale-[1.02]'
                         : 'border-[#E1D9CC]/60 bg-white/80 hover:bg-white shadow-sm hover:border-[#88C9C4]/60 hover:scale-[1.01]'
                         }`}
                     >
                       {/* Radio checkmark */}
-                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
+                      <div className={`absolute top-3 right-3 sm:top-4 sm:right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
                         }`}>
                         {isSelected && <Check className="w-3 h-3 stroke-3" />}
                       </div>
 
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
+                      <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 sm:mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
                         }`}>
-                        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                        <Icon className="w-5 h-5 sm:w-7 sm:h-7" />
                       </div>
 
-                      <div className="flex-1 w-full flex flex-col items-center justify-center">
-                        <div className="flex flex-col items-center gap-1.5 mb-2">
-                          <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] tracking-wide leading-none mt-1">
+                      <div className="flex-1 w-full min-w-0 flex flex-col items-start sm:items-center justify-center pr-6 sm:pr-0">
+                        <div className="flex flex-col items-start sm:items-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-2">
+                          <h3 className="font-bebas text-base sm:text-2xl text-[#364B5D] tracking-wide leading-none sm:mt-1">
                             {opt.title}
                           </h3>
                           {opt.badge && (
-                            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40">
+                            <span className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 rounded-full text-[#0C3B45] bg-[#88C9C4]/25 border border-[#88C9C4]/40">
                               {opt.badge}
                             </span>
                           )}
                         </div>
-                        <p className="text-[12px] sm:text-[13px] text-[#8CA0B2] leading-snug px-1">
+                        <p className="text-[11px] sm:text-[13px] text-[#8CA0B2] leading-snug">
                           {opt.desc}
                         </p>
                       </div>
@@ -875,17 +876,17 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <MapPin className="w-3.5 h-3.5 text-[#88C9C4]" /> Retiro en Sucursal
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 DÍA Y HORARIO
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
                 Seleccioná cuándo pasarás a retirar tu pedido por nuestra sucursal. Horario de atención: de 9:00 a 17:00hs.
               </p>
 
-              <div className="w-full max-w-md mx-auto text-left bg-white/95 backdrop-blur-md rounded-3xl p-6 border border-[#E1D9CC]/80 shadow-lg ring-1 ring-[#88C9C4]/10 flex flex-col gap-5">
+              <div className="w-full max-w-md mx-auto text-left bg-white/95 backdrop-blur-md rounded-3xl p-4 sm:p-6 border border-[#E1D9CC]/80 shadow-lg ring-1 ring-[#88C9C4]/10 flex flex-col gap-3 sm:gap-5">
                 <div className="flex flex-col gap-2 relative z-20">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-[#364B5D] ml-1">Día de Retiro</label>
                   <CustomDropdown 
@@ -923,18 +924,18 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <CreditCard className="w-3.5 h-3.5 text-[#88C9C4]" /> Métodos de Pago
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 MÉTODO DE PAGO
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-4 sm:mb-6 leading-relaxed px-2">
                 Elegí cómo abonar. Abonando con transferencia accedés a beneficios adicionales.
               </p>
 
-              {/* Mobile and Desktop responsive cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4 w-full max-w-lg md:max-w-4xl text-left mx-auto">
+              {/* Compact horizontal rows on mobile / responsive cards on desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 w-full max-w-lg md:max-w-4xl text-left mx-auto">
                 {paymentOptions.map(opt => {
                   const isSelected = selectedPayment === opt.id || (opt.id === 'tarjeta' && selectedPayment?.startsWith('tarjeta'));
                   const Icon = opt.icon;
@@ -942,32 +943,32 @@ const CargarProductos = () => {
                     <div
                       key={opt.id}
                       onClick={() => setSelectedPayment(opt.id)}
-                      className={`relative cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all flex flex-col items-center text-center gap-3 select-none ${isSelected
+                      className={`relative cursor-pointer rounded-2xl p-3 sm:p-6 border-2 transition-all flex flex-row sm:flex-col items-center text-left sm:text-center gap-3 select-none ${isSelected
                         ? 'border-[#88C9C4] bg-white shadow-lg ring-2 ring-[#88C9C4]/20 scale-[1.02]'
                         : 'border-[#E1D9CC]/60 bg-white/80 hover:bg-white shadow-sm hover:border-[#88C9C4]/60 hover:scale-[1.01]'
                         }`}
                     >
                       {/* Radio checkmark */}
-                      <div className={`absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
+                      <div className={`absolute top-3 right-3 sm:top-4 sm:right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
                         }`}>
                         {isSelected && <Check className="w-3 h-3 stroke-3" />}
                       </div>
 
-                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
+                      <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 sm:mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
                         }`}>
-                        <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                        <Icon className="w-5 h-5 sm:w-7 sm:h-7" />
                       </div>
 
-                      <div className="flex-1 w-full flex flex-col items-center justify-center">
-                        <div className="flex flex-col items-center gap-1 mb-2">
-                          <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D] tracking-wide leading-none mt-1">
+                      <div className="flex-1 w-full min-w-0 flex flex-col items-start sm:items-center justify-center pr-6 sm:pr-0">
+                        <div className="flex flex-col items-start sm:items-center gap-1 mb-0.5 sm:mb-2">
+                          <h3 className="font-bebas text-base sm:text-2xl text-[#364B5D] tracking-wide leading-none sm:mt-1">
                             {opt.title}
                           </h3>
                         </div>
-                        <p className="text-[12px] sm:text-[13px] text-[#8CA0B2] leading-snug mb-2.5 px-1">
+                        <p className="text-[11px] sm:text-[13px] text-[#8CA0B2] leading-snug mb-1 sm:mb-2.5">
                           {opt.desc}
                         </p>
-                        <div className="flex flex-wrap items-center justify-center gap-1.5">
+                        <div className="flex flex-wrap items-center justify-start sm:justify-center gap-1.5">
                           {opt.discountBadge && (
                             <span className="inline-block text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">
                               {opt.discountBadge}
@@ -1018,23 +1019,23 @@ const CargarProductos = () => {
               transition={{ duration: 0.25 }}
               className="flex flex-col items-center text-center w-full"
             >
-              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-3 py-1 rounded-full mb-1.5 border border-[#E1D9CC]/60">
+              <span className="inline-flex items-center gap-1 text-[#546A7E] font-bold tracking-widest text-[10px] uppercase bg-white/60 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full mb-1 sm:mb-1.5 border border-[#E1D9CC]/60">
                 <Check className="w-3.5 h-3.5 text-emerald-600" /> Confirmación Directa
               </span>
-              <h1 className="font-bebas text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-1 tracking-wide">
+              <h1 className="font-bebas text-xl xs:text-2xl sm:text-4xl md:text-5xl text-[#364B5D] leading-none mb-0.5 sm:mb-1 tracking-wide">
                 CONFIRMAR PEDIDO
               </h1>
-              <p className="text-xs text-[#546A7E] max-w-lg mb-3.5 leading-relaxed px-2">
+              <p className="hidden sm:block text-xs text-[#546A7E] max-w-lg mb-3.5 leading-relaxed px-2">
                 Revisá el resumen de tu orden. Al presionar finalizar, se abrirá WhatsApp con tu pedido ya redactado.
               </p>
 
               {/* 2-Column Desktop Grid / 1-Col Mobile */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 sm:gap-5 w-full max-w-4xl text-left items-start">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-5 w-full max-w-4xl text-left items-start">
 
                 {/* Left Col: Order Breakdown */}
-                <div className="md:col-span-7 bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-[#E1D9CC]/60">
-                  <div className="flex items-center justify-between pb-2.5 border-b border-[#F4F2EC] mb-2.5">
-                    <h3 className="font-bebas text-xl sm:text-2xl text-[#364B5D]">
+                <div className="md:col-span-7 bg-white rounded-2xl p-3 sm:p-5 shadow-xs border border-[#E1D9CC]/60">
+                  <div className="flex items-center justify-between pb-2 sm:pb-2.5 border-b border-[#F4F2EC] mb-2 sm:mb-2.5">
+                    <h3 className="font-bebas text-lg sm:text-2xl text-[#364B5D]">
                       Detalle de la Orden
                     </h3>
                     <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#88C9C4]/20 text-[#0C3B45]">
@@ -1042,7 +1043,7 @@ const CargarProductos = () => {
                     </span>
                   </div>
 
-                  <div className="space-y-2 mb-3 text-xs sm:text-sm">
+                  <div className="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3 text-xs sm:text-sm">
                     <div className="flex justify-between items-center">
                       <span className="text-[#8CA0B2]">Kit Seleccionado</span>
                       <span className="font-semibold text-[#364B5D]">Kit Odontológico Completo × {quantity} kits</span>
@@ -1099,9 +1100,9 @@ const CargarProductos = () => {
                 </div>
 
                 {/* Right Col: Total & WhatsApp Direct Action Card */}
-                <div className="md:col-span-5 bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-[#88C9C4]/60 flex flex-col justify-between">
+                <div className="md:col-span-5 bg-white rounded-2xl p-3 sm:p-5 shadow-xs border border-[#88C9C4]/60 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center justify-between pb-2 border-b border-[#F4F2EC] mb-2.5">
+                    <div className="flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#F4F2EC] mb-2 sm:mb-2.5">
                       <span className="text-[10px] font-bold text-[#8CA0B2] uppercase tracking-wider">
                         Total a Abonar
                       </span>
@@ -1112,27 +1113,27 @@ const CargarProductos = () => {
                       )}
                     </div>
 
-                    <div className="flex items-baseline justify-between mb-2.5">
-                      <span className="font-bebas text-3xl sm:text-4xl text-[#0C3B45] leading-none">
+                    <div className="flex items-baseline justify-between mb-2 sm:mb-2.5">
+                      <span className="font-bebas text-2xl sm:text-4xl text-[#0C3B45] leading-none">
                         ${Math.round(total).toLocaleString()}
                       </span>
                       <span className="text-[10px] font-semibold text-[#8CA0B2]">Cotización directa</span>
                     </div>
 
                     {/* WhatsApp Notice Inside Card */}
-                    <div className="p-3 bg-[#88C9C4]/15 border border-[#88C9C4]/35 rounded-xl text-xs text-[#0C3B45] mb-3">
+                    <div className="p-2.5 sm:p-3 bg-[#88C9C4]/15 border border-[#88C9C4]/35 rounded-xl text-xs text-[#0C3B45] mb-0 sm:mb-3">
                       <div className="flex items-center gap-1.5 font-bold mb-0.5 text-xs">
                         <MessageCircle className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                         <span>Coordinación directa vía WhatsApp</span>
                       </div>
-                      <p className="text-[11px] text-[#0C3B45]/85 leading-snug">
+                      <p className="hidden sm:block text-[11px] text-[#0C3B45]/85 leading-snug">
                         Al presionar el botón inferior se abrirá WhatsApp con el pedido pre-redactado para confirmar pago y entrega.
                       </p>
                     </div>
                   </div>
 
-                  {/* Micro trust guarantees row */}
-                  <div className="flex items-center justify-between gap-1 text-[10px] text-[#546A7E] pt-2 border-t border-[#F4F2EC]">
+                  {/* Micro trust guarantees row — hidden on mobile (decorative) */}
+                  <div className="hidden sm:flex items-center justify-between gap-1 text-[10px] text-[#546A7E] pt-2 border-t border-[#F4F2EC]">
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> 100% Estéril</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Factura A/B</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Entrega express</span>
@@ -1147,7 +1148,7 @@ const CargarProductos = () => {
       </main>
 
       {/* ── STICKY BOTTOM ACTION BAR (OPTIMIZED FOR MOBILE & DESKTOP) ── */}
-      <footer className={`${step === 1 ? 'w-full shrink-0' : 'fixed bottom-0 left-0 w-full'} z-40 bg-[#F4F2EC]/95 backdrop-blur-md border-t border-[#E1D9CC] px-3.5 sm:px-6 md:px-12 py-3 sm:py-3.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]`}>
+      <footer className="fixed bottom-0 left-0 w-full z-40 bg-[#F4F2EC]/95 backdrop-blur-md border-t border-[#E1D9CC] px-3.5 sm:px-6 md:px-12 py-2 sm:py-3.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
 
           {/* Back Button */}
