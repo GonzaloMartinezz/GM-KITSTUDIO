@@ -72,6 +72,17 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  // Día y horario de retiro elegidos en el wizard cuando shippingMethod es
+  // 'sucursal'. Antes esta info solo viajaba en el texto del WhatsApp y
+  // nunca quedaba guardada — ahora queda en la orden real.
+  pickupDate: {
+    type: String,
+    default: '',
+  },
+  pickupTime: {
+    type: String,
+    default: '',
+  },
   status: {
     type: String,
     enum: ['pendiente', 'confirmado', 'pagado', 'enviado', 'entregado', 'cancelado'],
@@ -80,6 +91,30 @@ const orderSchema = new mongoose.Schema({
   notes: {
     type: String,
     default: '',
+  },
+  // Datos de la pasarela de pago (Mercado Pago). Se completan al crear la
+  // preferencia y se actualizan cuando llega la notificación (webhook).
+  payment: {
+    provider: {
+      type: String,
+      enum: ['mercadopago'],
+    },
+    preferenceId: {
+      type: String,
+      default: '',
+    },
+    paymentId: {
+      type: String,
+      default: '',
+    },
+    status: {
+      type: String,
+      default: '', // approved | rejected | in_process | cancelled | refunded | charged_back
+    },
+    statusDetail: {
+      type: String,
+      default: '',
+    },
   },
 }, {
   timestamps: true,

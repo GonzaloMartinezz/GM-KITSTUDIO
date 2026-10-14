@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { paymentsAPI } from '../lib/api';
 
 /* ─── DATA ─────────────────────────────────────────── */
 const kitItems = [
@@ -64,6 +65,13 @@ const shippingOptions = [
 
 const paymentOptions = [
   {
+    id: 'mercadopago',
+    icon: CreditCard,
+    title: 'MERCADO PAGO',
+    desc: 'Tarjetas de débito/crédito, cuotas y dinero en cuenta. Pago online al instante.',
+    badge: 'Recomendado',
+  },
+  {
     id: 'efectivo',
     icon: Banknote,
     title: 'EFECTIVO',
@@ -76,12 +84,6 @@ const paymentOptions = [
     title: 'TRANSFERENCIA',
     desc: 'Alias / CBU inmediato con comprobante digital.',
   },
-  // {
-  //   id: 'tarjeta',
-  //   icon: CreditCard,
-  //   title: 'TARJETA',
-  //   desc: 'Débito o crédito a través de link de pago seguro.',
-  // },
 ];
 
 const getPromo = (qty) => {
@@ -207,6 +209,8 @@ const CargarProductos = () => {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [pickupDate, setPickupDate] = useState('');
   const [pickupTime, setPickupTime] = useState('');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
 
   const isPickup = selectedShipping === 'sucursal';
   const TOTAL_STEPS = isPickup ? 7 : 6;
@@ -260,6 +264,11 @@ const CargarProductos = () => {
       return;
     }
 
+    if (selectedPayment === 'mercadopago') {
+      handleMercadoPagoPay();
+      return;
+    }
+
     const shippingMap = {
       domicilio: 'Envío a Domicilio (Tucumán)',
       sucursal: 'Retiro en Sucursal (Punto designado)',
@@ -306,6 +315,26 @@ const CargarProductos = () => {
 
     window.open(`https://wa.me/5493816242482?text=${encodeURIComponent(msg)}`, '_blank');
     navigate('/');
+  };
+
+  const handleMercadoPagoPay = async () => {
+    setPaymentError('');
+    setIsProcessingPayment(true);
+    try {
+      const { data } = await paymentsAPI.createPreference({
+        quantity,
+        cartItems: cartItems.map(item => ({ _id: item._id, quantity: item.quantity })),
+        shippingMethod: selectedShipping,
+        pickupDate: isPickup ? pickupDate : '',
+        pickupTime: isPickup ? pickupTime : '',
+      });
+      window.location.href = data.init_point;
+    } catch (error) {
+      setIsProcessingPayment(false);
+      setPaymentError(
+        error?.response?.data?.message || 'No pudimos iniciar el pago con Mercado Pago. Intentá de nuevo en un momento.'
+      );
+    }
   };
 
   const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
@@ -1149,6 +1178,13 @@ const CargarProductos = () => {
 
       {/* ── STICKY BOTTOM ACTION BAR (OPTIMIZED FOR MOBILE & DESKTOP) ── */}
       <footer className="fixed bottom-0 left-0 w-full z-40 bg-[#F4F2EC]/95 backdrop-blur-md border-t border-[#E1D9CC] px-3.5 sm:px-6 md:px-12 py-2 sm:py-3.5 shadow-[0_-4px_25px_rgba(0,0,0,0.08)]">
+        {paymentError && step === TOTAL_STEPS && (
+          <div className="max-w-5xl mx-auto mb-2 px-0.5">
+            <p className="text-[11px] sm:text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2 leading-snug">
+              {paymentError}
+            </p>
+          </div>
+        )}
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
 
           {/* Back Button */}
@@ -1180,20 +1216,32 @@ const CargarProductos = () => {
             </div>
           )}
 
-          {/* Next / WhatsApp Finalize Button */}
+          {/* Next / Finalize Button (WhatsApp o Mercado Pago, según el método elegido) */}
           <button
             onClick={step === TOTAL_STEPS ? handleFinalize : handleNext}
-            disabled={!canAdvance()}
+            disabled={!canAdvance() || isProcessingPayment}
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed active:scale-[0.98] ${step === TOTAL_STEPS
               ? 'bg-[#88C9C4] text-[#0C3B45] hover:bg-[#6EB8B2] shadow-[0_4px_15px_rgba(136,201,196,0.5)]'
               : 'bg-[#364B5D] text-white hover:bg-[#2A3A48]'
               }`}
           >
             {step === TOTAL_STEPS ? (
-              <>
-                <MessageCircle className="w-4 h-4" />
-                <span>Enviar WhatsApp</span>
-              </>
+              isProcessingPayment ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                  <span>Redirigiendo...</span>
+                </>
+              ) : selectedPayment === 'mercadopago' ? (
+                <>
+                  <CreditCard className="w-4 h-4" />
+                  <span>Pagar con Mercado Pago</span>
+                </>
+              ) : (
+                <>
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Enviar WhatsApp</span>
+                </>
+              )
             ) : (
               <>
                 <span>{nextLabel}</span>

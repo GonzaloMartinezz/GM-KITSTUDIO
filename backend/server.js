@@ -25,6 +25,7 @@ const dispatchRoutes = require('./routes/dispatchRoutes');
 const paymentMethodRoutes = require('./routes/paymentMethodRoutes');
 const leadRoutes = require('./routes/leadRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -95,6 +96,7 @@ app.use('/api/dispatches', dispatchRoutes);
 app.use('/api/payment-methods', paymentMethodRoutes);
 app.use('/api/leads', leadRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/payments', paymentRoutes);
 
 /* ─── ERROR HANDLER ─────────────────────────────── */
 

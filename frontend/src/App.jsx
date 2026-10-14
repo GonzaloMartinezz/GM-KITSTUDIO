@@ -31,6 +31,7 @@ const AdminProveedores = lazy(() => import('./pages/admin/AdminProveedores'));
 const AdminLeads = lazy(() => import('./pages/admin/AdminLeads'));
 const AdminConfiguracion = lazy(() => import('./pages/admin/AdminConfiguracion'));
 const CargarProductos = lazy(() => import('./pages/CargarProductos'));
+const PaymentResult = lazy(() => import('./pages/PaymentResult'));
 
 function App() {
   return (
@@ -52,6 +53,32 @@ function App() {
           />
           <Route path="/comprarproducto" element={<Navigate to="/cargarproductos" replace />} />
           <Route path="/comprarproductos" element={<Navigate to="/cargarproductos" replace />} />
+
+          {/* === RESULTADO DE PAGO (Mercado Pago back_urls) === */}
+          <Route
+            path="/pago/exito"
+            element={
+              <ClientRoute>
+                <PaymentResult outcome="success" />
+              </ClientRoute>
+            }
+          />
+          <Route
+            path="/pago/pendiente"
+            element={
+              <ClientRoute>
+                <PaymentResult outcome="pending" />
+              </ClientRoute>
+            }
+          />
+          <Route
+            path="/pago/error"
+            element={
+              <ClientRoute>
+                <PaymentResult outcome="failure" />
+              </ClientRoute>
+            }
+          />
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/product/:id" element={<ProductDetail />} />

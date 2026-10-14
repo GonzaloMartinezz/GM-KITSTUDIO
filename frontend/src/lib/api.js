@@ -136,6 +136,11 @@ export const paymentMethodsAPI = {
   remove: (id) => api.delete(`/payment-methods/${id}`),
 };
 
+export const paymentsAPI = {
+  createPreference: (data) => api.post('/payments/create-preference', data),
+  status: (orderId) => api.get(`/payments/status/${orderId}`),
+};
+
 export const leadsAPI = {
   list: () => api.get('/leads'),
   create: (data) => api.post('/leads', data),
