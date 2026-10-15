@@ -43,14 +43,7 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* === PUBLIC E-COMMERCE ROUTES === */}
-          <Route
-            path="/cargarproductos"
-            element={
-              <ClientRoute>
-                <CargarProductos />
-              </ClientRoute>
-            }
-          />
+          <Route path="/cargarproductos" element={<CargarProductos />} />
           <Route path="/comprarproducto" element={<Navigate to="/cargarproductos" replace />} />
           <Route path="/comprarproductos" element={<Navigate to="/cargarproductos" replace />} />
 

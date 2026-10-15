@@ -10,6 +10,7 @@ import CatalogSpecsSection from '../components/CatalogSpecsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import { ScrollVelocityContainer, ScrollVelocityRow } from '../components/ui/ScrollBasedVelocity';
 import ReviewModal from '../components/ReviewModal';
+import WholesalePackOrder from '../components/WholesalePackOrder';
 
 const Home = () => {
   const [_products, setProducts] = useState([]);
@@ -212,7 +213,7 @@ const Home = () => {
             {/* Image Box */}
             <div className="w-full aspect-video sm:aspect-16/10 lg:aspect-auto lg:h-[60vh] lg:max-h-115 relative overflow-hidden">
               <img
-                src="/images/kitsodontologico.webp"
+                src="/images/IMAGEN6.webp"
                 alt="Kit Quirúrgico Odontológico Completo GM Kit"
                 fetchPriority="high"
                 loading="eager"
@@ -248,6 +249,11 @@ const Home = () => {
         </div>
 
       </div>
+
+      {/* SECCIÓN PEDIDO MAYORISTA */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-16 py-8 sm:py-14 relative z-30">
+        <WholesalePackOrder />
+      </section>
 
       {/* Original Services Section */}
       <section className="bg-brand-5 text-brand-1 rounded-t-[60px] mt-8 lg:-mt-10 relative z-40 py-24 px-6 md:px-12 lg:px-24 overflow-hidden">

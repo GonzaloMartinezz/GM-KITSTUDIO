@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Eye, Settings, Package, Truck, CreditCard, MessageCircle, X, Check, ShieldCheck, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { ProductShowcase } from '../components/ui/product-showcase';
 import { useSettings } from '../context/SettingsContext';
+import WholesalePackOrder from '../components/WholesalePackOrder';
 
 const Products = () => {
   const navigate = useNavigate();
@@ -92,13 +93,16 @@ const Products = () => {
         </section>
 
         {/* CATALOG / BEST SELLERS SECTION */}
-        <section id="catalog" className="scroll-mt-32">
+        <section id="catalog" className="scroll-mt-32 mb-16 sm:mb-24">
+          {/* SECCIÓN PEDIDO MAYORISTA */}
+          <WholesalePackOrder />
+
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="font-bebas text-3xl sm:text-4xl md:text-5xl text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-500 to-orange-500 mb-2 sm:mb-4 tracking-wide"
+            className="font-bebas text-3xl sm:text-4xl md:text-5xl text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-500 to-orange-500 mb-2 sm:mb-4 tracking-wide mt-16 sm:mt-24"
           >
             ¿QUÉ INCLUYE EL KIT?
           </motion.h2>

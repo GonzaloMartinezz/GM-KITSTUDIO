@@ -22,7 +22,7 @@ const Login = () => {
   const [isWelcoming, setIsWelcoming] = useState(false);
   const [welcomeUser, setWelcomeUser] = useState(null);
 
-  const redirectTarget = location.state?.from?.pathname;
+  const redirectTarget = location.state?.from?.pathname || (typeof location.state?.from === 'string' ? location.state.from : null);
 
   // Si ya hay sesión activa, redirigir directamente (evita re-loguear)
   useEffect(() => {

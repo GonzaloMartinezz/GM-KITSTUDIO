@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Truck,
@@ -199,16 +199,51 @@ const CustomDropdown = ({ value, options, onChange, placeholder, icon: Icon }) =
 /* ─── COMPONENT ─────────────────────────────────────── */
 const CargarProductos = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { cartItems, setIsCartOpen } = useCart();
   const { isAuthenticated, user, logout } = useAuth();
 
-  const [step, setStep] = useState(1);
+  const getInitialDraft = () => {
+    try {
+      const raw = sessionStorage.getItem('gm_checkout_draft');
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+  };
+  const draft = getInitialDraft();
+
+  const [step, setStep] = useState(() => {
+    if (location.state?.step) return location.state.step;
+    if (location.state?.quantity) return 3; // Paso de elegir cantidad
+    if (draft?.step) return draft.step;
+    return 1;
+  });
   const [personalization, setPersonalization] = useState('Completo');
-  const [quantity, setQuantity] = useState(5);
-  const [selectedShipping, setSelectedShipping] = useState(null);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [pickupDate, setPickupDate] = useState('');
-  const [pickupTime, setPickupTime] = useState('');
+  const [quantity, setQuantity] = useState(() => {
+    if (location.state?.quantity) return Number(location.state.quantity);
+    if (draft?.quantity) return Number(draft.quantity);
+    return 5;
+  });
+  const [selectedShipping, setSelectedShipping] = useState(() => {
+    return draft?.selectedShipping || null;
+  });
+  const [selectedPayment, setSelectedPayment] = useState(() => {
+    return draft?.selectedPayment || null;
+  });
+
+  useEffect(() => {
+    if (location.state?.quantity) {
+      setQuantity(Number(location.state.quantity));
+      if (location.state.step) {
+        setStep(location.state.step);
+      } else {
+        setStep(3);
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [location.state]);
+  const [pickupDate, setPickupDate] = useState(() => draft?.pickupDate || '');
+  const [pickupTime, setPickupTime] = useState(() => draft?.pickupTime || '');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState('');
 
@@ -258,23 +293,14 @@ const CargarProductos = () => {
     }
   };
 
-  const handleFinalize = () => {
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: '/cargarproductos' } });
-      return;
-    }
-
-    if (selectedPayment === 'mercadopago') {
-      handleMercadoPagoPay();
-      return;
-    }
-
+  const handleSendWhatsApp = () => {
     const shippingMap = {
       domicilio: 'Envío a Domicilio (Tucumán)',
       sucursal: 'Retiro en Sucursal (Punto designado)',
       acordar: 'Acordar con vendedor (En persona)'
     };
     const paymentMap = {
+      mercadopago: 'Mercado Pago (Online / Cuotas)',
       efectivo: 'Efectivo al recibir',
       transferencia: 'Transferencia bancaria / CBU',
       tarjeta: 'Tarjeta (Débito / Crédito)',
@@ -294,7 +320,7 @@ const CargarProductos = () => {
     }
 
     msg += `📦 *Detalle del Pedido:*\n`;
-    msg += `• ${quantity}x Kit Odontológico Completo\n`;
+    msg += `• ${quantity}x Kit Odontológico Completo ($${Math.round(unitPrice).toLocaleString()} c/u)\n`;
 
     if (cartItems.length > 0) {
       msg += `\n🛒 *Insumos adicionales del carrito:*\n`;
@@ -314,12 +340,29 @@ const CargarProductos = () => {
     msg += `Quedo a la espera de su confirmación para coordinar la entrega. ¡Muchas gracias!`;
 
     window.open(`https://wa.me/5493816242482?text=${encodeURIComponent(msg)}`, '_blank');
+    sessionStorage.removeItem('gm_checkout_draft');
     navigate('/');
   };
 
   const handleMercadoPagoPay = async () => {
     setPaymentError('');
     setIsProcessingPayment(true);
+
+    // Guardar borrador por si se redirige a login
+    sessionStorage.setItem('gm_checkout_draft', JSON.stringify({
+      quantity,
+      selectedShipping,
+      selectedPayment: 'mercadopago',
+      pickupDate: isPickup ? pickupDate : '',
+      pickupTime: isPickup ? pickupTime : '',
+      step: TOTAL_STEPS
+    }));
+
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/cargarproductos' } });
+      return;
+    }
+
     try {
       const { data } = await paymentsAPI.createPreference({
         quantity,
@@ -328,16 +371,25 @@ const CargarProductos = () => {
         pickupDate: isPickup ? pickupDate : '',
         pickupTime: isPickup ? pickupTime : '',
       });
+      sessionStorage.removeItem('gm_checkout_draft');
       window.location.href = data.init_point;
     } catch (error) {
       setIsProcessingPayment(false);
       setPaymentError(
-        error?.response?.data?.message || 'No pudimos iniciar el pago con Mercado Pago. Intentá de nuevo en un momento.'
+        error?.response?.data?.message || 'No pudimos iniciar el pago con Mercado Pago. Podés intentar nuevamente o enviar tu pedido directamente por WhatsApp.'
       );
     }
   };
 
-  const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Enviar por WhatsApp';
+  const handleFinalize = () => {
+    if (selectedPayment === 'mercadopago') {
+      handleMercadoPagoPay();
+    } else {
+      handleSendWhatsApp();
+    }
+  };
+
+  const nextLabel = step < TOTAL_STEPS ? 'Continuar' : 'Finalizar Pedido';
 
   return (
     <div className="h-[100dvh] overflow-hidden sm:h-auto sm:min-h-screen sm:overflow-x-hidden sm:overflow-y-visible bg-[#F4F2EC] text-[#364B5D] font-geist flex flex-col justify-between selection:bg-[#88C9C4] selection:text-[#0C3B45]">
@@ -1128,8 +1180,8 @@ const CargarProductos = () => {
                   )}
                 </div>
 
-                {/* Right Col: Total & WhatsApp Direct Action Card */}
-                <div className="md:col-span-5 bg-white rounded-2xl p-3 sm:p-5 shadow-xs border border-[#88C9C4]/60 flex flex-col justify-between">
+                {/* Right Col: Total & WhatsApp / Mercado Pago Direct Actions Card */}
+                <div className="md:col-span-5 bg-white rounded-2xl p-3.5 sm:p-5 shadow-xs border border-[#88C9C4]/60 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between pb-1.5 sm:pb-2 border-b border-[#F4F2EC] mb-2 sm:mb-2.5">
                       <span className="text-[10px] font-bold text-[#8CA0B2] uppercase tracking-wider">
@@ -1142,27 +1194,59 @@ const CargarProductos = () => {
                       )}
                     </div>
 
-                    <div className="flex items-baseline justify-between mb-2 sm:mb-2.5">
-                      <span className="font-bebas text-2xl sm:text-4xl text-[#0C3B45] leading-none">
+                    <div className="flex items-baseline justify-between mb-3">
+                      <span className="font-bebas text-3xl sm:text-4xl text-[#0C3B45] leading-none">
                         ${Math.round(total).toLocaleString()}
                       </span>
                       <span className="text-[10px] font-semibold text-[#8CA0B2]">Cotización directa</span>
                     </div>
 
-                    {/* WhatsApp Notice Inside Card */}
-                    <div className="p-2.5 sm:p-3 bg-[#88C9C4]/15 border border-[#88C9C4]/35 rounded-xl text-xs text-[#0C3B45] mb-0 sm:mb-3">
-                      <div className="flex items-center gap-1.5 font-bold mb-0.5 text-xs">
-                        <MessageCircle className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                        <span>Coordinación directa vía WhatsApp</span>
-                      </div>
-                      <p className="hidden sm:block text-[11px] text-[#0C3B45]/85 leading-snug">
-                        Al presionar el botón inferior se abrirá WhatsApp con el pedido pre-redactado para confirmar pago y entrega.
-                      </p>
+                    {/* Both Direct Action Buttons in Card */}
+                    <div className="space-y-2 mb-3">
+                      <button
+                        type="button"
+                        onClick={handleMercadoPagoPay}
+                        disabled={isProcessingPayment}
+                        className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${
+                          selectedPayment === 'mercadopago'
+                            ? 'bg-[#009EE3] text-white hover:bg-[#0089c7] ring-2 ring-[#009EE3]/40 shadow-[#009EE3]/25'
+                            : 'bg-white text-[#009EE3] border border-[#009EE3]/40 hover:bg-[#009EE3]/5'
+                        }`}
+                      >
+                        {isProcessingPayment ? (
+                          <>
+                            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                            <span>Conectando con Mercado Pago...</span>
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="w-4 h-4 shrink-0" />
+                            <span>Pagar con Mercado Pago</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleSendWhatsApp}
+                        className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm ${
+                          selectedPayment !== 'mercadopago'
+                            ? 'bg-[#25D366] text-white hover:bg-[#20bd5a] ring-2 ring-[#25D366]/40 shadow-[#25D366]/25'
+                            : 'bg-white text-[#15803D] border border-[#25D366]/40 hover:bg-[#25D366]/5'
+                        }`}
+                      >
+                        <MessageCircle className="w-4 h-4 shrink-0" />
+                        <span>Enviar pedido a WhatsApp</span>
+                      </button>
                     </div>
+
+                    <p className="text-[11px] text-[#64748B] text-center leading-snug">
+                      Podés abonar al instante con Mercado Pago o enviar el pedido por WhatsApp para coordinar pago en efectivo, transferencia o retiro.
+                    </p>
                   </div>
 
                   {/* Micro trust guarantees row — hidden on mobile (decorative) */}
-                  <div className="hidden sm:flex items-center justify-between gap-1 text-[10px] text-[#546A7E] pt-2 border-t border-[#F4F2EC]">
+                  <div className="hidden sm:flex items-center justify-between gap-1 text-[10px] text-[#546A7E] pt-3 mt-2 border-t border-[#F4F2EC]">
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> 100% Estéril</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Factura A/B</span>
                     <span className="flex items-center gap-1"><Check className="w-3 h-3 text-[#0C3B45]" /> Entrega express</span>
@@ -1216,39 +1300,45 @@ const CargarProductos = () => {
             </div>
           )}
 
-          {/* Next / Finalize Button (WhatsApp o Mercado Pago, según el método elegido) */}
-          <button
-            onClick={step === TOTAL_STEPS ? handleFinalize : handleNext}
-            disabled={!canAdvance() || isProcessingPayment}
-            className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed active:scale-[0.98] ${step === TOTAL_STEPS
-              ? 'bg-[#88C9C4] text-[#0C3B45] hover:bg-[#6EB8B2] shadow-[0_4px_15px_rgba(136,201,196,0.5)]'
-              : 'bg-[#364B5D] text-white hover:bg-[#2A3A48]'
-              }`}
-          >
-            {step === TOTAL_STEPS ? (
-              isProcessingPayment ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
-                  <span>Redirigiendo...</span>
-                </>
-              ) : selectedPayment === 'mercadopago' ? (
-                <>
-                  <CreditCard className="w-4 h-4" />
-                  <span>Pagar con Mercado Pago</span>
-                </>
-              ) : (
-                <>
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Enviar WhatsApp</span>
-                </>
-              )
-            ) : (
-              <>
-                <span>{nextLabel}</span>
-                <ChevronRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+          {/* Next / Finalize Buttons */}
+          {step === TOTAL_STEPS ? (
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                onClick={handleMercadoPagoPay}
+                disabled={isProcessingPayment}
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm cursor-pointer disabled:opacity-45 bg-[#009EE3] text-white hover:bg-[#0089c7] active:scale-[0.98]"
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                    <span>Conectando...</span>
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 shrink-0" />
+                    <span>Mercado Pago</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={handleSendWhatsApp}
+                className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm cursor-pointer bg-[#25D366] text-white hover:bg-[#20bd5a] active:scale-[0.98]"
+              >
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                <span>WhatsApp</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleNext}
+              disabled={!canAdvance()}
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed active:scale-[0.98] bg-[#364B5D] text-white hover:bg-[#2A3A48]"
+            >
+              <span>{nextLabel}</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
 
         </div>
       </footer>
