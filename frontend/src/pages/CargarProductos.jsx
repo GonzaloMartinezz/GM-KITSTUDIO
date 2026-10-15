@@ -22,11 +22,19 @@ import {
   LogOut,
   ChevronDown,
   Calendar,
-  Clock
+  Clock,
+  Landmark
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { paymentsAPI } from '../lib/api';
+
+/* ─── MERCADO PAGO OFFICIAL LOGO ───────────────────── */
+const MercadoPagoLogo = ({ className = "w-6 h-6" }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M11.115 16.479a.93.927 0 0 1-.939-.886c-.002-.042-.006-.155-.103-.155-.04 0-.074.023-.113.059-.112.103-.254.206-.46.206a.816.814 0 0 1-.305-.066c-.535-.214-.542-.578-.521-.725.006-.038.007-.08-.02-.11l-.547-.565a.86.86 0 0 1-.22-.72c.03-.213.197-.384.41-.424l.758-.146c.142-.027.283.023.385.125l.404.405c.108.109.266.15.418.106.185-.054.316-.22.33-.414l.034-.467a.9.9 0 0 1 .536-.777c.395-.164.856.022 1.02.417l1.455 3.522a.91.91 0 0 1-.502 1.18c-.378.146-.803-.042-.949-.408l-.517-1.287a.465.465 0 0 0-.61-.242.455.455 0 0 0-.251.406l.115 1.777a.925.925 0 0 1-.86 1.002zm2.08-9.018a.93.927 0 0 1 .939.886c.002.042.006.155.103.155.04 0 .074-.023.113-.059.112-.103.254-.206.46-.206a.816.814 0 0 1 .305.066c.535.214.542.578.521.725-.006.038-.007.08.02.11l.547.565a.86.86 0 0 1 .22.72c-.03.213-.197.384-.41.424l-.758.146c-.142.027-.283-.023-.385-.125l-.404-.405c-.108-.109-.266-.15-.418-.106-.185.054-.316.22-.33.414l-.034.467a.9.9 0 0 1-.536.777c-.395.164-.856-.022-1.02-.417L9.92 9.87a.91.91 0 0 1 .502-1.18c.378-.146.803.042.949.408l.517 1.287a.465.465 0 0 0 .61.242.455.455 0 0 0 .251-.406l-.115-1.777a.925.925 0 0 1 .86-1.002zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 1.954c5.551 0 10.046 4.495 10.046 10.046 0 5.551-4.495 10.046-10.046 10.046-5.551 0-10.046-4.495-10.046-10.046C1.954 6.449 6.449 1.954 12 1.954z"/>
+  </svg>
+);
 
 /* ─── DATA ─────────────────────────────────────────── */
 const kitItems = [
@@ -66,23 +74,63 @@ const shippingOptions = [
 const paymentOptions = [
   {
     id: 'mercadopago',
-    icon: CreditCard,
+    icon: MercadoPagoLogo,
     title: 'MERCADO PAGO',
-    desc: 'Tarjetas de débito/crédito, cuotas y dinero en cuenta. Pago online al instante.',
+    desc: 'Tarjetas de débito/crédito, cuotas y dinero en cuenta. Pago online en el acto.',
     badge: 'Recomendado',
+    colorKey: 'blue',
+    colors: {
+      accent: '#009EE3',
+      textAccent: 'text-[#009EE3]',
+      bgLight: 'bg-[#009EE3]/8',
+      bgSelected: 'bg-[#009EE3]/8',
+      borderSelected: 'border-[#009EE3]',
+      ringSelected: 'ring-[#009EE3]/30',
+      iconBgSelected: 'bg-[#009EE3] text-white shadow-md shadow-[#009EE3]/30',
+      iconBgUnselected: 'bg-[#009EE3]/15 text-[#009EE3]',
+      badgeBg: 'bg-[#E0F2FE] text-[#007EB5] border-[#BAE6FD]',
+      radioSelected: 'border-[#009EE3] bg-[#009EE3] text-white',
+    }
   },
   {
     id: 'efectivo',
     icon: Banknote,
     title: 'EFECTIVO',
-    desc: 'Abonas en efectivo al momento de recibir el pedido.',
+    desc: 'Abonás en efectivo al momento de recibir o retirar tu pedido.',
     badge: 'Contra entrega',
+    colorKey: 'green',
+    colors: {
+      accent: '#059669',
+      textAccent: 'text-[#059669]',
+      bgLight: 'bg-[#059669]/8',
+      bgSelected: 'bg-[#059669]/8',
+      borderSelected: 'border-[#059669]',
+      ringSelected: 'ring-[#059669]/30',
+      iconBgSelected: 'bg-[#059669] text-white shadow-md shadow-[#059669]/30',
+      iconBgUnselected: 'bg-[#059669]/15 text-[#059669]',
+      badgeBg: 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]',
+      radioSelected: 'border-[#059669] bg-[#059669] text-white',
+    }
   },
   {
     id: 'transferencia',
-    icon: Wallet,
-    title: 'TRANSFERENCIA',
-    desc: 'Alias / CBU inmediato con comprobante digital.',
+    icon: Landmark,
+    title: 'ALIAS / TRANSFERENCIA',
+    desc: 'Transferencia CBU / CVU o Alias con comprobante digital inmediato.',
+    badge: 'CBU / Alias',
+    colorKey: 'orange',
+    colors: {
+      accent: '#EA580C',
+      textAccent: 'text-[#EA580C]',
+      bgLight: 'bg-[#EA580C]/8',
+      bgSelected: 'bg-[#EA580C]/8',
+      borderSelected: 'border-[#EA580C]',
+      ringSelected: 'ring-[#EA580C]/30',
+      iconBgSelected: 'bg-[#EA580C] text-white shadow-md shadow-[#EA580C]/30',
+      iconBgUnselected: 'bg-[#EA580C]/15 text-[#EA580C]',
+      badgeBg: 'bg-[#FFEDD5] text-[#C2410C] border-[#FED7AA]',
+      radioSelected: 'border-[#EA580C] bg-[#EA580C] text-white',
+    }
   },
 ];
 
@@ -1015,73 +1063,60 @@ const CargarProductos = () => {
                 Elegí cómo abonar. Abonando con transferencia accedés a beneficios adicionales.
               </p>
 
-              {/* Compact horizontal rows on mobile / responsive cards on desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 w-full max-w-lg md:max-w-4xl text-left mx-auto">
+              {/* 3 cards de manera horizontal */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4.5 w-full max-w-5xl text-left mx-auto">
                 {paymentOptions.map(opt => {
-                  const isSelected = selectedPayment === opt.id || (opt.id === 'tarjeta' && selectedPayment?.startsWith('tarjeta'));
+                  const isSelected = selectedPayment === opt.id;
                   const Icon = opt.icon;
+                  const colors = opt.colors;
                   return (
                     <div
                       key={opt.id}
                       onClick={() => setSelectedPayment(opt.id)}
-                      className={`relative cursor-pointer rounded-2xl p-3 sm:p-6 border-2 transition-all flex flex-row sm:flex-col items-center text-left sm:text-center gap-3 select-none ${isSelected
-                        ? 'border-[#88C9C4] bg-white shadow-lg ring-2 ring-[#88C9C4]/20 scale-[1.02]'
-                        : 'border-[#E1D9CC]/60 bg-white/80 hover:bg-white shadow-sm hover:border-[#88C9C4]/60 hover:scale-[1.01]'
-                        }`}
+                      className={`relative cursor-pointer rounded-2xl p-4 sm:p-5 border-2 transition-all flex flex-col justify-between select-none group min-h-[190px] sm:min-h-[225px] ${
+                        isSelected
+                          ? `${colors.borderSelected} ${colors.bgSelected} shadow-lg ring-2 ${colors.ringSelected} scale-[1.02]`
+                          : 'border-[#E1D9CC]/70 bg-white/90 hover:bg-white shadow-sm hover:border-slate-300 hover:scale-[1.01]'
+                      }`}
                     >
-                      {/* Radio checkmark */}
-                      <div className={`absolute top-3 right-3 sm:top-4 sm:right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'border-[#88C9C4] bg-[#88C9C4] text-[#0C3B45]' : 'border-[#D9D1C7]'
-                        }`}>
-                        {isSelected && <Check className="w-3 h-3 stroke-3" />}
+                      {/* Top Row: Icon + Radio checkmark */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div
+                          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 transition-all ${
+                            isSelected ? colors.iconBgSelected : colors.iconBgUnselected
+                          }`}
+                        >
+                          <Icon className="w-6 h-6 sm:w-6.5 sm:h-6.5" />
+                        </div>
+
+                        <div
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                            isSelected ? colors.radioSelected : 'border-[#CBD5E1] bg-white'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                        </div>
                       </div>
 
-                      <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center shrink-0 sm:mb-1 transition-colors ${isSelected ? 'bg-[#88C9C4]/20 text-[#0C3B45]' : 'bg-[#F4F2EC] text-[#8CA0B2]'
-                        }`}>
-                        <Icon className="w-5 h-5 sm:w-7 sm:h-7" />
-                      </div>
-
-                      <div className="flex-1 w-full min-w-0 flex flex-col items-start sm:items-center justify-center pr-6 sm:pr-0">
-                        <div className="flex flex-col items-start sm:items-center gap-1 mb-0.5 sm:mb-2">
-                          <h3 className="font-bebas text-base sm:text-2xl text-[#364B5D] tracking-wide leading-none sm:mt-1">
+                      {/* Content: Title & Description */}
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <h3 className={`font-bebas text-xl sm:text-2xl tracking-wide leading-tight mb-1 ${
+                            isSelected ? colors.textAccent : 'text-[#1E293B]'
+                          }`}>
                             {opt.title}
                           </h3>
+                          <p className="text-xs text-[#64748B] leading-relaxed mb-3">
+                            {opt.desc}
+                          </p>
                         </div>
-                        <p className="text-[11px] sm:text-[13px] text-[#8CA0B2] leading-snug mb-1 sm:mb-2.5">
-                          {opt.desc}
-                        </p>
-                        <div className="flex flex-wrap items-center justify-start sm:justify-center gap-1.5">
-                          {opt.discountBadge && (
-                            <span className="inline-block text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                              {opt.discountBadge}
-                            </span>
-                          )}
-                          {opt.surchargeBadge && (
-                            <span className="inline-block text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">
-                              {opt.surchargeBadge}
-                            </span>
-                          )}
-                          {opt.badge && (
-                            <span className="inline-block text-[10px] font-bold text-[#0C3B45] bg-[#88C9C4]/25 px-2.5 py-0.5 rounded-full border border-[#88C9C4]/40">
-                              {opt.badge}
-                            </span>
-                          )}
+
+                        {/* Badge / Pill */}
+                        <div>
+                          <span className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${colors.badgeBg}`}>
+                            {opt.badge}
+                          </span>
                         </div>
-                        {opt.id === 'tarjeta' && (
-                          <div className="flex flex-col gap-2 mt-3 w-full">
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); setSelectedPayment('tarjeta_credito'); }}
-                              className={`w-full text-xs font-bold py-2.5 rounded-lg cursor-pointer transition-all border ${selectedPayment === 'tarjeta_credito' ? 'bg-[#88C9C4] text-[#0C3B45] border-[#88C9C4] shadow-sm' : 'text-[#364B5D] bg-[#F4F2EC] border-[#E1D9CC]/60 hover:bg-white hover:border-[#88C9C4]/40 hover:shadow-xs'}`}
-                            >
-                              CRÉDITO
-                            </button>
-                            <button 
-                              onClick={(e) => { e.stopPropagation(); setSelectedPayment('tarjeta_debito'); }}
-                              className={`w-full text-xs font-bold py-2.5 rounded-lg cursor-pointer transition-all border ${selectedPayment === 'tarjeta_debito' ? 'bg-[#88C9C4] text-[#0C3B45] border-[#88C9C4] shadow-sm' : 'text-[#364B5D] bg-[#F4F2EC] border-[#E1D9CC]/60 hover:bg-white hover:border-[#88C9C4]/40 hover:shadow-xs'}`}
-                            >
-                              DÉBITO
-                            </button>
-                          </div>
-                        )}
                       </div>
                     </div>
                   );

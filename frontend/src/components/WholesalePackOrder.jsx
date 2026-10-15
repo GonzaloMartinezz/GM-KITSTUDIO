@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Check, CheckCircle2, ShieldCheck, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 
 const WholesalePackOrder = () => {
@@ -10,6 +10,50 @@ const WholesalePackOrder = () => {
 
   // Pack x10 is 'MÁS ELEGIDO' by default as requested
   const [selectedPackId, setSelectedPackId] = useState('x10');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const productImages = [
+    {
+      src: '/images/IMAGEN6.webp',
+      alt: 'Kit quirúrgico desplegado en quirófano',
+      label: 'Contenido desplegado en quirófano',
+    },
+    {
+      src: '/images/IMAGEN1.webp',
+      alt: 'Kit odontológico estéril con doble termosellado hermético',
+      label: 'Kit sellado con termosellado',
+    },
+    {
+      src: '/images/IMAGEN4.webp',
+      alt: '13 piezas e insumos médicos descartables',
+      label: '13 piezas e insumos listos para usar',
+    },
+    {
+      src: '/images/IMAGEN2.webp',
+      alt: 'Presentación estéril en bandeja quirúrgica',
+      label: 'Presentación estéril en bandeja',
+    },
+    {
+      src: '/images/IMAGEN3.webp',
+      alt: 'Rótulo con trazabilidad, lote y vencimiento',
+      label: 'Rótulo con lote y vencimiento DIC/27',
+    },
+    {
+      src: '/images/IMAGEN5.webp',
+      alt: 'Kit listo para procedimiento en clínica odontológica',
+      label: 'Listo para abrir en clínica',
+    },
+  ];
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    setActiveImageIndex(prev => (prev === 0 ? productImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    setActiveImageIndex(prev => (prev === productImages.length - 1 ? 0 : prev + 1));
+  };
 
   const packs = [
     {
@@ -105,23 +149,85 @@ const WholesalePackOrder = () => {
       {/* TWO COLUMNS GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start relative z-10">
 
-        {/* LEFT COLUMN: Visual & Features */}
+        {/* LEFT COLUMN: Visual Gallery & Features */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-[#EAE5DA] flex flex-col">
-          {/* Main Kit Image */}
-          <div className="relative rounded-2xl overflow-hidden aspect-4/3 sm:aspect-16/11 bg-slate-100 group">
-            <img
-              src="/images/IMAGEN6.webp"
-              alt="Kit quirúrgico desplegado en quirófano"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
-            />
+          {/* Main Kit Image with Navigation */}
+          <div className="relative rounded-2xl overflow-hidden aspect-4/3 sm:aspect-16/11 bg-slate-100 group select-none">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeImageIndex}
+                src={productImages[activeImageIndex].src}
+                alt={productImages[activeImageIndex].alt}
+                initial={{ opacity: 0.35, scale: 0.99 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0.35 }}
+                transition={{ duration: 0.2 }}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
+              />
+            </AnimatePresence>
+
             {/* Pill bottom-left */}
-            <div className="absolute bottom-3 left-3 sm:bottom-3.5 sm:left-3.5 bg-[#0B1E22]/85 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-semibold px-3 py-1 rounded-full shadow-md">
-              Contenido desplegado en quirófano
+            <div className="absolute bottom-3 left-3 sm:bottom-3.5 sm:left-3.5 bg-[#0B1E22]/85 backdrop-blur-md text-white text-[10px] sm:text-[11px] font-semibold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 pointer-events-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#34D399] animate-pulse" />
+              <span>{productImages[activeImageIndex].label}</span>
             </div>
+
+            {/* Counter pill top-right */}
+            <div className="absolute top-3 right-3 bg-[#0B1E22]/75 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm pointer-events-none">
+              {activeImageIndex + 1} / {productImages.length}
+            </div>
+
+            {/* Prev / Next Arrows */}
+            <button
+              type="button"
+              onClick={handlePrevImage}
+              aria-label="Imagen anterior"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs opacity-70 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
+            >
+              <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
+            </button>
+            <button
+              type="button"
+              onClick={handleNextImage}
+              aria-label="Siguiente imagen"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-xs opacity-70 group-hover:opacity-100 transition-all cursor-pointer shadow-md"
+            >
+              <ChevronRight className="w-4 h-4 stroke-[2.5]" />
+            </button>
+          </div>
+
+          {/* Interactive Thumbnails Strip */}
+          <div className="grid grid-cols-6 gap-1.5 sm:gap-2 mt-3">
+            {productImages.map((img, idx) => {
+              const isActive = activeImageIndex === idx;
+              return (
+                <button
+                  type="button"
+                  key={idx}
+                  onClick={() => setActiveImageIndex(idx)}
+                  className={`relative rounded-xl overflow-hidden aspect-square border-2 transition-all cursor-pointer ${
+                    isActive
+                      ? 'border-[#0D9488] ring-2 ring-[#0D9488]/30 scale-105 shadow-sm'
+                      : 'border-[#EAE5DA] opacity-70 hover:opacity-100 hover:border-[#0D9488]/50'
+                  }`}
+                  title={img.label}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  {isActive && (
+                    <div className="absolute inset-0 bg-[#0D9488]/10 pointer-events-none" />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* Checklist */}
-          <div className="mt-5 sm:mt-6 space-y-3.5 px-1 sm:px-2 pb-1">
+          <div className="mt-5 sm:mt-6 space-y-3 px-1 sm:px-2 pb-1 border-t border-[#F1ECE1] pt-4">
             <div className="flex items-start gap-3">
               <div className="w-5 h-5 rounded-full bg-[#E0F2FE]/80 text-[#0D9488] flex items-center justify-center shrink-0 mt-0.5 border border-[#99F6E4]/50">
                 <Check className="w-3.5 h-3.5 stroke-3" />
