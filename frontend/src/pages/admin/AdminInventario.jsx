@@ -40,6 +40,7 @@ const AdminInventario = () => {
     reservations,
     inventoryData,
     updateInventoryData,
+    loading,
   } = useAdminData();
 
   const [activeTab, setActiveTab] = useState('reservados'); // 'reservados' | 'lotes' | 'componentes'
@@ -127,6 +128,10 @@ const AdminInventario = () => {
   };
 
   const handleOpenEditKit = () => {
+    // Si el producto todavia no termino de cargar, no abrimos el modal:
+    // antes esto prellenaba el formulario con ceros/valores por defecto,
+    // y al guardar esos ceros pisaban los datos reales (ver updateInventoryData).
+    if (!kitProduct?._id) return;
     setEditKitForm({
       kitPrice: kitPrice || '',
       minimumAlertThreshold: minThreshold || '',
@@ -205,7 +210,8 @@ const AdminInventario = () => {
 
           <button
             onClick={handleOpenEditKit}
-            className="flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
+            disabled={loading || !kitProduct?._id}
+            className="flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Edit3 size={16} className="text-[#1E5A9C]" />
             <span>Editar Kit</span>
@@ -213,7 +219,8 @@ const AdminInventario = () => {
 
           <button
             onClick={() => setIsStockModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto"
+            disabled={loading || !kitProduct?._id}
+            className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={16} />
             <span>Ingresar Stock (+Kits)</span>

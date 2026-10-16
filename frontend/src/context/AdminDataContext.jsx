@@ -619,12 +619,39 @@ export const AdminDataProvider = ({ children }) => {
 
   const updateInventoryData = async (updatedFields) => {
     if (!kitProduct?._id) return;
+    // Solo mandamos al backend los campos que REALMENTE cambiaron respecto
+    // al producto actual. Antes se mandaban los 5 campos siempre (incluso
+    // los que el admin no tocó), rellenados desde el estado del formulario
+    // al abrir el modal. Si ese snapshot quedaba viejo o en 0 (por ejemplo,
+    // el modal se abrió antes de que terminara de cargar el producto), con
+    // solo cambiar el precio se pisaba el stock real por el valor viejo/0
+    // sin que el admin se diera cuenta — eso explicaba stock resultando en
+    // 0 después de editar otro campo cualquiera.
     const payload = {};
-    if (updatedFields.minimumAlertThreshold !== undefined) payload.minStock = updatedFields.minimumAlertThreshold;
-    if (updatedFields.kitPrice !== undefined) payload.price = updatedFields.kitPrice;
-    if (updatedFields.kitCost !== undefined) payload.cost = updatedFields.kitCost;
-    if (updatedFields.stockAvailable !== undefined) payload.stock = updatedFields.stockAvailable;
-    if (updatedFields.kitsPurchasedTotal !== undefined) payload.totalPurchased = updatedFields.kitsPurchasedTotal;
+    if (
+      updatedFields.minimumAlertThreshold !== undefined &&
+      Number(updatedFields.minimumAlertThreshold) !== (kitProduct.minStock ?? 30)
+    ) {
+      payload.minStock = updatedFields.minimumAlertThreshold;
+    }
+    if (updatedFields.kitPrice !== undefined && Number(updatedFields.kitPrice) !== (kitProduct.price ?? 0)) {
+      payload.price = updatedFields.kitPrice;
+    }
+    if (updatedFields.kitCost !== undefined && Number(updatedFields.kitCost) !== (kitProduct.cost ?? 0)) {
+      payload.cost = updatedFields.kitCost;
+    }
+    if (
+      updatedFields.stockAvailable !== undefined &&
+      Number(updatedFields.stockAvailable) !== (kitProduct.stock ?? 0)
+    ) {
+      payload.stock = updatedFields.stockAvailable;
+    }
+    if (
+      updatedFields.kitsPurchasedTotal !== undefined &&
+      Number(updatedFields.kitsPurchasedTotal) !== (kitProduct.totalPurchased ?? 0)
+    ) {
+      payload.totalPurchased = updatedFields.kitsPurchasedTotal;
+    }
     if (Object.keys(payload).length > 0) {
       // Usamos directamente el producto que devuelve el PUT en vez de volver
       // a pedir la lista completa: evita que una lectura con un pelín de
