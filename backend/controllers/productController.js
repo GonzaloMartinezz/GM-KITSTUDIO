@@ -67,8 +67,8 @@ const updateProduct = async (req, res, next) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { returnDocument: 'after', runValidators: true }
-    );
+      { new: true, returnDocument: 'after', runValidators: true }
+    ).populate('supplier', 'company');
     res.json(updatedProduct);
   } catch (error) {
     next(error);

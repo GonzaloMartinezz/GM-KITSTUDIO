@@ -62,16 +62,20 @@ const AdminInventario = () => {
 
   // Form state for Adding Stock
   const [stockAddCount, setStockAddCount] = useState('');
+  const [modalError, setModalError] = useState('');
+  const [isSubmittingStock, setIsSubmittingStock] = useState(false);
+  const [isSubmittingEditKit, setIsSubmittingEditKit] = useState(false);
 
-  const stockFisico = kitProduct?.stock || 0;
+  const productId = kitProduct?._id || kitProduct?.id || null;
+  const stockFisico = kitProduct?.stock ?? inventoryData?.stockAvailable ?? 0;
   const stockReserved = reservations?.reduce((acc, r) => acc + (r.kits || 1), 0) || 0;
   const stockAvailable = Math.max(0, stockFisico - stockReserved);
-  const minThreshold = kitProduct?.minStock || 30;
-  const kitPrice = kitProduct?.price || 14500;
+  const minThreshold = kitProduct?.minStock ?? inventoryData?.minimumAlertThreshold ?? 30;
+  const kitPrice = kitProduct?.price ?? inventoryData?.kitPrice ?? 9500;
   const stockSoldMonth = inventoryData?.stockSoldMonth || 0;
   const stockInTransit = supplierOrders?.reduce((acc, o) => acc + (o.status === 'En Tránsito' ? (o.kits || 0) : 0), 0) || 0;
-  const kitsPurchasedTotal = inventoryData?.kitsPurchasedTotal || 0;
-  const kitCost = inventoryData?.kitCost || kitProduct?.cost || 0;
+  const kitsPurchasedTotal = inventoryData?.kitsPurchasedTotal ?? kitProduct?.totalPurchased ?? 0;
+  const kitCost = inventoryData?.kitCost ?? kitProduct?.cost ?? 0;
 
   const totalInWarehouse = stockFisico;
   const totalInCircuit = stockFisico + stockInTransit;
@@ -114,29 +118,45 @@ const AdminInventario = () => {
     }
   };
 
+  const handleOpenStockModal = () => {
+    if (!productId) return;
+    setModalError('');
+    setStockAddCount('');
+    setIsStockModalOpen(true);
+  };
+
   const handleAddStockSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
+    setModalError('');
+    const count = Number(stockAddCount);
+    if (!count || count <= 0) {
+      setModalError('Ingresá una cantidad mayor a 0.');
+      return;
+    }
+    setIsSubmittingStock(true);
     try {
-      await adjustStock(Number(stockAddCount) || 10);
+      await adjustStock(count);
       setIsStockModalOpen(false);
       setStockAddCount('');
     } catch (err) {
-      setFormError(err?.response?.data?.message || 'No se pudo ingresar el stock.');
+      const msg = err?.response?.data?.message || 'No se pudo ingresar el stock.';
+      setModalError(msg);
+      setFormError(msg);
+    } finally {
+      setIsSubmittingStock(false);
     }
   };
 
   const handleOpenEditKit = () => {
-    // Si el producto todavia no termino de cargar, no abrimos el modal:
-    // antes esto prellenaba el formulario con ceros/valores por defecto,
-    // y al guardar esos ceros pisaban los datos reales (ver updateInventoryData).
-    if (!kitProduct?._id) return;
+    if (!productId) return;
+    setModalError('');
     setEditKitForm({
-      kitPrice: kitPrice || '',
-      minimumAlertThreshold: minThreshold || '',
-      kitCost: inventoryData?.kitCost || '',
-      stockAvailable: stockFisico || 0,
-      kitsPurchasedTotal: inventoryData?.kitsPurchasedTotal || 0,
+      kitPrice: kitProduct?.price ?? inventoryData?.kitPrice ?? '',
+      minimumAlertThreshold: kitProduct?.minStock ?? inventoryData?.minimumAlertThreshold ?? 30,
+      kitCost: inventoryData?.kitCost ?? kitProduct?.cost ?? '',
+      stockAvailable: stockFisico ?? 0,
+      kitsPurchasedTotal: kitsPurchasedTotal ?? 0,
     });
     setIsEditKitModalOpen(true);
   };
@@ -144,17 +164,23 @@ const AdminInventario = () => {
   const handleSaveEditKit = async (e) => {
     e.preventDefault();
     setFormError('');
+    setModalError('');
+    setIsSubmittingEditKit(true);
     try {
       await updateInventoryData({
-        kitPrice: Number(editKitForm.kitPrice) || kitPrice,
-        minimumAlertThreshold: Number(editKitForm.minimumAlertThreshold) || minThreshold,
+        kitPrice: editKitForm.kitPrice === '' ? undefined : Number(editKitForm.kitPrice),
+        minimumAlertThreshold: editKitForm.minimumAlertThreshold === '' ? undefined : Number(editKitForm.minimumAlertThreshold),
         kitCost: editKitForm.kitCost === '' ? undefined : Number(editKitForm.kitCost),
         stockAvailable: editKitForm.stockAvailable === '' ? undefined : Number(editKitForm.stockAvailable),
         kitsPurchasedTotal: editKitForm.kitsPurchasedTotal === '' ? undefined : Number(editKitForm.kitsPurchasedTotal),
       });
       setIsEditKitModalOpen(false);
     } catch (err) {
-      setFormError(err?.response?.data?.message || 'No se pudo actualizar el kit.');
+      const msg = err?.response?.data?.message || 'No se pudo actualizar el kit.';
+      setModalError(msg);
+      setFormError(msg);
+    } finally {
+      setIsSubmittingEditKit(false);
     }
   };
 
@@ -209,7 +235,7 @@ const AdminInventario = () => {
 
           <button
             onClick={handleOpenEditKit}
-            disabled={!kitProduct?._id}
+            disabled={!productId}
             className="flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] border border-[#E2E8F0] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Edit3 size={16} className="text-[#1E5A9C]" />
@@ -217,8 +243,8 @@ const AdminInventario = () => {
           </button>
 
           <button
-            onClick={() => setIsStockModalOpen(true)}
-            disabled={!kitProduct?._id}
+            onClick={handleOpenStockModal}
+            disabled={!productId}
             className="flex items-center justify-center gap-2 bg-[#1E5A9C] hover:bg-[#16487D] text-white px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md shadow-[#1E5A9C]/25 transition-all cursor-pointer active:scale-[0.98] w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={16} />
@@ -852,7 +878,7 @@ const AdminInventario = () => {
       {/* ── MODAL: INGRESAR STOCK ── */}
       <AnimatePresence>
         {isStockModalOpen && (
-          <div className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs flex items-center justify-center p-4 z-100">
+          <div className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -862,12 +888,19 @@ const AdminInventario = () => {
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
                 <h3 className="text-base font-bold text-[#0F172A]">Ingresar Kits al Stock</h3>
                 <button
+                  type="button"
                   onClick={() => setIsStockModalOpen(false)}
-                  className="text-[#64748B] hover:text-[#0F172A] font-bold"
+                  className="text-[#64748B] hover:text-[#0F172A] font-bold p-1 cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
+
+              {modalError && (
+                <div className="mb-4 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+                  {modalError}
+                </div>
+              )}
 
               <form onSubmit={handleAddStockSubmit} className="space-y-4 text-xs">
                 <div>
@@ -879,6 +912,7 @@ const AdminInventario = () => {
                     className="w-full p-2.5 rounded-xl border border-[#CBD5E1] text-[#0F172A] text-sm font-black"
                     min="1"
                     required
+                    autoFocus
                   />
                 </div>
 
@@ -897,15 +931,24 @@ const AdminInventario = () => {
                   <button
                     type="button"
                     onClick={() => setIsStockModalOpen(false)}
-                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B]"
+                    disabled={isSubmittingStock}
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer disabled:opacity-50"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md"
+                    disabled={isSubmittingStock}
+                    className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    Añadir al Depósito
+                    {isSubmittingStock ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Añadiendo...</span>
+                      </>
+                    ) : (
+                      'Añadir al Depósito'
+                    )}
                   </button>
                 </div>
               </form>
@@ -917,7 +960,7 @@ const AdminInventario = () => {
       {/* ── MODAL: EDITAR PRECIO Y UMBRAL DEL KIT ── */}
       <AnimatePresence>
         {isEditKitModalOpen && (
-          <div className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs flex items-center justify-center p-4 z-100">
+          <div className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -927,12 +970,19 @@ const AdminInventario = () => {
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0] mb-4">
                 <h3 className="text-base font-bold text-[#0F172A]">Editar Kit</h3>
                 <button
+                  type="button"
                   onClick={() => setIsEditKitModalOpen(false)}
-                  className="text-[#64748B] hover:text-[#0F172A] font-bold"
+                  className="text-[#64748B] hover:text-[#0F172A] font-bold p-1 cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
+
+              {modalError && (
+                <div className="mb-4 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+                  {modalError}
+                </div>
+              )}
 
               <form onSubmit={handleSaveEditKit} className="space-y-4 text-xs">
                 <div>
@@ -1001,15 +1051,24 @@ const AdminInventario = () => {
                   <button
                     type="button"
                     onClick={() => setIsEditKitModalOpen(false)}
-                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B]"
+                    disabled={isSubmittingEditKit}
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] text-xs font-bold text-[#64748B] hover:bg-[#F8FAFC] cursor-pointer disabled:opacity-50"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md"
+                    disabled={isSubmittingEditKit}
+                    className="px-5 py-2 rounded-xl bg-[#1E5A9C] hover:bg-[#16487D] text-white text-xs font-bold shadow-md cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
                   >
-                    Guardar Cambios
+                    {isSubmittingEditKit ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Guardando...</span>
+                      </>
+                    ) : (
+                      'Guardar Cambios'
+                    )}
                   </button>
                 </div>
               </form>

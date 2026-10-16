@@ -653,16 +653,13 @@ export const AdminDataProvider = ({ children }) => {
       payload.totalPurchased = updatedFields.kitsPurchasedTotal;
     }
     if (Object.keys(payload).length > 0) {
-      // Usamos directamente el producto que devuelve el PUT en vez de volver
-      // a pedir la lista completa: evita que una lectura con un pelín de
-      // demora (replicación de Mongo/caché) pise el precio/stock recién
-      // guardados con un valor todavía viejo.
+      // Usamos directamente el producto que devuelve el PUT y luego refrescamos
+      // para asegurar consistencia total.
       const { data: updated } = await productsAPI.update(kitProduct._id, payload);
-      if (updated && updated._id) {
+      if (updated && (updated._id || updated.id)) {
         setKitProduct(updated);
-      } else {
-        await fetchKitProduct();
       }
+      await fetchKitProduct();
     }
   };
 
@@ -691,7 +688,10 @@ export const AdminDataProvider = ({ children }) => {
   };
   const adjustStock = async (deltaAvailable) => {
     if (!kitProduct?._id) return;
-    await productsAPI.adjustStock(kitProduct._id, deltaAvailable);
+    const { data } = await productsAPI.adjustStock(kitProduct._id, deltaAvailable);
+    if (data?.stock !== undefined) {
+      setKitProduct((prev) => (prev ? { ...prev, stock: data.stock } : prev));
+    }
     await fetchKitProduct();
   };
   const receiveTransitBatch = async (kitsCount = 100) => {
@@ -753,6 +753,8 @@ export const AdminDataProvider = ({ children }) => {
     addSupplierOrder,
     updateSupplierOrder,
     deleteSupplierOrder,
+    kitProduct,
+    refreshKitProduct: fetchKitProduct,
     inventoryData,
     updateInventoryData,
     addReservation,
