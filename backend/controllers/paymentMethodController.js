@@ -7,7 +7,11 @@ const PaymentMethod = require('../models/PaymentMethod');
  */
 const getPaymentMethods = async (req, res, next) => {
   try {
-    const methods = await PaymentMethod.find({ isActive: true }).sort({ createdAt: 1 });
+    // ?all=true devuelve también los métodos desactivados — lo usa el panel
+    // de Configuración para poder reactivarlos; el resto de la app (gráficos,
+    // dashboard) sigue viendo solo los activos por defecto, sin cambios.
+    const filter = req.query.all === 'true' ? {} : { isActive: true };
+    const methods = await PaymentMethod.find(filter).sort({ isActive: -1, createdAt: 1 });
     res.json(methods);
   } catch (error) {
     next(error);

@@ -66,6 +66,7 @@ export const authAPI = {
   logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
   refresh: () => api.post('/auth/refresh'),
+  changePassword: (data) => api.put('/auth/change-password', data),
 };
 
 export const productsAPI = {
@@ -130,7 +131,7 @@ export const dispatchesAPI = {
 };
 
 export const paymentMethodsAPI = {
-  list: () => api.get('/payment-methods'),
+  list: (params) => api.get('/payment-methods', { params }),
   create: (data) => api.post('/payment-methods', data),
   update: (id, data) => api.put(`/payment-methods/${id}`, data),
   remove: (id) => api.delete(`/payment-methods/${id}`),

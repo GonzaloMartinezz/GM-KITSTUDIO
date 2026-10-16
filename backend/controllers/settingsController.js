@@ -34,11 +34,15 @@ const updateSettings = async (req, res, next) => {
       whatsappNumber,
       contactEmail,
       instagramUrl,
+      freeShippingMinKits,
+      shippingDiscountAmount,
     } = req.body;
 
     if (whatsappNumber !== undefined) settings.whatsappNumber = whatsappNumber;
     if (contactEmail !== undefined) settings.contactEmail = contactEmail;
     if (instagramUrl !== undefined) settings.instagramUrl = instagramUrl;
+    if (freeShippingMinKits !== undefined) settings.freeShippingMinKits = Number(freeShippingMinKits);
+    if (shippingDiscountAmount !== undefined) settings.shippingDiscountAmount = Number(shippingDiscountAmount);
 
     await settings.save();
     res.json(settings);

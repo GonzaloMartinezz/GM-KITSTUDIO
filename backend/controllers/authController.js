@@ -199,6 +199,46 @@ const logout = (req, res) => {
 };
 
 /**
+ * @desc    Cambiar la contraseña del usuario autenticado
+ * @route   PUT /api/auth/change-password
+ * @access  Authenticated
+ */
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      res.status(400);
+      throw new Error('Ingresá tu contraseña actual y la nueva contraseña.');
+    }
+    if (newPassword.length < 6) {
+      res.status(400);
+      throw new Error('La nueva contraseña debe tener al menos 6 caracteres.');
+    }
+
+    const user = await User.findById(req.user._id).select('+password');
+
+    if (!user.password) {
+      res.status(400);
+      throw new Error('Esta cuenta inició sesión con Google y no tiene contraseña propia para cambiar.');
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      res.status(401);
+      throw new Error('La contraseña actual es incorrecta.');
+    }
+
+    user.password = newPassword; // el pre-save hook de User.js se encarga del hash
+    await user.save();
+
+    res.json({ message: 'Contraseña actualizada correctamente.' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Obtener datos del usuario autenticado (auto-login)
  * @route   GET /api/auth/me
  * @access  Authenticated
@@ -258,4 +298,4 @@ const refreshToken = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, googleAuth, logout, getMe, refreshToken };
+module.exports = { register, login, googleAuth, logout, getMe, refreshToken, changePassword };
