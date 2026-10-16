@@ -24,14 +24,34 @@ const processQueue = (error) => {
 
 // Interceptor: si el access token expiró (401 + expired: true), intenta refrescar
 // una sola vez y reintenta la request original.
+//
+// Importante: NO excluimos TODAS las rutas '/auth/*' del refresh-retry.
+// '/auth/me' (chequeo de sesión al cargar la página) necesita poder
+// refrescar igual que cualquier otra ruta: el access token dura solo 15
+// minutos, así que si el admin deja la pestaña abierta más tiempo y
+// recarga, '/auth/me' da 401 aunque el refresh token (7-30 días) siga
+// siendo válido. Antes, al estar excluida, esto tiraba al usuario al
+// login innecesariamente en vez de refrescar la sesión en silencio.
+// Las rutas de abajo sí deben quedar excluidas porque su propio 401 es
+// una respuesta de negocio (credenciales inválidas) o porque reintentarlas
+// podría crear un loop (refresh llamándose a sí mismo).
+const NO_REFRESH_ROUTES = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/google',
+  '/auth/refresh',
+  '/auth/logout',
+  '/auth/change-password',
+];
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
-    const isAuthRoute = originalRequest?.url?.includes('/auth/');
+    const isNoRefreshRoute = NO_REFRESH_ROUTES.some((path) => originalRequest?.url?.includes(path));
 
-    if (status === 401 && !originalRequest._retry && !isAuthRoute) {
+    if (status === 401 && !originalRequest._retry && !isNoRefreshRoute) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           refreshQueue.push({ resolve, reject });
